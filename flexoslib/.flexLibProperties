@@ -5,6 +5,7 @@
 <classEntry path="com.nextgenapp.opensocial.Phone"/>
 <classEntry path="com.nextgenapp.opensocial.Name"/>
 <classEntry path="com.nextgenapp.opensocial.Email.Field"/>
+<classEntry path="com.nextgenapp.opensocial.Url"/>
 <classEntry path="com.nextgenapp.opensocial.Phone.Field"/>
 <classEntry path="com.nextgenapp.opensocial.Organization.Field"/>
 <classEntry path="com.nextgenapp.opensocial.AField"/>
