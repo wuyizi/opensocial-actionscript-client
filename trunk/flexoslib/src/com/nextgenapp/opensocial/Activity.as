@@ -1,15 +1,15 @@
-package com.nextgenapp.os {
-	import opensocial.Activity.*;
+/**
+ * Activity - Opensocial activity object
+ * 
+ * @author Aaron Tong
+ */
+package com.nextgenapp.opensocial {
+	import com.nextgenapp.opensocial.Activity.*;
 	
-	/**
-	 * Base interface for all activity objects. 
-	 * @author Joseph Estrada
-	 * 
-	 */	
 	public class Activity extends OSResource {		
 		
-		public static const Field:Class = opensocial.Activity.Field;
-		public static const MediaItem:Class = opensocial.Activity.MediaItem;
+		public static const Field:Class = com.nextgenapp.opensocial.Activity.Field;
+		public static const MediaItem:Class = com.nextgenapp.opensocial.Activity.MediaItem;
 		
 		/**
 		 * ID key. 

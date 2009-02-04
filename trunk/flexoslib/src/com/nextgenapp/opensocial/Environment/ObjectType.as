@@ -1,10 +1,6 @@
-package opensocial.Environment
+package com.nextgenapp.opensocial.Environment
 {
-	/**
-	 * The types of objects in this container. 
-	 * @author Joseph Estrada
-	 * 
-	 */	
+	//TODO: Upgrade to v 0.8
 	public class ObjectType
 	{
 		public static var ACTIVITY:String = "ACTIVITY";
