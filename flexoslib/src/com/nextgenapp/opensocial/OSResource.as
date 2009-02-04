@@ -25,11 +25,6 @@ package com.nextgenapp.opensocial
 		protected var _fields:Object;
 		
 		/**
-		 * Holds the current version
-		 */
-		protected var currentVersion:String = "0.81";
-		
-		/**
 		 * OSResource constructor. 
 		 * @param optFields Optional field set for resource. 
 		 * 
