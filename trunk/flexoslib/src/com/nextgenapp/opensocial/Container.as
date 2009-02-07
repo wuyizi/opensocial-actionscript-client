@@ -5,7 +5,8 @@
  */
 package com.nextgenapp.opensocial
 {
-	import com.nextgenapp.opensocial.Activity.MediaItem;
+	import com.nextgenapp.opensocial.Activity.*;
+	import mx.collections.XMLListCollection;
 	
 	public class Container implements IContainer
 	{
@@ -17,6 +18,12 @@ package com.nextgenapp.opensocial
 		 * Sub container that opensocial container methods are delegated to. 
 		 */		
 		private var _container:Container;
+		/**
+		 * XML factory for JS injection
+		 */
+		protected var _xmlFactory:XMLListCollection = null;
+		
+		protected var _appId:String = "";
 		
 		/**
 		 * Container constructor. 
@@ -53,6 +60,24 @@ package com.nextgenapp.opensocial
 		 */		
 		public function setContainer(container:Container):void {
 			_container = container;
+		}
+		
+		/**
+		 * Gets the xml factory for this container
+		 * 
+		 * @return XMLCollection XMLCollection of methods for this factory
+		 */
+		public function get xmlFactory():XMLListCollection {
+			return this._xmlFactory;
+		}
+		
+		/**
+		 * Gets the application id which js can use to call flash obj
+		 * 
+		 * @return appId the application id
+		 */
+		public function get appId():String {
+			return _appId;
 		}
 		
 		/// IContainer Functions
@@ -95,7 +120,7 @@ package com.nextgenapp.opensocial
 		 * @param optParams Additional parameters to pass to the request.
 		 * 
 		 */		
-		public function makeRequest(url:String, callback:Function, optParams:Object = null /*Map<opensocial.ContentReqeustParameters, String>*/):void {
+		public function makeRequest(url:String, callback:Function, optParams:Object = null):void {
 			if(_container == null) 
 				throw new Error("Container delegate must be set before calling makeRequest");
 			_container.makeRequest(url, callback, optParams);

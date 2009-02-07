@@ -17,7 +17,7 @@ package com.nextgenapp.opensocial
 	 * @author Joseph Estrada
 	 * 
 	 */	
-	public class OSResource
+	public class OSResource implements Serializable
 	{
 		/**
 		 * Holds all the fields
@@ -83,6 +83,30 @@ package com.nextgenapp.opensocial
 			for(var key:String in _fields) 
 				result += key + ": " + _fields[key].toString() + "\n";
 			return result + "}\n";
+		}
+		
+		/**
+		 * convert this object to a generic object with the same properties.  
+		 */
+		public function write():Object
+		{
+			// this may only work fordynamic object.  we may need to use describeType() instead.  
+			var obj:Object = new Object();
+			for (var propName:String in _fields) {
+				obj[propName] = _fields[propName];
+			}
+			return obj;
+		}
+		
+		/**
+		 * read this generic object's properties into this object.  
+		 */
+		public function read(obj:Object):Boolean
+		{
+			for (var propName:String in obj) {
+				_fields[propName] = obj[propName];
+			}
+			return true;
 		}
 
 	}
