@@ -1,4 +1,9 @@
-package opensocial.DataRequest
+/**
+ * PeopleRequestFields - Opensocial PeopleRequestFields
+ * 
+ * @author Aaron Tong
+ */
+package com.nextgenapp.opensocial.DataRequest
 {
 	/**
 	 * Optional request fields for people/person requests. 
@@ -11,6 +16,10 @@ package opensocial.DataRequest
 		 * How to filter the people objects; defaults to ALL. Possible values are defined by FilterType. 
 		 */		
 		public static const FILTER:String = "FILTER";
+		/**
+		 * Additional options to be passed into the filter, specified as a Map<String, Object>.
+		 */
+		public static const FILTER_OPTIONS:String = "FILTER_OPTIONS";
 		/**
 		 * When paginating, the index of the first item to fetch. Specified as a Number. 
 		 */		

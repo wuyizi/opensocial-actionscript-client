@@ -27,19 +27,19 @@ package com.nextgenapp.opensocial.MySpace.Person
 		/**
 		 * A string ID that can be permanently associated with this person.
 		 */
-		public static const ID:String = "ID";
+		//public static const ID:String = "ID";
 		/**
 		 * A string containing the person's name. 
 		 */		
-		public static const NAME:String = "NAME";
+		//public static const NAME:String = "NAME";
 		/**
 		 * Person's profile URL, specified as a string. 
 		 */				
-		public static const PROFILE_URL:String = "PROFILE_URL";
+		//public static const PROFILE_URL:String = "PROFILE_URL";
 		/**
 		 * Person's photo thumbnail URL, specified as a string. 
 		 */		
-		public static const THUMBNAIL_URL:String = "THUMBNAIL_URL";
+		//public static const THUMBNAIL_URL:String = "THUMBNAIL_URL";
 		
 		/**
 		 * Image URI for a person's large image. 
@@ -106,7 +106,7 @@ package com.nextgenapp.opensocial.MySpace.Person
 		/**
 		 * A string representing a Person's heroes. 
 		 */		
-		public static const HEROES:String = "HEROES";
+		//public static const HEROES:String = "HEROES";
 		/**
 		 * A string representing a Person's headline or shoutout. 
 		 */		
@@ -132,7 +132,7 @@ package com.nextgenapp.opensocial.MySpace.Person
 		/**
 		 * A string representing a Person's status. 
 		 */		
-		public static const STATUS:String = "STATUS";
+		//public static const STATUS:String = "STATUS";
 		/**
 		 * A string representing a list of people the Person would like to meet. 
 		 */		

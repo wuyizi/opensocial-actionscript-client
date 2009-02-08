@@ -1,9 +1,10 @@
-package opensocial.ResponseItem {
-	/**
-	 * Error codes that a response item can return. 
-	 * @author Joseph Estrada
-	 * 
-	 */	
+/**
+ * ResponseItem - Opensocial Response Item
+ * 
+ * @author Aaron Tong
+ */
+package com.nextgenapp.opensocial.ResponseItem {
+	
 	public class Error {
 		/**
 		 * The request was invalid. Example: 'max' was -1. 

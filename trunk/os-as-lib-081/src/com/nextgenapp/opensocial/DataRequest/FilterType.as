@@ -1,10 +1,10 @@
-package opensocial.DataRequest
+/**
+ * FilterType - Opensocial filter type for DataRequest
+ * 
+ * @author Aaron Tong
+ */
+package com.nextgenapp.opensocial.DataRequest
 {
-	/**
-	 * The filter values used to filter the set of people returned by a fetch people request.  
-	 * @author Joseph Estrada
-	 * 
-	 */	
 	public class FilterType
 	{		
 		/**
@@ -15,6 +15,10 @@ package opensocial.DataRequest
 		 * Retrieves all friends with any data for this application. 
 		 */		
 		public static const HAS_APP:String = "HAS_APP";
+		/**
+		 * Retrieves only the user's top friends as defined by the container. 
+		 */
+		public static const TOP_FRIENDS:String = "TOP_FRIENDS";
 
 	}
 }

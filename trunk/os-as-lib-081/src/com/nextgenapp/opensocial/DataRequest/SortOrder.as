@@ -1,10 +1,8 @@
-package opensocial.DataRequest
+/**
+ * SortOrder - Opensocial DataRequest SortOrder
+ */
+package com.nextgenapp.opensocial.DataRequest
 {
-	/**
-	 * The sort orders available for ordering person objects. 
-	 * @author Joseph Estrada
-	 * 
-	 */	
 	public class SortOrder
 	{
 		/**
