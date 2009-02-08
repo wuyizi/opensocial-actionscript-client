@@ -56,8 +56,10 @@ package com.nextgenapp.opensocial.MySpace
 				}
 				//check to see if this is owner or viewer
 				obj.view = r.id;
+				//Register callback with MySpaceCallback
+				MySpaceCallback.register(MySpaceCallback.FETCH_PERSON, callback);
 				//Add the callback
-				ExternalInterface.addCallback("fetchPersonRequestCallback",callback);
+				ExternalInterface.addCallback("fetchPersonRequestCallback", MySpaceCallback.newFetchPersonCallback);
 				//Make the call
 				ExternalInterface.call(_xmlFunctions.fetchPersonRequest, obj);
 			break;

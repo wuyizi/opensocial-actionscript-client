@@ -5,17 +5,22 @@
  */
 package com.nextgenapp.opensocial.MySpace
 {
-	import mx.core.Application;
-	import com.nextgenapp.opensocial.Activity.*;
 	import com.nextgenapp.opensocial.*;
+	import com.nextgenapp.opensocial.Activity.*;
 	
 	import flash.external.ExternalInterface;
+	
+	import mx.core.Application;
 
 	public class MySpaceContainer extends Container
 	{
 
 		public function MySpaceContainer()
 		{
+			//check and make sure external interface is available
+			if(!ExternalInterface.available) {
+				throw new Error("*** Cannot intialize MySpaceContainer as flash ExternalInterface is not available.");
+			}
 			//initailize the application id
 			this._appId = Application.application.id;
 			//initialize the xml factory

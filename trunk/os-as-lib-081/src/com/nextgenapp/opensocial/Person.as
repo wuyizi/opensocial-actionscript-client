@@ -1,11 +1,10 @@
-﻿package com.nextgenapp.opensocial
+﻿/**
+ * Field - Person field for opensocial
+ * 
+ * @author Aaron Tong
+ */
+package com.nextgenapp.opensocial
 {
-	import com.nextgenapp.opensocial.Person.Field;
-	/**
-	 * Base interface for all person objects. 
-	 * @author Joseph Estrada
-	 * 
-	 */	
 	public class Person extends OSResource
 	{
 		

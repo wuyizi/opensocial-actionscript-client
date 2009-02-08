@@ -1,11 +1,12 @@
-﻿package com.nextgenapp.opensocial.Person
+﻿/**
+ * Field - Opensocial person field
+ * 
+ * @author Aaron Tong
+ */
+package com.nextgenapp.opensocial.Person
 {
 	import com.nextgenapp.opensocial.AField;
-	/**
-	 * All of the fields that a person has. These are the supported keys for the Person.getField() method. 
-	 * @author Joseph Estrada
-	 * 
-	 */	
+		
 	public class Field extends AField 
 	{
 		/**
