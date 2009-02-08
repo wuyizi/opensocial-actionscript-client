@@ -7,6 +7,7 @@ package com.nextgenapp.opensocial
 {
 	import com.nextgenapp.opensocial.Activity.*;
 	import mx.collections.XMLListCollection;
+	import flash.system.Security;
 	
 	public class Container implements IContainer
 	{
@@ -32,6 +33,9 @@ package com.nextgenapp.opensocial
 		function Container()
 		{
 			super();
+			//set the flahs domain
+			//allow cross domain calls 
+			flash.system.Security.allowDomain("api.msappspace.com");
 		}
 		
 		/**

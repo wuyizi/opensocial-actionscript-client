@@ -305,13 +305,17 @@
 						var flashobj = document.getElementById(oParam.name);
 						var OWNER = response.get(oParam.view).getData();
 						var returnData = {};
+						returnData.data = {};
+						//tells whether viewer or owner
+						returnData.isViewer = OWNER.isViewer();
+						returnData.isOwner = OWNER.isOwner();
 						for (var i in oParam.params){
 		  					switch (i){
 		  					case 'PROFILE_DETAILS':
 		  						//get the array of the profile details
 		  						var profDet = oParam.params[i];
 		  						for (var j in profDet){
-		  							returnData[profDet[j]] = OWNER.getField(oParam.osParam[j]);
+		  							returnData.data[profDet[j]] = OWNER.getField(oParam.osParam[j]);
 		  						}
 		  					break;
 		  					default:
