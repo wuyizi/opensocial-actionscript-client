@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- MySpaceXMLOS maps Actionscript requests to Javascript Requests -->
+<mx:XMLListCollection xmlns:mx="http://www.adobe.com/2006/mxml" >
+		<!-- Setting up static functions here -->
+		<mx:XML id="init">
+		<script>
+        <![CDATA[
+            function(){
+                //Create a name space for our global function
+                //if it doesn't already exists
+                try {
+                    NextGenApp;
+                } catch(e) {
+                    NextGenApp = new Object(); 
+                }
+
+				//TODO: checks to see if the variable exists before defining it
+				
+                NextGenApp.fillPeopleRequestFields = function (obj) {
+                    	var params = new Array();
+                    	for (i in obj.params){
+                    		switch(obj.params[i]){
+                    		case 'ID': 
+                    			params[i] = opensocial.Person.Field.ID;
+                    			break;
+                    		case 'BOOKS':
+                    			params[i] = MyOpenSpace.Person.Field.BOOKS;
+                    			break;
+                    		case 'ABOUT':
+                    			params[i] = MyOpenSpace.Person.Field.ABOUT;
+                    			break;
+                    		default:
+                    			params[i] = "";
+                    		}
+                    	}//for
+                    	return params;
+                    }//getOSParams
+            }
+        ]]>
+	    </script>
+		</mx:XML>
+
+		<!-- Start of OPENSOCIAL CALLS here -->
+	   	<mx:XML id="fetchPersonRequest" xmlns="http://www.nextgenapp.com/opensocial/flex/api" >  
+   		<script>
+		<![CDATA[
+			function(objParam)
+			{	
+				function fetchPerson(oParam){  	
+					var os = opensocial.Container.get();
+	  				var dataRequest = os.newDataRequest();
+	  				var param = {};
+	  				//lets fill out the params
+	  				if ( oParam.params != undefined ){
+		  				for (var i in oParam.params){
+		  					switch (i){
+		  					case 'PROFILE_DETAILS':
+		  						param[opensocial.DataRequest.PeopleRequestFields.PROFILE_DETAILS] = NextGenApp.fillPeopleRequestFields(oParam.params[i]);
+		  					break;
+		  					default:
+		  						//not supported. throw an exception
+		  						var mesg = "Error. DataRequest.PeopleRequestFields = " + i + " is not supported.";
+		  						throw mesg;
+		  					}//switch
+		  				}//for
+	  				}
+					
+					var OWNERReq = os.newFetchPersonRequest(oParam.view, param);
+					dataRequest.add(OWNERReq);
+					dataRequest.send(getResponse);
+
+					function getResponse(response)
+					{
+						var flashobj = document.getElementById(oParam.name);
+						var OWNER = response.get(oParam.view).getData();
+						var ReturnData = 
+						{   
+						  'PERSON_ID' : OWNER.getField(opensocial.Person.Field.ID),
+						  'PERSON_NAME' : OWNER.getField(opensocial.Person.Field.NAME),
+						  'PERSON_CITY' : OWNER.getField(MyOpenSpace.Person.Field.CITY),
+						  'PERSON_REGION' : OWNER.getField(MyOpenSpace.Person.Field.REGION),
+						  'PERSON_POSTALCODE' : OWNER.getField(MyOpenSpace.Person.Field.POSTALCODE),
+						  'PERSON_COUNTRY' : OWNER.getField(MyOpenSpace.Person.Field.COUNTRY),
+						  'PERSON_HOMETOWN' : OWNER.getField(MyOpenSpace.Person.Field.HOMETOWN),
+						  'PERSON_AGE' : OWNER.getField(MyOpenSpace.Person.Field.AGE),
+						  'OWNER_GENDER' : OWNER.getField(MyOpenSpace.Person.Field.GENDER),
+						  'OWNER_CULTURE' : OWNER.getField(MyOpenSpace.Person.Field.CULTURE),
+						  'OWNER_ABOUT' : OWNER.getField(MyOpenSpace.Person.Field.ABOUT),
+						  'OWNER_MARITAL_STATUS' : OWNER.getField(MyOpenSpace.Person.Field.MARITAL_STATUS),
+						  'OWNER_HEADLINE' : OWNER.getField(MyOpenSpace.Person.Field.HEADLINE),
+						  'OWNER_OCCUPATION' : OWNER.getField(MyOpenSpace.Person.Field.OCCUPATION),
+						  'OWNER_DESIRE_TO_MEET' : OWNER.getField(MyOpenSpace.Person.Field.DESIRE_TO_MEET),
+						  'OWNER_INTERESTS' : OWNER.getField(MyOpenSpace.Person.Field.INTERESTS),
+						  'OWNER_MUSIC' : OWNER.getField(MyOpenSpace.Person.Field.MUSIC),
+						  'OWNER_MOVIES' : OWNER.getField(MyOpenSpace.Person.Field.MOVIES),
+						  'OWNER_TELEVISION' : OWNER.getField(MyOpenSpace.Person.Field.TELEVISION),
+						  'OWNER_BOOKS' : OWNER.getField(MyOpenSpace.Person.Field.BOOKS),
+						  'OWNER_HEROES' : OWNER.getField(MyOpenSpace.Person.Field.HEROES),
+						  'OWNER_ZODIAC_SIGN' : OWNER.getField(MyOpenSpace.Person.Field.ZODIAC_SIGN),
+						  'OWNER_MOOD' : OWNER.getField(MyOpenSpace.Person.Field.MOOD),
+						  'OWNER_STATUS' : OWNER.getField(MyOpenSpace.Person.Field.STATUS),
+						  'OWNER_THUMBNAIL_URL' : OWNER.getField(opensocial.Person.Field.THUMBNAIL_URL)
+	
+						}		
+					  	flashobj.fetchPersonRequestCallback(ReturnData);
+				  	}//getResponse
+			  	}//fetchPerson
+			  	fetchPerson(objParam);
+			  }
+		]]>
+		</script>
+   	</mx:XML> 
+</mx:XMLListCollection>
