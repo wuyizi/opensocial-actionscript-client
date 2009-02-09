@@ -5,6 +5,8 @@
  */
 package com.nextgenapp.opensocial
 {
+	import com.nextgenapp.opensocial.Person.Field;
+	
 	public class Person extends OSResource
 	{
 		

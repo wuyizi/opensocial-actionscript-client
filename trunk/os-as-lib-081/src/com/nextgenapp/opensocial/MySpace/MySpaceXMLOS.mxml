@@ -16,10 +16,10 @@
 
 				//TODO: checks to see if the variable exists before defining it
 				
-                NextGenApp.fillPeopleRequestFields = function (obj) {
+                NextGenApp.fillPeopleRequestFields = function (parameter) {
                     	var params = new Array();
-                    	for (i in obj.params){
-                    		switch(obj.params[i]){
+                    	for (i in parameter){
+                    		switch(parameter[i]){
                     		case 'ABOUT_ME':
                     			params[i] = opensocial.Person.Field.ABOUT_ME;
                     			break;
@@ -309,6 +309,13 @@
 						//tells whether viewer or owner
 						returnData.isViewer = OWNER.isViewer();
 						returnData.isOwner = OWNER.isOwner();
+						//returnData.errMesg = response.getErrorMessage();
+						//returnData.hadError = response.hadError();
+						returnData.owner = {};
+						returnData.owner.name = OWNER.getField(opensocial.Person.Field.NAME);
+						returnData.owner.age = OWNER.getField(opensocial.Person.Field.AGE);
+						returnData.owner.myArray = ['AGE', 'NAME', 'FIELD'];
+						returnData.owner.osParam = oParam.osParam;
 						for (var i in oParam.params){
 		  					switch (i){
 		  					case 'PROFILE_DETAILS':
@@ -324,6 +331,7 @@
 		  						throw mesg;
 		  					}//switch
 		  				}//for
+		  				
 					  	flashobj.fetchPersonRequestCallback(returnData);
 				  	}//getResponse
 				  	
