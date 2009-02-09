@@ -69,7 +69,8 @@ package com.nextgenapp.opensocial.MySpace
 			var r:ResponseItem = new ResponseItem(null, p);
 			if ( p.isOwner()){
 				responseItems[PersonId.OWNER] = r;
-			}else {
+			}
+			if  ( p.isViewer() ) {
 				responseItems[PersonId.VIEWER] = r;
 			}
 			//create the DataResponse
@@ -78,9 +79,9 @@ package com.nextgenapp.opensocial.MySpace
 			if ( regMap[MySpaceCallback.FETCH_PERSON] != null ){
 				//call the callback
 				var func:Function = regMap[MySpaceCallback.FETCH_PERSON] as Function;
-				func(dr);
 				//remove the registration after the call
 				regMap[MySpaceCallback.FETCH_PERSON] = null;
+				func(dr);
 			}else {
 				//no one register to retrieve this object.
 				trace("*** Error. No one register to receive this object");

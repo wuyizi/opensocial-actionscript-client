@@ -25,6 +25,7 @@ package com.nextgenapp.opensocial.MySpace
 			this._appId = Application.application.id;
 			//initialize the xml factory
 			this._xmlFactory = new MySpaceXMLOS();
+			trace("*** xml init: " + MySpaceXMLOS(this._xmlFactory).init);
 			//initialize the javascript lib persistent functions
 			ExternalInterface.call(MySpaceXMLOS(this._xmlFactory).init);
 		}

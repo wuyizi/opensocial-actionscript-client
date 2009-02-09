@@ -15,6 +15,7 @@ package com.nextgenapp.opensocial
 		 * Singleton reference.
 		 */		
 		private static var _instance:Container = new Container();
+		
 		/**
 		 * Sub container that opensocial container methods are delegated to. 
 		 */		
@@ -72,7 +73,9 @@ package com.nextgenapp.opensocial
 		 * @return XMLCollection XMLCollection of methods for this factory
 		 */
 		public function get xmlFactory():XMLListCollection {
-			return this._xmlFactory;
+			if(_container == null) 
+				throw new Error("Container delegate must be set before calling xmlFactory");
+			return _container._xmlFactory;	
 		}
 		
 		/**
@@ -81,7 +84,9 @@ package com.nextgenapp.opensocial
 		 * @return appId the application id
 		 */
 		public function get appId():String {
-			return _appId;
+			if(_container == null) 
+				throw new Error("Container delegate must be set before calling appId");
+			return _container._appId;	
 		}
 		
 		/// IContainer Functions
