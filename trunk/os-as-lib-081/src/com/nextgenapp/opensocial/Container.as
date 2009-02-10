@@ -34,9 +34,9 @@ package com.nextgenapp.opensocial
 		function Container()
 		{
 			super();
-			//set the flahs domain
-			//allow cross domain calls 
-			flash.system.Security.allowDomain("*");
+			// allow js to call actionscript methods.  without this, you may get "security sandbox violation: ExternalINterface...." when the js function is trying to call actionscript function.
+			flash.system.Security.allowDomain("*"); // have to add each container, so add all for now.  change this to the container you are working on.   
+			flash.system.Security.allowDomain("api.msappspace.com"); // myspace
 		}
 		
 		/**
