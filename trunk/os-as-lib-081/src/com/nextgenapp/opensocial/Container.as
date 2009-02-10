@@ -36,7 +36,7 @@ package com.nextgenapp.opensocial
 			super();
 			//set the flahs domain
 			//allow cross domain calls 
-			flash.system.Security.allowDomain("api.msappspace.com");
+			flash.system.Security.allowDomain("*");
 		}
 		
 		/**
