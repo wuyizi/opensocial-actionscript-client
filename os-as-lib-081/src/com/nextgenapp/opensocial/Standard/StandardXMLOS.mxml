@@ -272,31 +272,45 @@
 						alert('11');
 						returnData.owner.osParam = oParam.osParam;
 						alert('12');
-						for (var i in oParam.params){
-						alert('13');
-		  					switch (i){
-		  					
-		  					case 'PROFILE_DETAILS':
-		  					alert('14');
-		  						//get the array of the profile details
-		  						var profDet = oParam.params[i];
-		  						alert('15');
-		  						for (var j in profDet){
-		  						alert('16');
-		  							returnData.data[profDet[j]] = OWNER.getField(oParam.osParam[j]);
-		  							alert('17');
-		  						}
-		  						alert('18');
-		  					break;
-		  					default:
-		  						//not supported. throw an exception
-		  						alert('19');
-		  						var mesg = "Error. DataRequest.PeopleRequestFields = " + i + " is not supported.";
-		  						alert('20');
-		  						throw mesg;
-		  					}//switch
-		  					alert('21');
-		  				}//for
+
+
+
+  						//get the array of the profile details
+  						var profDet = oParam.params['PROFILE_DETAILS'];
+  						alert('15');
+  						for (var j in profDet){
+  						alert('16');
+  							switch(profDet[j]) {
+  							alert('100');
+  							case 'NAME':
+  								alert('110');
+  								var tmpName = OWNER.getField(oParam.osParam[j]);
+  								alert('120');
+  								returnData.data['NAME'].ADDITIONAL_NAME = tmpName.getField(opensocial.Name.Field.ADDITIONAL_NAME);
+  								alert('130');
+  								returnData.data['NAME'].FAMILY_NAME = tmpName.getField(opensocial.Name.Field.FAMILY_NAME);
+  								alert('140');
+  								returnData.data['NAME'].GIVEN_NAME = tmpName.getField(opensocial.Name.Field.GIVEN_NAME);
+  								alert('150');
+  								returnData.data['NAME'].HONORIFIC_PREFIX = tmpName.getField(opensocial.Name.Field.HONORIFIC_PREFIX);
+  								alert('160');
+  								returnData.data['NAME'].HONORIFIC_SUFFIX = tmpName.getField(opensocial.Name.Field.HONORIFIC_SUFFIX);
+  								alert('170');
+  								returnData.data['NAME'].UNSTRUCTURED = tmpName.getField(opensocial.Name.Field.UNSTRUCTURED);
+  								alert('180');
+  								
+  							break;
+  							//case 'GENDER':
+  							//break;
+  							default:
+  								returnData.data[profDet[j]] = OWNER.getField(oParam.osParam[j]);
+  							break;
+  							} // switch  							
+  							alert('17');
+  						} // for
+  						alert('18');
+
+
 		  				
 		  				alert('calling fetchPersonRequestCallback()');
 					  	flashobj.fetchPersonRequestCallback(returnData);
