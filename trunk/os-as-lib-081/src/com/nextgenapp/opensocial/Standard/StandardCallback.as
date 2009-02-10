@@ -1,7 +1,7 @@
 /**
  * Contains the callback functions for DataRequest
  * 
- * @author Aaron Tong & ayci wu
+ * @author Aaron Tong & sol wu
  */
 package com.nextgenapp.opensocial.Standard
 {

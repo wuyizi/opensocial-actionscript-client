@@ -2,7 +2,7 @@ package com.nextgenapp.opensocial
 {
 	/**
 	 * Base interface for all name objects.
-	 * @author Joseph Estrada
+	 * @author Aaron Tong
 	 * 
 	 */	
 	public class Name extends OSResource

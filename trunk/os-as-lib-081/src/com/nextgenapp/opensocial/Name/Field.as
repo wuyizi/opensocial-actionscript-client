@@ -7,27 +7,27 @@ package com.nextgenapp.opensocial.Name
 		/**
 		 * The additional name. 
 		 */		
-		public static const ADDITIONAL_NAME:String = "ADDITIONAL_NAME";
+		public static const ADDITIONAL_NAME:String = "additionalName";
 		/**
 		 * The family name. 
 		 */		
-		public static const FAMILY_NAME:String = "FAMILY_NAME";
+		public static const FAMILY_NAME:String = "familyName";
 		/**
 		 * The given name. 
 		 */		
-		public static const GIVEN_NAME:String = "GIVEN_NAME";
+		public static const GIVEN_NAME:String = "givenName";
 		/**
 		 * The honorific prefix. 
 		 */		
-		public static const HONORIFIC_PREFIX:String = "HONORIFIC_PREFIX";
+		public static const HONORIFIC_PREFIX:String = "honorificPrefix";
 		/**
 		 * The honorific suffix. 
 		 */		
-		public static const HONORIFIC_SUFFIX:String = "HONORIFIC_SUFFIX";
+		public static const HONORIFIC_SUFFIX:String = "honorificSuffix";
 		/**
 		 * The unstructured name. 
 		 */		
-		public static const UNSTRUCTURED:String = "UNSTRUCTURED";
+		public static const UNSTRUCTURED:String = "unstructured";
 		
 		/**
 		 * Returns collection of fields. 

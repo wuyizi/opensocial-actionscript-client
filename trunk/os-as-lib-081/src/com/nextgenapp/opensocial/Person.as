@@ -5,6 +5,7 @@
  */
 package com.nextgenapp.opensocial
 {
+	import com.nextgenapp.opensocial.Name.Field;
 	import com.nextgenapp.opensocial.Person.Field;
 	
 	public class Person extends OSResource
@@ -50,7 +51,12 @@ package com.nextgenapp.opensocial
 		 * 
 		 */		
 		public function getDisplayName():String {
-			return String(this.getField(com.nextgenapp.opensocial.Person.Field.NAME));
+			//var name:Object = this.getField(com.nextgenapp.opensocial.Person.Field.NAME);
+			//return name.fields_.givenName + " " + name.fields_.familyName;
+			var name:Name = this.getField(com.nextgenapp.opensocial.Person.Field.NAME);
+			var givenName:String = name.getField(com.nextgenapp.opensocial.Name.Field.GIVEN_NAME);
+			var familyName:String =  name.getField(com.nextgenapp.opensocial.Name.Field.FAMILY_NAME);
+			return givenName + " " + familyName;
 		}
 		
 		/**
@@ -70,5 +76,30 @@ package com.nextgenapp.opensocial
 		public function isViewer():Boolean {
 			return _isViewer
 		}		
+		
+		/**
+		 * convert each field to the appropriate type.    
+		 */
+		public override function read(obj:Object):Boolean {
+			for (var propName:String in obj) {
+				var propValue:* = obj[propName];
+				switch (propName) {
+				case com.nextgenapp.opensocial.Person.Field.NAME:
+					var name:Name = new Name();
+					name.read(propValue);
+					_fields[propName] = name;
+					break;
+				case com.nextgenapp.opensocial.Person.Field.GENDER:
+					var gender:Enum = new Enum(propValue.key, propValue.displayValue); // the argument here is not important, they will get overwritten by read().
+					_fields[propName] = gender;
+					break;
+				default:
+					_fields[propName] = obj[propName];
+					break;
+				}
+				
+			}
+			return true;
+		}
 	}
 }
