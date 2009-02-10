@@ -281,13 +281,13 @@
   						for (var j in profDet){
   						alert('16');
   							switch(profDet[j]) {
-  							alert('100');
   							case 'NAME':
   								alert('110');
   								var tmpName = OWNER.getField(oParam.osParam[j]);
-  								alert('120');
-  								returnData.data['NAME'].ADDITIONAL_NAME = tmpName.getField(opensocial.Name.Field.ADDITIONAL_NAME);
-  								alert('130');
+  								returnData.data['NAME'] = {};
+  								alert('120.  tmpName='+tmpName);
+  								//returnData.data['NAME'].ADDITIONAL_NAME = tmpName.getField(opensocial.Name.Field.ADDITIONAL_NAME);
+  								//alert('130');
   								returnData.data['NAME'].FAMILY_NAME = tmpName.getField(opensocial.Name.Field.FAMILY_NAME);
   								alert('140');
   								returnData.data['NAME'].GIVEN_NAME = tmpName.getField(opensocial.Name.Field.GIVEN_NAME);
