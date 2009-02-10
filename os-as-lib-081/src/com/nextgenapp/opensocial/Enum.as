@@ -1,15 +1,15 @@
-package opensocial
+package com.nextgenapp.opensocial
 {
 	/**
 	 * Base interface for all enum objects. This class allows containers to use constants for fields that are usually have a common set of values. 
-	 * @author Joseph Estrada
+	 * @author Aaron Tong, sol wu
 	 * 
 	 */	
 	public class Enum
 	{
-		public static const Drinker:Class = opensocial.Enum.Drinker;
-		public static const Gender:Class = opensocial.Enum.Gender;
-		public static const Smoker:Class = opensocial.Enum.Smoker;
+		public static const Drinker:Class =  com.nextgenapp.opensocial.Enum.Drinker;
+		public static const Gender:Class =  com.nextgenapp.opensocial.Enum.Gender;
+		public static const Smoker:Class =  com.nextgenapp.opensocial.Enum.Smoker;
 		
 		/**
 		 * The enum's key. This should be one of the defined enums below. 

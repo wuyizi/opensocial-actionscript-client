@@ -1,7 +1,7 @@
 /**
  * standard implementation of the Container.  conform to 0.8 standard.
  *
- * @author Aaron Tong & ayci wu
+ * @author Aaron Tong & sol wu
  */
 package com.nextgenapp.opensocial.Standard
 {

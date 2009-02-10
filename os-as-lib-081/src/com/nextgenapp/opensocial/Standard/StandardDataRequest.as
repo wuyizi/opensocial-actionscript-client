@@ -1,7 +1,7 @@
 /**
  * implementation of the DataRequest that conforms to opensocial standard.  Conforms to spec 0.8.
  * 
- * @author Aaron Tong & ayci wu
+ * @author Aaron Tong & sol wu
  */
 package com.nextgenapp.opensocial.Standard
 {
