@@ -239,7 +239,7 @@
 
 					function getResponse(response)
 					{
-						alert('getResponse(): flash obj name='+oParam.name+'.  view='+oParam.view+".  response="+response);
+						//alert('getResponse(): flash obj name='+oParam.name+'.  view='+oParam.view+".  response="+response);
 						
 						var flashobj = document.getElementById(oParam.name);
 						var OWNER = response.get(oParam.view).getData();
@@ -283,7 +283,7 @@
   								var tmpProp = OWNER.getField(oParam.osParam[j]);
   								// if it is Enum object (eg. gender) (note: opensocial uses "gender" for field name, but our Flex constant currently uses "GENDER"
   								if (tmpProp instanceof opensocial.Enum) {  									
-  									alert('42.  param=' + oParam.osParam[j]);
+  									//alert('param=' + oParam.osParam[j]);
  	 								returnData.data[oParam.osParam[j]] = {};
   									returnData.data[oParam.osParam[j]].key = tmpProp.getKey();
   									returnData.data[oParam.osParam[j]].displayValue = tmpProp.getDisplayValue();
