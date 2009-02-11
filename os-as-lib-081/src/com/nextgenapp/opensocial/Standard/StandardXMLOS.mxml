@@ -205,9 +205,6 @@
 			function(objParam)
 			{	
 				function fetchPerson(oParam){  	
-					for (var tempname in oParam) {
-						alert(tempname+'='+oParam[tempname]);
-					}
 					
 					if (oParam.view == 'VIEWER') {
 						oParam.view = opensocial.IdSpec.PersonId.VIEWER;
@@ -215,9 +212,6 @@
 						oParam.view = opensocial.IdSpec.PersonId.OWNER;
 					}
 					
-					for (var tempname in oParam) {
-						alert(tempname+'='+oParam[tempname]);
-					}
 				
 					var os = opensocial.Container.get();
 	  				var dataRequest = opensocial.newDataRequest();
@@ -248,73 +242,59 @@
 						alert('getResponse(): flash obj name='+oParam.name+'.  view='+oParam.view+".  response="+response);
 						
 						var flashobj = document.getElementById(oParam.name);
-						alert('2');
 						var OWNER = response.get(oParam.view).getData();
-						alert('3');
 						var returnData = {};
-						alert('4');
 						returnData.data = {};
 						//tells whether viewer or owner
-						alert('5');
 						returnData.isViewer = OWNER.isViewer();
-						alert('6');
 						returnData.isOwner = OWNER.isOwner();
-						alert('7');
 						//returnData.errMesg = response.getErrorMessage();
 						//returnData.hadError = response.hadError();
 						returnData.owner = {};
-						alert('8');
 						returnData.owner.name = OWNER.getField(opensocial.Person.Field.NAME);
-						alert('9');
 						returnData.owner.age = OWNER.getField(opensocial.Person.Field.AGE);
-						alert('10');
 						returnData.owner.myArray = ['AGE', 'NAME', 'FIELD'];
-						alert('11');
 						returnData.owner.osParam = oParam.osParam;
-						alert('12');
 
 
 
   						//get the array of the profile details
   						var profDet = oParam.params['PROFILE_DETAILS'];
-  						alert('15');
   						for (var j in profDet){
-  						alert('16');
   							switch(profDet[j]) {
   							case 'NAME':
-  								alert('110');
   								var tmpName = OWNER.getField(oParam.osParam[j]);
   								returnData.data['NAME'] = {};
-  								alert('120.  tmpName='+tmpName);
-  								//returnData.data['NAME'].ADDITIONAL_NAME = tmpName.getField(opensocial.Name.Field.ADDITIONAL_NAME);
-  								//alert('130');
+  								returnData.data['NAME'].ADDITIONAL_NAME = tmpName.getField(opensocial.Name.Field.ADDITIONAL_NAME);
   								returnData.data['NAME'].FAMILY_NAME = tmpName.getField(opensocial.Name.Field.FAMILY_NAME);
-  								alert('140');
   								returnData.data['NAME'].GIVEN_NAME = tmpName.getField(opensocial.Name.Field.GIVEN_NAME);
-  								alert('150');
   								returnData.data['NAME'].HONORIFIC_PREFIX = tmpName.getField(opensocial.Name.Field.HONORIFIC_PREFIX);
-  								alert('160');
   								returnData.data['NAME'].HONORIFIC_SUFFIX = tmpName.getField(opensocial.Name.Field.HONORIFIC_SUFFIX);
-  								alert('170');
   								returnData.data['NAME'].UNSTRUCTURED = tmpName.getField(opensocial.Name.Field.UNSTRUCTURED);
-  								alert('180');
   								
   							break;
-  							//case 'GENDER':
-  							//break;
+  							case 'GENDER':
+  								var tmpGender = OWNER.getField(oParam.osParam[j]);
+  								returnData.data['GENDER'] = {};
+  								returnData.data['GENDER'].key = tmpGender.getKey();
+  								returnData.data['GENDER'].displayValue = tmpGender.getDisplayValue();
+  							break;
   							default:
-  								returnData.data[profDet[j]] = OWNER.getField(oParam.osParam[j]);
+  								var tmpProp = OWNER.getField(oParam.osParam[j]);
+  								// if it is Enum object (eg. gender) (note: opensocial uses "gender" for field name, but our Flex constant currently uses "GENDER"
+  								if (tmpProp instanceof opensocial.Enum) {  									
+  									alert('42.  param=' + oParam.osParam[j]);
+ 	 								returnData.data[oParam.osParam[j]] = {};
+  									returnData.data[oParam.osParam[j]].key = tmpProp.getKey();
+  									returnData.data[oParam.osParam[j]].displayValue = tmpProp.getDisplayValue();
+  								} else {
+  									returnData.data[profDet[j]] = OWNER.getField(oParam.osParam[j]);
+  								}
   							break;
   							} // switch  							
-  							alert('17');
   						} // for
-  						alert('18');
 
-
-		  				
-		  				alert('calling fetchPersonRequestCallback()');
 					  	flashobj.fetchPersonRequestCallback(returnData);
-					  	alert('fetchPersonRequestCallback getResponse() ends');
 				  	}//getResponse
 				  	
 			  	}//fetchPerson

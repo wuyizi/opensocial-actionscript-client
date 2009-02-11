@@ -90,7 +90,7 @@ package com.nextgenapp.opensocial
 					_fields[propName] = name;
 					break;
 				case com.nextgenapp.opensocial.Person.Field.GENDER:
-					var gender:Enum = new Enum(propValue.key, propValue.displayValue); // the argument here is not important, they will get overwritten by read().
+					var gender:Enum = new Enum(propValue.key, propValue.displayValue);
 					_fields[propName] = gender;
 					break;
 				default:
