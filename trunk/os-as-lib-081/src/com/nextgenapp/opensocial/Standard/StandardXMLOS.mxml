@@ -248,7 +248,7 @@
 						//tells whether viewer or owner
 						returnData.isViewer = OWNER.isViewer();
 						returnData.isOwner = OWNER.isOwner();
-						//returnData.errMesg = response.getErrorMessage();
+						//returnData.errorMessage = response.getErrorMessage();
 						//returnData.hadError = response.hadError();
 						returnData.owner = {};
 						returnData.owner.name = OWNER.getField(opensocial.Person.Field.NAME);

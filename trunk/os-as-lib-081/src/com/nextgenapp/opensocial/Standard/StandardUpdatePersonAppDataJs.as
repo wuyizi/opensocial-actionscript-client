@@ -1,7 +1,7 @@
 package com.nextgenapp.opensocial.Standard
 {
 	/**
-	 * this class is used to house the javascript for newUpdatePersonAppData().
+	 * this class is used to house the javascript for newUpdatePersonAppDataRequest().
 	 * 
 	 * @author sol wu
 	 */

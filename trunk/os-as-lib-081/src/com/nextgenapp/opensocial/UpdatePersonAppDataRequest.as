@@ -1,5 +1,8 @@
 package com.nextgenapp.opensocial
 {
+	/**
+	 * the request returned by newUpdatePersonAppDataRequest
+	 */
 	public class UpdatePersonAppDataRequest extends Request
 	{
 		public var key:String = "";

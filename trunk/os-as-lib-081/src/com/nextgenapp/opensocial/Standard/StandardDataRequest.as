@@ -8,10 +8,10 @@ package com.nextgenapp.opensocial.Standard
 	import com.nextgenapp.opensocial.Container;
 	import com.nextgenapp.opensocial.DataRequest;
 	import com.nextgenapp.opensocial.DataRequest.PeopleRequestFields;
+	import com.nextgenapp.opensocial.FetchPersonAppDataRequest;
 	import com.nextgenapp.opensocial.Request;
 	import com.nextgenapp.opensocial.UpdatePersonAppDataRequest;
 	import com.nextgenapp.opensocial.WorkRequest;
-	import com.nextgenapp.opensocial.IdSpec;
 	
 	import flash.external.ExternalInterface;
 
@@ -64,6 +64,15 @@ package com.nextgenapp.opensocial.Standard
 				ExternalInterface.call(_xmlFunctions.fetchPersonRequest, obj);
 			break;
 			
+			case Request.PERSON_APP_DATA_REQUEST:
+				var fpadReq:FetchPersonAppDataRequest = req as FetchPersonAppDataRequest;
+				//Register callback 
+				StandardCallback.register(StandardCallback.FETCH_PERSON_APP_DATA, callback);
+				//Add the callback
+				ExternalInterface.addCallback("fetchPersonAppDataRequestCallback", StandardCallback.newFetchPersonAppDataCallback);
+				ExternalInterface.call(StandardFetchPersonAppDataJs.updatePersonAppDataRequest, fpadReq.idspec, upadReq.keys, upadReq.opt_params);
+			break;
+			
 			case Request.UPDATE_PERSON_APP_DATA_REQUEST:
 				var upadReq:UpdatePersonAppDataRequest = req as UpdatePersonAppDataRequest;
 				// no callback
@@ -87,7 +96,7 @@ package com.nextgenapp.opensocial.Standard
 		
 		public override function newFetchPersonAppDataRequest(idSpec:IdSpec, keys:Array, optParam:Object):Object
 		{
-			return null;
+			return new FetchPersonAppDataRequest(idSpec, keys, optParam);
 		}
 		
 		public override function newFetchPersonRequest(id:String, optParams:Object=null):Object
