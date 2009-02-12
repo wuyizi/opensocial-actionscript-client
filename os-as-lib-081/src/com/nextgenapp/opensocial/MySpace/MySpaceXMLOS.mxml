@@ -276,7 +276,7 @@
 			function(objParam)
 			{	
 				function fetchPerson(oParam){  	
-					var os = opensocial.Container.get();
+					var os = opensocial.Container.get(); // different from standard
 	  				var dataRequest = os.newDataRequest();
 	  				var param = {};
 	  				//lets fill out the params
@@ -297,7 +297,7 @@
 	  				}
 					
 					var OWNERReq = os.newFetchPersonRequest(oParam.view, param);
-					dataRequest.add(OWNERReq);
+					dataRequest.add(OWNERReq); // different from standard
 					dataRequest.send(getResponse);
 
 					function getResponse(response)
