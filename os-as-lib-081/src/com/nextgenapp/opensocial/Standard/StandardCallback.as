@@ -5,10 +5,8 @@
  */
 package com.nextgenapp.opensocial.Standard
 {
-	import com.nextgenapp.opensocial.Person;
-	import com.nextgenapp.opensocial.IdSpec.PersonId;
 	import com.nextgenapp.opensocial.DataResponse;
-	import com.nextgenapp.opensocial.ResponseItem;
+	import com.nextgenapp.opensocial.IdSpec.PersonId;
 	
 	public class StandardCallback
 	{
@@ -48,10 +46,51 @@ package com.nextgenapp.opensocial.Standard
 		 * newFetchPersonAppDataCallback - Callback function for newFetchPersonAppDataRequest
 		 * 
 		 * @param obj - JS returned object
+		 * 			the returned object from js should have the following property
+		 * 			- errorMessage - value from js getErrorMessage()
+		 * 			- hadError - value from js hadError()
+		 * 			- data - the actual appData retrieved
 		 * @return DataResponse - DataResponse
 		 */		
 		public static function newFetchPersonAppDataCallback(obj:Object):void {
-			//not implemented
+			// retrieve the standard error data for all response.
+			// set hadError and errorMessage
+			var hadError:Boolean = false;
+			if (obj.hadError) { // hadError is populated by js
+				hadError = true;
+			}
+			
+			var errorMessage:String = null;
+			if (obj.errorMessage) { // hadError is populated by js
+				errorMessage = obj.errorMessage;
+			}
+			
+			// retrieve the actual data.  
+			// the actual data is a string in json format.
+			var appData = null;
+			if (obj.data) {
+				appData = obj.data;
+			}
+
+			//create an map of data response
+			var responseItems:Object = new Object();
+			//create a response item
+			var responseItem:ResponseItem = new ResponseItem(null, appData);
+
+			//create the DataResponse
+			var dr:DataResponse = new DataResponse(responseItems, hadError, errorMessage);
+			
+			//check to see if there is any registration for this object
+			if ( regMap[StandardCallback.FETCH_PERSON_APP_DATA] != null ){
+				//call the callback
+				var func:Function = regMap[StandardCallback.FETCH_PERSON_APP_DATA] as Function;
+				//remove the registration after the call
+				regMap[StandardCallback.FETCH_PERSON_APP_DATA] = null;
+				func(dr);
+			}else {
+				//no one register to retrieve this object.
+				trace("*** Error. No one register to receive this object");
+			}
 		}
 
 		/**
