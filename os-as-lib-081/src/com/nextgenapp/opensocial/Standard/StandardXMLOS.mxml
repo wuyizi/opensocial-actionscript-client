@@ -213,7 +213,7 @@
 					}
 					
 				
-					var os = opensocial.Container.get();
+					//var os = opensocial.Container.get(); // probably don't need this line
 	  				var dataRequest = opensocial.newDataRequest();
 	  				var param = {};
 	  				//lets fill out the params
@@ -273,20 +273,20 @@
   								returnData.data['NAME'].UNSTRUCTURED = tmpName.getField(opensocial.Name.Field.UNSTRUCTURED);
   								
   							break;
-  							case 'GENDER':
-  								var tmpGender = OWNER.getField(oParam.osParam[j]);
-  								returnData.data['GENDER'] = {};
-  								returnData.data['GENDER'].key = tmpGender.getKey();
-  								returnData.data['GENDER'].displayValue = tmpGender.getDisplayValue();
-  							break;
+  							//case 'GENDER':
+  							//	var tmpGender = OWNER.getField(oParam.osParam[j]);
+  							//	returnData.data['GENDER'] = {};
+  							//	returnData.data['GENDER'].key = tmpGender.getKey();
+  							//	returnData.data['GENDER'].displayValue = tmpGender.getDisplayValue();
+  							//break;
   							default:
   								var tmpProp = OWNER.getField(oParam.osParam[j]);
   								// if it is Enum object (eg. gender) (note: opensocial uses "gender" for field name, but our Flex constant currently uses "GENDER"
   								if (tmpProp instanceof opensocial.Enum) {  									
   									//alert('param=' + oParam.osParam[j]);
- 	 								returnData.data[oParam.osParam[j]] = {};
-  									returnData.data[oParam.osParam[j]].key = tmpProp.getKey();
-  									returnData.data[oParam.osParam[j]].displayValue = tmpProp.getDisplayValue();
+ 	 								returnData.data[profDet[j]] = {};
+  									returnData.data[profDet[j]].key = tmpProp.getKey();
+  									returnData.data[profDet[j]].displayValue = tmpProp.getDisplayValue();
   								} else {
   									returnData.data[profDet[j]] = OWNER.getField(oParam.osParam[j]);
   								}
