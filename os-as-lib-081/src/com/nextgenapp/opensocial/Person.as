@@ -51,12 +51,28 @@ package com.nextgenapp.opensocial
 		 * 
 		 */		
 		public function getDisplayName():String {
-			//var name:Object = this.getField(com.nextgenapp.opensocial.Person.Field.NAME);
-			//return name.fields_.givenName + " " + name.fields_.familyName;
+			var displayName:String = "";
 			var name:Name = this.getField(com.nextgenapp.opensocial.Person.Field.NAME);
 			var givenName:String = name.getField(com.nextgenapp.opensocial.Name.Field.GIVEN_NAME);
 			var familyName:String =  name.getField(com.nextgenapp.opensocial.Name.Field.FAMILY_NAME);
-			return givenName + " " + familyName;
+			var unstructured:String = name.getField(com.nextgenapp.opensocial.Name.Field.UNSTRUCTURED);
+			var additionalName:String = name.getField(com.nextgenapp.opensocial.Name.Field.ADDITIONAL_NAME);
+			
+			// different container may return givenName, familyName, or unstructured (eg. myspace returned unstructured)
+			// the priority is - givenName, familyName, unstructured, additionalname,
+			if (givenName) {
+				displayName = givenName;
+				if (familyName) {
+					displayName += (" " + familyName);
+				}
+			} else if (familyName) {
+				displayName = familyName;
+			} else if (unstructured) {
+				displayName = unstructured;
+			} else if (additionalName) {
+				displayName = additionalName;
+			}
+			return displayName;
 		}
 		
 		/**
