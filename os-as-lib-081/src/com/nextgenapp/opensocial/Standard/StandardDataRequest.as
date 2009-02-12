@@ -9,6 +9,7 @@ package com.nextgenapp.opensocial.Standard
 	import com.nextgenapp.opensocial.DataRequest;
 	import com.nextgenapp.opensocial.DataRequest.PeopleRequestFields;
 	import com.nextgenapp.opensocial.Request;
+	import com.nextgenapp.opensocial.UpdatePersonAppDataRequest;
 	import com.nextgenapp.opensocial.WorkRequest;
 	import com.nextgenapp.opensocial.IdSpec;
 	
@@ -32,8 +33,8 @@ package com.nextgenapp.opensocial.Standard
 		{
 			//For now, we don't support batching.
 			if ( request is Request && _workRequest.length < 1){
-				var r:Request = request as Request;
-				_workRequest.push(new WorkRequest(r, opt_key));
+				var req:Request = request as Request;
+				_workRequest.push(new WorkRequest(req, opt_key));
 			}else {
 				throw new Error("Request must be of type Request class!");
 			}
@@ -47,14 +48,14 @@ package com.nextgenapp.opensocial.Standard
 			obj.params = new Object();
 			//set the parameters
 			var wr:WorkRequest = _workRequest[0] as WorkRequest;
-			var r:Request = wr.request;
+			var req:Request = wr.request;
 			//check what type of request
-			switch (r.type){
+			switch (req.type){
 			case Request.PERSON_REQUEST:
-				var optFields:Array = r.opt_params as Array;
+				var optFields:Array = req.opt_params as Array;
 				obj.params[com.nextgenapp.opensocial.DataRequest.PeopleRequestFields.PROFILE_DETAILS] = optFields;
 				//check to see if this is owner or viewer
-				obj.view = r.id;
+				obj.view = req.id;
 				//Register callback with MySpaceCallback
 				StandardCallback.register(StandardCallback.FETCH_PERSON, callback);
 				//Add the callback
@@ -62,6 +63,13 @@ package com.nextgenapp.opensocial.Standard
 				//Make the call
 				ExternalInterface.call(_xmlFunctions.fetchPersonRequest, obj);
 			break;
+			
+			case Request.UPDATE_PERSON_APP_DATA_REQUEST:
+				var upadReq:UpdatePersonAppDataRequest = req as UpdatePersonAppDataRequest;
+				// no callback
+				ExternalInterface.call(StandardUpdatePersonAppDataJs.updatePersonAppDataRequest, upadReq.id, upadReq.key, upadReq.value);
+			break;
+			
 			default:
 				throw new Error("Unsupported Request Type");
 			}//switch
@@ -94,7 +102,7 @@ package com.nextgenapp.opensocial.Standard
 		
 		public override function newUpdatePersonAppDataRequest(id:String, key:String, value:String):Object
 		{
-			return null;
+			return new UpdatePersonAppDataRequest(id, key, value);
 		}
 		
 	}
