@@ -1,4 +1,4 @@
-package com.nextgenapp.opensocial {
+package opensocial {
 	/**
 	 * Collection of multiple objects with useful accessors. May also represent subset of a larger collection (for example, page 1 of 10) and contain information about the larger collection.
 	 *  
