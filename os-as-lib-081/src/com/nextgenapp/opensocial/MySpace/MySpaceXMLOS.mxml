@@ -276,7 +276,12 @@
 			function(objParam)
 			{	
 				function fetchPerson(oParam){  	
+<<<<<<< .mine
+					alert('test');
+					var os = opensocial.Container.get();  // different from standard
+=======
 					var os = opensocial.Container.get(); // different from standard
+>>>>>>> .r33
 	  				var dataRequest = os.newDataRequest();
 	  				var param = {};
 	  				//lets fill out the params
@@ -311,11 +316,11 @@
 						returnData.isOwner = OWNER.isOwner();
 						//returnData.errMesg = response.getErrorMessage();
 						//returnData.hadError = response.hadError();
-						returnData.owner = {};
-						returnData.owner.name = OWNER.getField(opensocial.Person.Field.NAME);
-						returnData.owner.age = OWNER.getField(opensocial.Person.Field.AGE);
-						returnData.owner.myArray = ['AGE', 'NAME', 'FIELD'];
-						returnData.owner.osParam = oParam.osParam;
+						//returnData.owner = {};
+						//returnData.owner.name = OWNER.getField(opensocial.Person.Field.NAME);
+						//returnData.owner.age = OWNER.getField(opensocial.Person.Field.AGE);
+						//returnData.owner.myArray = ['AGE', 'NAME', 'FIELD'];
+						//returnData.owner.osParam = oParam.osParam;
 						for (var i in oParam.params){
 		  					switch (i){
 		  					case 'PROFILE_DETAILS':

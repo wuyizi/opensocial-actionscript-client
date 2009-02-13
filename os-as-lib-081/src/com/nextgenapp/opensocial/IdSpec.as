@@ -13,9 +13,20 @@ package com.nextgenapp.opensocial
 		public static const Field:Class = com.nextgenapp.opensocial.IdSpec.Field;
 		public static const PersonId:Class = com.nextgenapp.opensocial.IdSpec.PersonId;
 		
-		public function IdSpec()
+		/**
+		 * IdSpec
+		 * 
+		 * @param user   The USER_ID field can be either be the OWNER and VIEWER constants of PersonId, 
+		 * 				 an OpenSocial ID string, or an array of OpenSocial ID strings if you're looking to 
+		 *               access information for two or more specific users.
+		 * @param group  the GROUP_ID field can contain either "FRIENDS" or "SELF" in GroupId
+		 * @param dist   the network distance
+		 */
+		public function IdSpec(user:Object, group:Object, dist:Object=null)
 		{
-			//TODO: need implementation
+			this.setField(com.nextgenapp.opensocial.IdSpec.Field.USER_ID, user);
+			this.setField(com.nextgenapp.opensocial.IdSpec.Field.GROUP_ID, group);
+			this.setField(com.nextgenapp.opensocial.IdSpec.Field.NETWORK_DISTANCE, dist);
 		}
 
 	}

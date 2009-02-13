@@ -82,7 +82,7 @@ package com.nextgenapp.opensocial.MySpace
 		 * Creates an IdSpec object. 
 		 * @param params Parameters defining the id spec
 		 */
-		override public function newIdSpec():IdSpec {
+		override public function newIdSpec(params:Object):IdSpec {
 			throw new Error("method not implemented!");
 		}
 		

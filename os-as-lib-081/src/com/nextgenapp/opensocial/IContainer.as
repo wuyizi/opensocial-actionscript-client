@@ -47,7 +47,7 @@ package com.nextgenapp.opensocial
 		 * Creates an IdSpec object. 
 		 * @param params Parameters defining the id spec
 		 */
-		function newIdSpec():IdSpec;
+		function newIdSpec(params:Object):IdSpec;
 
 		/**
 		 * Creates a media item. Represents images, movies, and audio. Used when creating activities on the server. 

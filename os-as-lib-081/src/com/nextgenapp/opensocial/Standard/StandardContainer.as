@@ -7,6 +7,7 @@ package com.nextgenapp.opensocial.Standard
 {
 	import com.nextgenapp.opensocial.*;
 	import com.nextgenapp.opensocial.Activity.*;
+	import com.nextgenapp.opensocial.IdSpec.Field;
 	
 	import flash.external.ExternalInterface;
 	
@@ -82,8 +83,9 @@ package com.nextgenapp.opensocial.Standard
 		 * Creates an IdSpec object. 
 		 * @param params Parameters defining the id spec
 		 */
-		override public function newIdSpec():IdSpec {
-			throw new Error("method not implemented!");
+		override public function newIdSpec(params:Object):IdSpec {
+			return new IdSpec(params[com.nextgenapp.opensocial.IdSpec.Field.USER_ID],
+							  params[com.nextgenapp.opensocial.IdSpec.Field.GROUP_ID]);
 		}
 		
 		/**

@@ -9,10 +9,10 @@ package com.nextgenapp.opensocial.Standard
 	import com.nextgenapp.opensocial.DataRequest;
 	import com.nextgenapp.opensocial.DataRequest.PeopleRequestFields;
 	import com.nextgenapp.opensocial.FetchPersonAppDataRequest;
+	import com.nextgenapp.opensocial.IdSpec;
 	import com.nextgenapp.opensocial.Request;
 	import com.nextgenapp.opensocial.UpdatePersonAppDataRequest;
 	import com.nextgenapp.opensocial.WorkRequest;
-	import com.nextgenapp.opensocial.IdSpec;
 	
 	import flash.external.ExternalInterface;
 
@@ -50,6 +50,7 @@ package com.nextgenapp.opensocial.Standard
 			//set the parameters
 			var wr:WorkRequest = _workRequest[0] as WorkRequest;
 			var req:Request = wr.request;
+			var idSpec:IdSpec = req.idspec;
 			//check what type of request
 			switch (req.type){
 			case Request.PERSON_REQUEST:
@@ -63,6 +64,39 @@ package com.nextgenapp.opensocial.Standard
 				ExternalInterface.addCallback("fetchPersonRequestCallback", StandardCallback.newFetchPersonCallback);
 				//Make the call
 				ExternalInterface.call(_xmlFunctions.fetchPersonRequest, obj);
+			break;
+			
+			case Request.PEOPLE_REQUEST:
+				if ( idSpec == null ){
+					throw new Error("IdSpec cannot be null for PeopleRequest!");
+				}
+				//set the user for IdSpec
+				var value:Object = idSpec.getField(com.nextgenapp.opensocial.IdSpec.Field.USER_ID);
+				if ( value == null ){
+					throw new Error("User value for IdSpec cannot be null!");
+				}
+				obj.IdSpec[com.nextgenapp.opensocial.IdSpec.Field.USER_ID] = value;
+				//set the group for IdSpec
+				value = idSpec.getField(com.nextgenapp.opensocial.IdSpec.Field.GROUP_ID);
+				if ( value == null ){
+					throw new Error("Group value cannot be null for IdSpec!");
+				}
+				obj.IdSpec[com.nextgenapp.opensocial.IdSpec.Field.GROUP_ID] = value;
+				//set the network distance for IdSpec
+				value = idSpec.getField(com.nextgenapp.opensocial.IdSpec.Field.NETWORK_DISTANCE);
+				if ( value != null ){
+					obj.IdSpec[com.nextgenapp.opensocial.IdSpec.Field.NETWORK_DISTANCE] = value;
+				}
+				//set the optional parameters
+				var peoReqParams:Array = req.opt_params as Array;
+				obj.params = peoReqParams;
+				
+				//Register callback with MySpaceCallback
+				StandardCallback.register(StandardCallback.FETCH_PEOPLE, callback);
+				//Add the callback
+				ExternalInterface.addCallback("fetchPeopleRequestCallback", StandardCallback.newFetchPeopleCallback);
+				//Make the call
+				ExternalInterface.call(_xmlFunctions.fetchPeopleRequest, obj);
 			break;
 			
 			case Request.PERSON_APP_DATA_REQUEST:
@@ -92,7 +126,7 @@ package com.nextgenapp.opensocial.Standard
 		
 		public override function newFetchPeopleRequest(idSpec:IdSpec, optParams:Object=null):Object
 		{
-			return null;
+			return new Request(Request.PEOPLE_REQUEST, optParams, null, idSpec);
 		}
 		
 		public override function newFetchPersonAppDataRequest(idSpec:IdSpec, keys:Array, optParam:Object):Object

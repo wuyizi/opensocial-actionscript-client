@@ -1,6 +1,13 @@
+/**
+ * Field - Fields for IdSpec
+ * 
+ * @author Aaron Tong
+ */
 package com.nextgenapp.opensocial.IdSpec
 {
-	public class Field
+	import com.nextgenapp.opensocial.AField;
+	
+	public class Field extends AField
 	{
 		/**
 		 * Holds the group id
