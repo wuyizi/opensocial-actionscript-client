@@ -27,7 +27,7 @@ package com.nextgenapp.opensocial.Standard
 						var returnData = {};
 						
 						// todo: handle error message
-						//returnData.errMesg = response.getErrorMessage();
+						//returnData.errorMessage = response.getErrorMessage();
 						//returnData.hadError = response.hadError();
 						
 						var appData = response.get('data').getData();

@@ -1,8 +1,8 @@
-package opensocial.Enum
+package com.nextgenapp.opensocial.Enum
 {
 	/**
 	 * The enum keys used by the drinker field.
-	 * @author Joseph Estrada
+	 * @author Aaron Tong
 	 * 
 	 */	
 	public class Drinker
