@@ -1,7 +1,7 @@
-package com.nextgenapp.opensocial {
+package opensocial {
 	/**
 	 * The priorities a create activity request can have. 
-	 * @author Aarong Tong
+	 * @author Joseph Estrada
 	 * 
 	 */	
 	public class CreateActivityPriority {

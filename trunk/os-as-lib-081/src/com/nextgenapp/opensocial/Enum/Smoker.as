@@ -2,6 +2,8 @@ package com.nextgenapp.opensocial.Enum
 {
 	/**
 	 * The enum keys used by the smoker field. 
+	 * http://code.google.com/apis/opensocial/docs/0.8/reference/#opensocial.Enum.Smoker
+	 * 
 	 * @author Aarong Tong
 	 * 
 	 */	
