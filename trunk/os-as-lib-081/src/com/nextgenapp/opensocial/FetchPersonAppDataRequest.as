@@ -6,7 +6,10 @@ package com.nextgenapp.opensocial
 		
 		public function FetchPersonAppDataRequest(idSpec:IdSpec, keys:Array, optParam:Object)
 		{
-			super(Request.PERSON_APP_DATA_REQUEST, oParam, "", id_spec);
+			super(Request.PERSON_APP_DATA_REQUEST);
+			this.idspec = idSpec;
+			this.keys = keys;
+			this.opt_params = optParam;
 			this.keys = keys;
 		}
 		

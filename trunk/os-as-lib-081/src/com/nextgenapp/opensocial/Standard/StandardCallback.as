@@ -7,6 +7,8 @@ package com.nextgenapp.opensocial.Standard
 {
 	import com.nextgenapp.opensocial.DataResponse;
 	import com.nextgenapp.opensocial.IdSpec.PersonId;
+	import com.nextgenapp.opensocial.Person;
+	import com.nextgenapp.opensocial.ResponseItem;
 	
 	public class StandardCallback
 	{

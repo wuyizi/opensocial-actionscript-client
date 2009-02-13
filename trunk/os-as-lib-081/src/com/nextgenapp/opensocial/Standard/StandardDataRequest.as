@@ -12,6 +12,7 @@ package com.nextgenapp.opensocial.Standard
 	import com.nextgenapp.opensocial.Request;
 	import com.nextgenapp.opensocial.UpdatePersonAppDataRequest;
 	import com.nextgenapp.opensocial.WorkRequest;
+	import com.nextgenapp.opensocial.IdSpec;
 	
 	import flash.external.ExternalInterface;
 
@@ -70,7 +71,7 @@ package com.nextgenapp.opensocial.Standard
 				StandardCallback.register(StandardCallback.FETCH_PERSON_APP_DATA, callback);
 				//Add the callback
 				ExternalInterface.addCallback("fetchPersonAppDataRequestCallback", StandardCallback.newFetchPersonAppDataCallback);
-				ExternalInterface.call(StandardFetchPersonAppDataJs.updatePersonAppDataRequest, fpadReq.idspec, upadReq.keys, upadReq.opt_params);
+				ExternalInterface.call(StandardFetchPersonAppDataRequestJs.fetchPersonAppDataRequest, fpadReq.idspec, fpadReq.keys, fpadReq.opt_params);
 			break;
 			
 			case Request.UPDATE_PERSON_APP_DATA_REQUEST:
