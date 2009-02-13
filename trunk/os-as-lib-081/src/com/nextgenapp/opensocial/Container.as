@@ -161,10 +161,10 @@ package com.nextgenapp.opensocial
 		 * Creates an IdSpec object. 
 		 * @param params Parameters defining the id spec
 		 */
-		public function newIdSpec():IdSpec {
+		public function newIdSpec(params:Object):IdSpec {
 			if(_container == null) 
 				throw new Error("Container delegate must be set before calling newIdSpec");
-			return _container.newIdSpec();
+			return _container.newIdSpec(params);
 		}
 		
 		/**

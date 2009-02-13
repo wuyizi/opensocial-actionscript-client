@@ -1,5 +1,5 @@
 /**
- * PersonId - Opensocial PersonId of IdSpec
+ * PersonId - Opensocial PersonId value for IdSpec
  * 
  * @author Aaron Tong
  */
