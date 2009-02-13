@@ -4,7 +4,7 @@ package com.nextgenapp.opensocial.Enum
 	 * The enum keys used by the lookingfor field. 
 	 * http://code.google.com/apis/opensocial/docs/0.8/reference/#opensocial.Enum.LookingFor
 	 * 
-	 * @author sol wu
+	 * @author sol wu, aaron tong
 	 * 
 	 */	
 	public class LookingFor

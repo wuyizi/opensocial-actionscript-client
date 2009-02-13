@@ -4,7 +4,7 @@ package com.nextgenapp.opensocial.Enum
 	 * The enum keys used by the presence field. 
 	 * http://code.google.com/apis/opensocial/docs/0.8/reference/#opensocial.Enum.Presence
 	 * 
-	 * @author sol wu
+	 * @author sol wu, aaron tong
 	 * 
 	 */	
 	public class Presence
