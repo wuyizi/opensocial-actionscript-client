@@ -5,6 +5,7 @@
  */
 package com.nextgenapp.opensocial.Standard
 {
+	import com.nextgenapp.opensocial.Collection;
 	import com.nextgenapp.opensocial.DataResponse;
 	import com.nextgenapp.opensocial.IdSpec.PersonId;
 	import com.nextgenapp.opensocial.Person;
@@ -41,7 +42,54 @@ package com.nextgenapp.opensocial.Standard
 		 * @param obj - JS returned object
 		 */
 		public static function newFetchPeopleCallback(obj:Object):void {
-			//not implemented
+			
+			//check to see if there was any errors
+			if ( obj.hadError == undefined ){
+				var items:Array = new Array();
+				for (var i:int=0; i < obj.data.length; i++){
+					var p:Person = new Person(null, obj.data[i].isOwner, obj.data[i].isViewer);
+					//read the object's data
+					p.read(obj.data[i]);
+					items.push(p);
+				}
+				
+				//create a Collection
+				var col:Collection = new Collection(items, obj.colOffset, obj.colTotalSize);
+				
+				//create an map of data response
+				var responseItems:Object = new Object();
+				//create a response item
+				var r:ResponseItem = new ResponseItem(null, col);
+				responseItems[obj.drAddOptKey] = r;
+				
+				//create the DataResponse
+				var dr:DataResponse = new DataResponse(responseItems, false);
+				//check to see if there is any registration for this object
+				if ( regMap[StandardCallback.FETCH_PEOPLE] != null ){
+					//call the callback
+					var func:Function = regMap[StandardCallback.FETCH_PEOPLE] as Function;
+					//remove the registration after the call
+					regMap[StandardCallback.FETCH_PEOPLE] = null;
+					func(dr);
+				}else {
+					//no one register to retrieve this object.
+					trace("*** Error. No one register to receive this object");
+				}
+			} else {
+				//create the DataResponse
+				var dr:DataResponse = new DataResponse(null, true, obj.errorMessage);
+				//check to see if there is any registration for this object
+				if ( regMap[StandardCallback.FETCH_PEOPLE] != null ){
+					//call the callback
+					var func:Function = regMap[StandardCallback.FETCH_PEOPLE] as Function;
+					//remove the registration after the call
+					regMap[StandardCallback.FETCH_PEOPLE] = null;
+					func(dr);
+				}else {
+					//no one register to retrieve this object.
+					trace("*** Error. No one register to receive this object");
+				}
+			}
 		}
 
 		/**
