@@ -67,6 +67,14 @@ package com.nextgenapp.opensocial.Standard
 			break;
 			
 			case Request.PEOPLE_REQUEST:
+				//check if there is optional parameter
+				if ( wr.opt_key != null ){
+					//this is key field in response data
+					obj.drAddOptKey = wr.opt_key;
+				}else {
+					obj.drAddOptKey = "PEOPLE_REQUEST";
+				}
+				//throw exception if no idSpec
 				if ( idSpec == null ){
 					throw new Error("IdSpec cannot be null for PeopleRequest!");
 				}

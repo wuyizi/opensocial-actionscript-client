@@ -309,15 +309,15 @@
 		<![CDATA[
 function(objParam)
 			{	
-				function fetchPeopleRequest(oParam){  	
+				function fetchPeopleRequest(oParam){
 					//get the idspec
 					if ( (oParam.IdSpec['USER_ID'] == undefined) || 
 						 (oParam.IdSpec['GROUP_ID'] == undefined) ){
 						 throw 'Cannot execute people request due to user id or group id not defined';
 					}
 					var idspec_params = {};
-					idspec_params[opensocial.IdSpec.Field.USER_ID] = obj.IdSpec['USER_ID'];
-					idspec_params[opensocial.IdSpec.Field.GROUP_ID] = obj.IdSpec['GROUP_ID'];
+					idspec_params[opensocial.IdSpec.Field.USER_ID] = oParam.IdSpec['USER_ID'];
+					idspec_params[opensocial.IdSpec.Field.GROUP_ID] = oParam.IdSpec['GROUP_ID'];
 					
 					if ( oParam.IdSpec['NETWORK_DISTANCE'] != undefined ){
 						idspec_params[opensocial.IdSpec.Field.NETWORK_DISTANCE] = oParam.IdSpec['NETWORK_DISTANCE'];
@@ -353,7 +353,7 @@ function(objParam)
 						}//switch
 					}//for
 	  				var dataRequest = opensocial.newDataRequest();
-	  				req.add(req.newFetchPeopleRequest(idspec, opt_params), 'viewerFriends');
+	  				req.add(req.newFetchPeopleRequest(idspec, opt_params), oParam.drAddOptKey);
 					req.send(fetchPeopleHandler);
 
 					function fetchPeopleHandler(response)
@@ -361,7 +361,7 @@ function(objParam)
 						var flashobj = document.getElementById(oParam.name);
 						var returnData = {};
 						returnData.data = new Array();
-						var viewerFriendsResp = resp.get('viewerFriends'); // use the key passed with the request to "get" the appropriate data
+						var viewerFriendsResp = resp.get(oParam.drAddOptKey); // use the key passed with the request to "get" the appropriate data
 
 	  				    if (!viewerFriendsResp.hadError()) { // always verify whether your request was successful
 						    var viewerFriends = viewerFriendsResp.getData();
@@ -370,6 +370,8 @@ function(objParam)
 						    viewerFriends.each( // each method is used to iterate through every object in collection
 						      function(person) { // anonymous function is called once for every object in collection
 						        returnData.data[count] = {};
+						        returnData.data[count].isOwner = person.isOwner();
+						        returnData.data[count].isViewer = person.isViewer();
 						        //get the array of the profile details
   								var profDet = oParam.params['PROFILE_DETAILS'];
   								for (var j in profDet){
@@ -401,6 +403,10 @@ function(objParam)
 			  					} // for
 						      }//function person
 						    );//each
+						    
+						    returnData.colTotalSize = viewerFriends.getTotalSize();
+						    returnData.colOffset = viewerFriends.getOffset();
+						    returnData.drAddOptKey = oParam.drAddOptKey;
 					   }else {
 							returnData.errorMessage = response.getErrorMessage();
 							returnData.hadError = response.hadError();
