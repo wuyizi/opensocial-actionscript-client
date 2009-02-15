@@ -307,7 +307,7 @@
    	<mx:XML id="fetchPeopleRequest" xmlns="http://www.nextgenapp.com/opensocial/flex/api" >
    		<script>
 		<![CDATA[
-function(objParam)
+		function(objParam)
 			{	
 				function fetchPeopleRequest(oParam){
 					//get the idspec
@@ -326,33 +326,33 @@ function(objParam)
 					var idspec = opensocial.newIdSpec(idspec_params);
 					var opt_params = {};
 					//create the optional parameters
-					for (myProp in oParam.params){
+					for (var myProp in oParam.params){
 						switch (myProp){
 						case 'FILTER':
-							opt_params[opensocial.DataRequest.PeopleRequestFields.FILTER] = obj.params[myProp];
+							opt_params[opensocial.DataRequest.PeopleRequestFields.FILTER] = oParam.params[myProp];
 						break;
 						case 'FIRST':
-							opt_params[opensocial.DataRequest.PeopleRequestFields.FIRST] = obj.params[myProp];
+							opt_params[opensocial.DataRequest.PeopleRequestFields.FIRST] = oParam.params[myProp];
 						break;
 						case 'MAX':
-							opt_params[opensocial.DataRequest.PeopleRequestFields.MAX] = obj.params[myProp];
+							opt_params[opensocial.DataRequest.PeopleRequestFields.MAX] = oParam.params[myProp];
 						break;
 						case 'FILTER_OPTIONS':
-							opt_params[opensocial.DataRequest.PeopleRequestFields.FILTER_OPTIONS] = obj.params[myProp];
+							opt_params[opensocial.DataRequest.PeopleRequestFields.FILTER_OPTIONS] = oParam.params[myProp];
 						break;
 						case 'PROFILE_DETAILS':
-							opt_params[opensocial.DataRequest.PeopleRequestFields.PROFILE_DETAILS] = NextGenApp.fillPeopleRequestFields(obj.params[myProp]);
+							opt_params[opensocial.DataRequest.PeopleRequestFields.PROFILE_DETAILS] = NextGenApp.fillPeopleRequestFields(oParam.params[myProp]);
 							//use this as cache for the response
 		  					oParam.osParam = opt_params[opensocial.DataRequest.PeopleRequestFields.PROFILE_DETAILS];
 						break;
 						case 'SORT_ORDER':
-							opt_params[opensocial.DataRequest.PeopleRequestFields.SORT_ORDER] = obj.params[myProp];
+							opt_params[opensocial.DataRequest.PeopleRequestFields.SORT_ORDER] = oParam.params[myProp];
 						break;
 						default:
 							//ignore
 						}//switch
 					}//for
-	  				var dataRequest = opensocial.newDataRequest();
+					var req = opensocial.newDataRequest();
 	  				req.add(req.newFetchPeopleRequest(idspec, opt_params), oParam.drAddOptKey);
 					req.send(fetchPeopleHandler);
 
@@ -360,53 +360,59 @@ function(objParam)
 					{
 						var flashobj = document.getElementById(oParam.name);
 						var returnData = {};
-						returnData.data = new Array();
-						var viewerFriendsResp = resp.get(oParam.drAddOptKey); // use the key passed with the request to "get" the appropriate data
+						returnData.data = {};
+						var viewerFriendsResp = response.get(oParam.drAddOptKey); // use the key passed with the request to "get" the appropriate data
 
 	  				    if (!viewerFriendsResp.hadError()) { // always verify whether your request was successful
 						    var viewerFriends = viewerFriendsResp.getData();
-						    var count = 0;
-						
+						    var count=0;
 						    viewerFriends.each( // each method is used to iterate through every object in collection
 						      function(person) { // anonymous function is called once for every object in collection
+						      	//alert("Calling person... count = " + count + ", person = " + person.getDisplayName());
 						        returnData.data[count] = {};
+						        returnData.data[count].pAttr = {};
 						        returnData.data[count].isOwner = person.isOwner();
 						        returnData.data[count].isViewer = person.isViewer();
+						        //alert("returnData owner = " + returnData.data[count].isOwner + ", viewer = " + returnData.data[count].isViewer);
 						        //get the array of the profile details
   								var profDet = oParam.params['PROFILE_DETAILS'];
   								for (var j in profDet){
   									switch(profDet[j]) {
   										case 'NAME':
   											var tmpName = person.getField(oParam.osParam[j]);
-  											returnData.data['NAME'] = {};
-			  								returnData.data['NAME'].ADDITIONAL_NAME = tmpName.getField(opensocial.Name.Field.ADDITIONAL_NAME);
-			  								returnData.data['NAME'].FAMILY_NAME = tmpName.getField(opensocial.Name.Field.FAMILY_NAME);
-			  								returnData.data['NAME'].GIVEN_NAME = tmpName.getField(opensocial.Name.Field.GIVEN_NAME);
-			  								returnData.data['NAME'].HONORIFIC_PREFIX = tmpName.getField(opensocial.Name.Field.HONORIFIC_PREFIX);
-			  								returnData.data['NAME'].HONORIFIC_SUFFIX = tmpName.getField(opensocial.Name.Field.HONORIFIC_SUFFIX);
-			  								returnData.data['NAME'].UNSTRUCTURED = tmpName.getField(opensocial.Name.Field.UNSTRUCTURED);
-			  								
+  											returnData.data[count].pAttr['NAME'] = {};
+			  								returnData.data[count].pAttr['NAME'].ADDITIONAL_NAME = tmpName.getField(opensocial.Name.Field.ADDITIONAL_NAME);
+			  								returnData.data[count].pAttr['NAME'].FAMILY_NAME = tmpName.getField(opensocial.Name.Field.FAMILY_NAME);
+			  								returnData.data[count].pAttr['NAME'].GIVEN_NAME = tmpName.getField(opensocial.Name.Field.GIVEN_NAME);
+			  								returnData.data[count].pAttr['NAME'].HONORIFIC_PREFIX = tmpName.getField(opensocial.Name.Field.HONORIFIC_PREFIX);
+			  								returnData.data[count].pAttr['NAME'].HONORIFIC_SUFFIX = tmpName.getField(opensocial.Name.Field.HONORIFIC_SUFFIX);
+			  								returnData.data[count].pAttr['NAME'].UNSTRUCTURED = tmpName.getField(opensocial.Name.Field.UNSTRUCTURED);
   										break;
 			  							default:
-			  								var tmpProp = OWNER.getField(oParam.osParam[j]);
+			  								var tmpProp = person.getField(oParam.osParam[j]);
+			  								//alert("Property = " + tmpProp + " for " + oParam.osParam[j]);
 			  								// if it is Enum object (eg. gender) (note: opensocial uses "gender" for field name, but our Flex constant currently uses "GENDER"
-			  								if (tmpProp instanceof opensocial.Enum) {  									
-			  									//alert('param=' + oParam.osParam[j]);
-			 	 								returnData.data[profDet[j]] = {};
-			  									returnData.data[profDet[j]].key = tmpProp.getKey();
-			  									returnData.data[profDet[j]].displayValue = tmpProp.getDisplayValue();
+			  								if (tmpProp instanceof opensocial.Enum) {
+			  									//alert(tmpProp + " is instanceof Enum");  									
+			 	 								returnData.data[count].pAttr[profDet[j]] = {};
+			  									returnData.data[count].pAttr[profDet[j]].key = tmpProp.getKey();
+			  									returnData.data[count].pAttr[profDet[j]].displayValue = tmpProp.getDisplayValue();
 			  								} else {
-			  									returnData.data[profDet[j]] = OWNER.getField(oParam.osParam[j]);
+			  									returnData.data[count].pAttr[profDet[j]] = person.getField(oParam.osParam[j]);
 			  								}
 			  							break;
-			  						} // switch  							
+			  						} // switch  				
 			  					} // for
+			  					count++;
 						      }//function person
 						    );//each
 						    
 						    returnData.colTotalSize = viewerFriends.getTotalSize();
+						    //alert("total size = " + returnData.colTotalSize);
 						    returnData.colOffset = viewerFriends.getOffset();
+						    //alert("offset = " + returnData.colOffset);
 						    returnData.drAddOptKey = oParam.drAddOptKey;
+						    //alert("callback key = " + returnData.drAddOptKey);
 					   }else {
 							returnData.errorMessage = response.getErrorMessage();
 							returnData.hadError = response.hadError();

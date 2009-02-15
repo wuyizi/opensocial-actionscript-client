@@ -78,6 +78,7 @@ package com.nextgenapp.opensocial.Standard
 				if ( idSpec == null ){
 					throw new Error("IdSpec cannot be null for PeopleRequest!");
 				}
+				obj.IdSpec = new Object();
 				//set the user for IdSpec
 				var value:Object = idSpec.getField(com.nextgenapp.opensocial.IdSpec.Field.USER_ID);
 				if ( value == null ){
@@ -96,7 +97,7 @@ package com.nextgenapp.opensocial.Standard
 					obj.IdSpec[com.nextgenapp.opensocial.IdSpec.Field.NETWORK_DISTANCE] = value;
 				}
 				//set the optional parameters
-				var peoReqParams:Array = req.opt_params as Array;
+				var peoReqParams:Object = req.opt_params;
 				obj.params = peoReqParams;
 				
 				//Register callback with MySpaceCallback

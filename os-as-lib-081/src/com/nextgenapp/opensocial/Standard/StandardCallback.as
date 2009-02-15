@@ -46,10 +46,10 @@ package com.nextgenapp.opensocial.Standard
 			//check to see if there was any errors
 			if ( obj.hadError == undefined ){
 				var items:Array = new Array();
-				for (var i:int=0; i < obj.data.length; i++){
-					var p:Person = new Person(null, obj.data[i].isOwner, obj.data[i].isViewer);
+				for each (var item:Object in obj.data){
+					var p:Person = new Person(null, item.isOwner, item.isViewer);
 					//read the object's data
-					p.read(obj.data[i]);
+					p.read(item.pAttr);
 					items.push(p);
 				}
 				

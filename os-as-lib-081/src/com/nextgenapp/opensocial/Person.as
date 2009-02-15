@@ -106,6 +106,12 @@ package com.nextgenapp.opensocial
 					_fields[propName] = name;
 					break;
 				case com.nextgenapp.opensocial.Person.Field.GENDER:
+					if ( propValue == null || propValue == "undefined" ||
+						 propValue == undefined ){
+						 	propValue = new Object();
+						 	propValue.key = "Unknown";
+						 	propValue.displayValue = "Unknown";
+					}
 					var gender:Enum = new Enum(propValue.key, propValue.displayValue);
 					_fields[propName] = gender;
 					break;
