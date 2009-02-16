@@ -11,14 +11,20 @@ package com.nextgenapp.opensocial.Standard
 		<script>
 		<![CDATA[
 			function(id, key, value)
-			{	
+			{
 				function updatePersonAppData(id, key, value){
+					alert('10');
 					var dataRequest = opensocial.newDataRequest();
-	          		dataRequest.add(req.newUpdatePersonAppDataRequest(id, key, value));
+					alert('20');
+	          		dataRequest.add(dataRequest.newUpdatePersonAppDataRequest(id, key, value));
+	          		alert('30');
 	          		dataRequest.send(); // no callback
+	          		alert('40');
 			  	}//updatePersonAppData
 			  	
+			  	alert('1');
 			  	updatePersonAppData(id, key, value);
+			  	alert('2');
 			}
 		]]>
 		</script>

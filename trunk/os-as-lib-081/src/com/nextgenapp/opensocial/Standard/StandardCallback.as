@@ -103,6 +103,7 @@ package com.nextgenapp.opensocial.Standard
 		 * @return DataResponse - DataResponse
 		 */		
 		public static function newFetchPersonAppDataCallback(obj:Object):void {
+			trace("newFetchPersonAppDataCallback()...");
 			// retrieve the standard error data for all response.
 			// set hadError and errorMessage
 			var hadError:Boolean = false;
@@ -117,15 +118,19 @@ package com.nextgenapp.opensocial.Standard
 			
 			// retrieve the actual data.  
 			// the actual data is a string in json format.
-			var appData = null;
+			var appData:Object = null;
 			if (obj.data) {
 				appData = obj.data;
 			}
+			
+			var opt_key:String = obj.opt_key;
 
 			//create an map of data response
 			var responseItems:Object = new Object();
 			//create a response item
 			var responseItem:ResponseItem = new ResponseItem(null, appData);
+			// todo: cache the variable, and use it here.
+			responseItems[opt_key] = responseItem;
 
 			//create the DataResponse
 			var dr:DataResponse = new DataResponse(responseItems, hadError, errorMessage);
@@ -137,6 +142,7 @@ package com.nextgenapp.opensocial.Standard
 				//remove the registration after the call
 				regMap[StandardCallback.FETCH_PERSON_APP_DATA] = null;
 				func(dr);
+				//func.call(null, dr);  
 			}else {
 				//no one register to retrieve this object.
 				trace("*** Error. No one register to receive this object");
