@@ -11,30 +11,70 @@ package com.nextgenapp.opensocial.Standard
 		public static var fetchPersonAppDataRequest:XML =
 		<script>
 		<![CDATA[
-			function(flashName, idSpec, keys, opt_params)
-			{	
-				const KEY_DATA = 'data';
-				
+			function(flashName, opt_key, idSpec, keys, opt_params)
+			{					
 				function updatePersonAppData(flashName, idSpec, keys, opt_params){
+					for (var tempPropName in idSpec) {
+						alert(tempPropName + "=" + idSpec[tempPropName]);
+					}
+					
+					for each (var tempKey in keys) {
+						alert(tempKey);
+					}
+					
+					alert('1');
 					var dataRequest = opensocial.newDataRequest();
-	          		dataRequest.add(req.newFetchPersonAppDataRequest(idSpec, keys, opt_params), KEY_DATA);
+					var idSpecJsParam = {};
+					
+					alert('2');
+					if (idSpec['USER_ID']) {
+						alert('3');
+						idSpecJsParam[opensocial.IdSpec.Field.USER_ID] = idSpec['USER_ID'];
+						alert('4');
+					}
+					if (idSpec['GROUP_ID']) {
+						alert('5');
+						idSpecJsParam[opensocial.IdSpec.Field.GROUP_ID] = idSpec['GROUP_ID'];
+						alert('6');
+					}
+					
+					//var idSpecJs = opensocial.newIdSpec({ "userId" : "OWNER", "groupId" : "FRIENDS" });
+					var idSpecJs = opensocial.newIdSpec(idSpecJsParam);
+					var fpadReq;
+					alert('7');
+					if (opt_params) {
+						fpadReq = dataRequest.newFetchPersonAppDataRequest(idSpecJs, keys, opt_params);
+					} else {
+						fpadReq = dataRequest.newFetchPersonAppDataRequest(idSpecJs, keys);
+					}
+					alert('7.5');
+	          		dataRequest.add(fpadReq, opt_key);
+	          		alert('8');
 	          		dataRequest.send(getResponse);
-	          		
+	          		alert('9');
 	          		
 	          		function getResponse(response)
 					{
+						alert('100');
 						var flashobj = document.getElementById(flashName);
+						alert('101');
 						var returnData = {};
 						
 						// todo: handle error message
 						//returnData.errorMessage = response.getErrorMessage();
 						//returnData.hadError = response.hadError();
 						
-						var appData = response.get('data').getData();
+						alert('105');
+						var appData = response.get(opt_key).getData();
+						alert('106. appData=' + appData + ".  typeof()" + typeof(appData));
+						returnData.opt_key = opt_key;
+						alert('106.5 appData=' + appData + ".  typeof()" + typeof(appData));
 						returnData.data = appData;
+						alert('107');
 						
 						
 						flashobj.fetchPersonAppDataRequestCallback(returnData);
+						alert('108');
 					} 
 			  	}//updatePersonAppData
 			  	

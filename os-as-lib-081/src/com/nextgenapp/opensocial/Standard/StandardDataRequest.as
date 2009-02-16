@@ -114,7 +114,7 @@ package com.nextgenapp.opensocial.Standard
 				StandardCallback.register(StandardCallback.FETCH_PERSON_APP_DATA, callback);
 				//Add the callback
 				ExternalInterface.addCallback("fetchPersonAppDataRequestCallback", StandardCallback.newFetchPersonAppDataCallback);
-				ExternalInterface.call(StandardFetchPersonAppDataRequestJs.fetchPersonAppDataRequest, fpadReq.idspec, fpadReq.keys, fpadReq.opt_params);
+				ExternalInterface.call(StandardFetchPersonAppDataRequestJs.fetchPersonAppDataRequest, ExternalInterface.objectID, wr.opt_key, fpadReq.idspec.write(), fpadReq.keys, fpadReq.opt_params);
 			break;
 			
 			case Request.UPDATE_PERSON_APP_DATA_REQUEST:
