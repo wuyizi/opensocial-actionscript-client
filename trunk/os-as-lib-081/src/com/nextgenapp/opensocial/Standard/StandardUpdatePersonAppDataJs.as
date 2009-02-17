@@ -13,7 +13,7 @@ package com.nextgenapp.opensocial.Standard
 			function(id, key, value)
 			{
 				function updatePersonAppData(id, key, value){
-					alert('10');
+					alert('10. id='+id+'.  key='+key+'.  value='+value);
 					var dataRequest = opensocial.newDataRequest();
 					alert('20');
 	          		dataRequest.add(dataRequest.newUpdatePersonAppDataRequest(id, key, value));
