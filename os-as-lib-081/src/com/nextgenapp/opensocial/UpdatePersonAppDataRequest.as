@@ -11,6 +11,7 @@ package com.nextgenapp.opensocial
 		public function UpdatePersonAppDataRequest(id:String, key:String, value:String)
 		{
 			super(Request.UPDATE_PERSON_APP_DATA_REQUEST);
+			this.id = id;
 			this.key = key;
 			this.value = value;
 		}
