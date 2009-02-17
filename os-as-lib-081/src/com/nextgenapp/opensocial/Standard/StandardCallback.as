@@ -129,7 +129,7 @@ package com.nextgenapp.opensocial.Standard
 			var responseItems:Object = new Object();
 			//create a response item
 			var responseItem:ResponseItem = new ResponseItem(null, appData);
-			// todo: cache the variable, and use it here.
+
 			responseItems[opt_key] = responseItem;
 
 			//create the DataResponse
@@ -141,8 +141,7 @@ package com.nextgenapp.opensocial.Standard
 				var func:Function = regMap[StandardCallback.FETCH_PERSON_APP_DATA] as Function;
 				//remove the registration after the call
 				regMap[StandardCallback.FETCH_PERSON_APP_DATA] = null;
-				func(dr);
-				//func.call(null, dr);  
+				func(dr); 
 			}else {
 				//no one register to retrieve this object.
 				trace("*** Error. No one register to receive this object");
@@ -198,7 +197,47 @@ package com.nextgenapp.opensocial.Standard
 		 * @param obj - JS returned object
 		 */		
 		public static function newUpdatePersonAppDataCallback(obj:Object):void {
-			//not implemented
+			trace("newUpdatePersonAppDataCallback()...");
+			// retrieve the standard error data for all response.
+			// set hadError and errorMessage
+			var hadError:Boolean = false;
+			if (obj.hadError) { // hadError is populated by js
+				hadError = true;
+			}
+			
+			var errorMessage:String = null;
+			if (obj.errorMessage) { // hadError is populated by js
+				errorMessage = obj.errorMessage;
+			}
+			
+			// retrieve the actual data.  
+			// the actual data is a string in json format.
+			var appData:Object = null;
+			if (obj.data) {
+				appData = obj.data;
+			}
+			
+			var opt_key:String = obj.opt_key;
+
+			//create an map of data response
+			var responseItems:Object = new Object();
+			//create a response item
+			var responseItem:ResponseItem = new ResponseItem(null, appData);
+
+			//create the DataResponse
+			var dr:DataResponse = new DataResponse(null, hadError, errorMessage);
+			
+			//check to see if there is any registration for this object
+			if ( regMap[StandardCallback.UPDATE_PERSON_APP_DATA] != null ){
+				//call the callback
+				var func:Function = regMap[StandardCallback.UPDATE_PERSON_APP_DATA] as Function;
+				//remove the registration after the call
+				regMap[StandardCallback.UPDATE_PERSON_APP_DATA] = null;
+				func(dr); 
+			}else {
+				//no one register to retrieve this object.
+				trace("*** Error. No one register to receive this object");
+			}
 		}
 		
 		/**

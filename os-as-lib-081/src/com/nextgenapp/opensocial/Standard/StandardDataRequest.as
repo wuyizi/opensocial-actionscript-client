@@ -119,8 +119,11 @@ package com.nextgenapp.opensocial.Standard
 			
 			case Request.UPDATE_PERSON_APP_DATA_REQUEST:
 				var upadReq:UpdatePersonAppDataRequest = req as UpdatePersonAppDataRequest;
-				// no callback
-				ExternalInterface.call(StandardUpdatePersonAppDataJs.updatePersonAppDataRequest, upadReq.id, upadReq.key, upadReq.value);
+				//Register callback 
+				StandardCallback.register(StandardCallback.UPDATE_PERSON_APP_DATA, callback);
+				//Add the callback
+				ExternalInterface.addCallback("updatePersonAppDataRequestCallback", StandardCallback.newUpdatePersonAppDataCallback);
+				ExternalInterface.call(StandardUpdatePersonAppDataJs.updatePersonAppDataRequest, ExternalInterface.objectID, upadReq.id, upadReq.key, upadReq.value);
 			break;
 			
 			default:
