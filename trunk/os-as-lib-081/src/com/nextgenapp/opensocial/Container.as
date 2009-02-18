@@ -6,8 +6,10 @@
 package com.nextgenapp.opensocial
 {
 	import com.nextgenapp.opensocial.Activity.*;
-	import mx.collections.XMLListCollection;
+	
 	import flash.system.Security;
+	
+	import mx.collections.XMLListCollection;
 	
 	public class Container implements IContainer
 	{
@@ -239,7 +241,7 @@ package com.nextgenapp.opensocial
 		 * @param optCallback The function to call once the request has been processed; either this callback will be called or the gadget will be reloaded from scratch 
 		 * @param optParams The optional parameters indicating where to send a user when a request is made, or when a request is accepted; options are of type  NavigationParameters.DestinationType
 		 */
-		 public function requestSendMessage(recipients:Array, message:String, optCallback:Function = null, optParam:Object=null):void {
+		 public function requestSendMessage(recipients:Array, message:Message, optCallback:Function = null, optParam:Object=null):void {
 		 	if(_container == null) 
 				throw new Error("Container delegate must be set before calling requestSendMessage");
 			_container.requestSendMessage(recipients, message, optCallback, optParam);

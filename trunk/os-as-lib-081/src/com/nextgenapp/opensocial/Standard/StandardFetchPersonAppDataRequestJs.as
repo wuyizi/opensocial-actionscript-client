@@ -4,7 +4,7 @@ package com.nextgenapp.opensocial.Standard
 	 * this class is used to house the javascript for newFetchPersonAppDataRequest().
 	 * http://wiki.opensocial.org/index.php?title=Opensocial.DataRequest_(v0.8)#newFetchPersonAppDataRequest
 	 * 
-	 * @author sol wu
+	 * @author sol wu & aaron tong
 	 */
 	public class StandardFetchPersonAppDataRequestJs
 	{

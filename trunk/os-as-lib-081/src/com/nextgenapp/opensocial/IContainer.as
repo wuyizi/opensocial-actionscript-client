@@ -102,6 +102,6 @@ package com.nextgenapp.opensocial
 		 * @param optCallback The function to call once the request has been processed; either this callback will be called or the gadget will be reloaded from scratch 
 		 * @param optParams The optional parameters indicating where to send a user when a request is made, or when a request is accepted; options are of type  NavigationParameters.DestinationType
 		 */
-		 function requestSendMessage(recipients:Array, message:String, optCallback:Function = null, optParam:Object=null):void;
+		 function requestSendMessage(recipients:Array, message:Message, optCallback:Function = null, optParam:Object=null):void;
 	}
 }

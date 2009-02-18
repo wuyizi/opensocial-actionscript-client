@@ -1,5 +1,7 @@
 package com.nextgenapp.opensocial
 {
+	import com.nextgenapp.opensocial.Message.Field;
+	
 	/**
 	 * Base interface for all message objects. 
 	 * @author Joseph Estrada
@@ -15,9 +17,10 @@ package com.nextgenapp.opensocial
 		 * @param optFields
 		 * 
 		 */		
-		public function Message(optFields:Object=null)
+		public function Message(body:String, optFields:Object=null)
 		{
 			super(optFields);
+			setField(com.nextgenapp.opensocial.Message.Field.BODY, body);
 		}
 		
 	}

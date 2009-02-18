@@ -108,7 +108,7 @@ package com.nextgenapp.opensocial.Standard
 		 * @return Message The new message object
 		 */
 		 override public function newMessage(body:String, optParams:Object = null):Message {
-			throw new Error("method not implemented!");
+			return new Message(body, optParams);
 		 }
 		
 		/**
@@ -150,8 +150,14 @@ package com.nextgenapp.opensocial.Standard
 		 * @param optCallback The function to call once the request has been processed; either this callback will be called or the gadget will be reloaded from scratch 
 		 * @param optParams The optional parameters indicating where to send a user when a request is made, or when a request is accepted; options are of type  NavigationParameters.DestinationType
 		 */
-		 override public function requestSendMessage(recipients:Array, message:String, optCallback:Function = null, optParam:Object=null):void {
-			throw new Error("method not implemented!");
+		 override public function requestSendMessage(recipients:Array, message:Message, optCallback:Function = null, optParam:Object=null):void {
+			//Register callback 
+			//StandardCallback.register(StandardCallback.REQUEST_SEND_MESSAGE, callback);
+			//Add the callback
+			//ExternalInterface.addCallback("requestSendMessageCallback", StandardCallback.requestSendMessageCallback);
+			
+			// convert message from Message object to generic object.
+			ExternalInterface.call(StandardRequestSendMessageJs.requestSendMessage, ExternalInterface.objectID, recipients, message.write(), optParam);
 		 }
 	}
 }
