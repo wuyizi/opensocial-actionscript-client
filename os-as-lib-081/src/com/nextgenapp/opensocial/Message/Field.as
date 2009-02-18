@@ -4,7 +4,7 @@ package com.nextgenapp.opensocial.Message
 
 	/**
 	 * All of the fields that messages can have. 
-	 * @author Joseph Estrada
+	 * @author aaron tong & sol wu
 	 * 
 	 */
 	public class Field extends AField
@@ -12,23 +12,23 @@ package com.nextgenapp.opensocial.Message
 		/**
 		 * The main text of the message. 
 		 */		
-		public static const BODY:String = "BODY";
+		public static const BODY:String = "body";
 		/**
 		 * The main text of the message as a message template. 
 		 */
-		public static const BODY_ID:String = "BODY_ID";
+		public static const BODY_ID:String = "bodyId";
 		/**
 		 * The title of the message. 
 		 */		
-		public static const TITLE:String = "TITLE";
+		public static const TITLE:String = "title";
 		/**
 		 * The title of the message as a message template. Specifies the message ID to use in the gadget xml. 
 		 */
-		public static const TITLE_ID:String = "TITLE_ID";
+		public static const TITLE_ID:String = "titleId";
 		/**
 		 * The title of the message, specified as an opensocial.Message.Type. 
 		 */		
-		public static const TYPE:String = "TYPE";
+		public static const TYPE:String = "type";
 
 		/**
 		 * Returns collection of fields. 
