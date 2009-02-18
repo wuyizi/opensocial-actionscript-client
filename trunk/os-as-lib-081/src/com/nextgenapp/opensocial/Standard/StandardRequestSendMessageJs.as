@@ -16,18 +16,20 @@ package com.nextgenapp.opensocial.Standard
 				function requestSendMessage(flashName, recipients, message, opt_params){
 					alert('1. flashName='+flashName +'.  recipients='+recipients+'.  message='+message +'.  '+opt_params);
 					// convert message to an message type
-					// body is required.
-					var body = message.BODY;
-					alert('2.  body=' + body);
+					// body is mandatory field.
+					var body = message[opensocial.Message.Field.BODY];
+					alert('2.  body=' + body + '.  body literal=' + opensocial.Message.Field.BODY);
 					
 					var msgParams = {};
-					msgParams[opensocial.Message.Field.TITLE] = 'title';
-					msgParams[opensocial.Message.Field.TYPE] = opensocial.Message.Type.EMAIL;
-					// todo: implement msgParams by getting it from message object
-					//for (var msgParamName in message) {
-					//  // find the correct parameter name.
-					//	msgParams[msgParamName] = message[msgParamName];
-					//}
+					//msgParams[opensocial.Message.Field.TITLE] = 'title';
+					//msgParams[opensocial.Message.Field.TYPE] = opensocial.Message.Type.EMAIL;
+					// populate msgParams by getting it from message object
+					for (var msgParamName in message) {
+						// ignore BODY, because it is populated in another way.
+						if (opensocial.Message.Field.BODY != msgParamName) {
+							msgParams[msgParamName] = message[msgParamName];
+						}
+					}
 					
 					
 					alert('3');
