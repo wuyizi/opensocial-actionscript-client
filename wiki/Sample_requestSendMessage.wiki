@@ -1,0 +1,13 @@
+= Sample Code for requestSendMessage() =
+
+{{{
+var msgParams:Object = {};
+msgParams[com.nextgenapp.opensocial.Message.Field.TITLE] = 'test title';
+msgParams[com.nextgenapp.opensocial.Message.Field.TYPE] = com.nextgenapp.opensocial.Message.Type.EMAIL;
+
+var message:Message = container.newMessage("test msg body", msgParams);
+container.requestSendMessage(["VIEWER"], message);
+}}}
+
+
+A full sample code can be found here: http://opensocial-tutorial-trial.googlecode.com/svn-history/r180/trunk/os-as-lib-081-test/src/SendMsgExampleOrkut.mxml
