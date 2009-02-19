@@ -36,8 +36,32 @@ package com.nextgenapp.opensocial.Standard
 					var messageJs = opensocial.newMessage(body, msgParams);
 					// todo: implement callback and opt_params
 					alert('4 messageJs=' + messageJs);
-					opensocial.requestSendMessage(recipients, messageJs); 
+					opensocial.requestSendMessage(recipients, messageJs, getResponse); 
 					alert('5');
+					
+					
+					/**
+					 * Note: response is an instance of ResponseItem, not DataResponse.  
+					 */
+					function getResponse(response)
+					{
+						alert('10');
+						var flashobj = document.getElementById(flashName);
+						alert('20');
+						var returnData = {};
+						alert('30');
+						// handle error message
+						returnData.errorMessage = response.getErrorMessage();
+						alert('40');
+						returnData.hadError = response.hadError();
+						alert('50');
+						returnData.errorCode = response.getErrorCode();
+						alert('60.  returnData.errorCode=' + returnData.errorCode);
+						
+						alert('70');
+						flashobj.requestSendMessageCallback(returnData);
+						alert('80');
+					}//getResponse 
 		
 		
 					

@@ -7,9 +7,9 @@ package com.nextgenapp.opensocial.Standard
 {
 	import com.nextgenapp.opensocial.Collection;
 	import com.nextgenapp.opensocial.DataResponse;
-	import com.nextgenapp.opensocial.IdSpec.PersonId;
-	import com.nextgenapp.opensocial.Person;
 	import com.nextgenapp.opensocial.ResponseItem;
+	import com.nextgenapp.opensocial.Person;
+	import com.nextgenapp.opensocial.IdSpec.PersonId;
 	
 	public class StandardCallback
 	{
@@ -24,6 +24,8 @@ package com.nextgenapp.opensocial.Standard
 		public static const REMOVE_PERSON_APP_DATA:int = 4;
 		
 		public static const UPDATE_PERSON_APP_DATA:int = 5;
+		
+		public static const REQUEST_SEND_MESSAGE:int = 6;
 		
 		public static var regMap:Object = new Object();
 		
@@ -194,7 +196,7 @@ package com.nextgenapp.opensocial.Standard
 		/**
 		 * newUpdatePersonAppDataCallback - Callback function for newUpdatePersonAppDataRequest
 		 * 
-		 * @param obj - JS returned object
+		 * @param obj - JS returned object, follows the format of DataResponse.
 		 */		
 		public static function newUpdatePersonAppDataCallback(obj:Object):void {
 			trace("newUpdatePersonAppDataCallback()...");
@@ -210,19 +212,12 @@ package com.nextgenapp.opensocial.Standard
 				errorMessage = obj.errorMessage;
 			}
 			
-			// retrieve the actual data.  
-			// the actual data is a string in json format.
-			var appData:Object = null;
-			if (obj.data) {
-				appData = obj.data;
-			}
-			
 			var opt_key:String = obj.opt_key;
 
 			//create an map of data response
 			var responseItems:Object = new Object();
 			//create a response item
-			var responseItem:ResponseItem = new ResponseItem(null, appData);
+			var responseItem:ResponseItem = new ResponseItem(null, null);
 
 			//create the DataResponse
 			var dr:DataResponse = new DataResponse(null, hadError, errorMessage);
@@ -237,6 +232,50 @@ package com.nextgenapp.opensocial.Standard
 			}else {
 				//no one register to retrieve this object.
 				trace("*** Error. No one register to receive this object");
+			}
+		}
+		
+		/**
+		 * Callback function for requestSendMessage
+		 * 
+		 * @param obj - JS returned object, follows the format of DataResponse. 
+		 */		
+		public static function requestSendMessageCallback(obj:Object):void {
+			trace("requestSendMessageCallback()...");
+			// note, js requestSendMessage returns a ResponseItem, not DataResponse.  so the javascript here returns different value.  
+			// retrieve the standard error data for all response.
+			// set hadError and errorMessage
+			var hadError:Boolean = false;
+			if (obj.hadError) { // hadError is populated by js
+				hadError = true;
+			}
+			
+			var errorMessage:String = null;
+			if (obj.errorMessage) { // errorMessage is populated by js
+				errorMessage = obj.errorMessage;
+			}
+			
+			var errorCode:String = null;
+			if (obj.errorCode) {
+				errorCode = obj.errorCode;
+			}
+
+			//create an map of data response
+			var responseItems:Object = new Object();
+			//create a response item
+			var responseItem:ResponseItem = new ResponseItem(null, null, errorCode, errorMessage);
+
+			
+			//check to see if there is any registration for this object
+			if ( regMap[StandardCallback.REQUEST_SEND_MESSAGE] != null ){
+				//call the callback
+				var func:Function = regMap[StandardCallback.REQUEST_SEND_MESSAGE] as Function;
+				//remove the registration after the call
+				regMap[StandardCallback.REQUEST_SEND_MESSAGE] = null;
+				func(responseItem); 
+			}else {
+				//no one register to retrieve this object.
+				trace("*** Error. No one register to receive this object " + StandardCallback.REQUEST_SEND_MESSAGE);
 			}
 		}
 		
