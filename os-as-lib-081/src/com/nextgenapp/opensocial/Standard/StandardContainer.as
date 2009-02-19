@@ -148,13 +148,13 @@ package com.nextgenapp.opensocial.Standard
 		 * @param recipients An ID, array of IDs, or a group reference; the supported keys are VIEWER, OWNER, VIEWER_FRIENDS, OWNER_FRIENDS, or a single ID within one of those groups 
 		 * @param message The message to send to the specified users
 		 * @param optCallback The function to call once the request has been processed; either this callback will be called or the gadget will be reloaded from scratch 
-		 * @param optParams The optional parameters indicating where to send a user when a request is made, or when a request is accepted; options are of type  NavigationParameters.DestinationType
+		 * @param optParams (todo) The optional parameters indicating where to send a user when a request is made, or when a request is accepted; options are of type  NavigationParameters.DestinationType
 		 */
 		 override public function requestSendMessage(recipients:Array, message:Message, optCallback:Function = null, optParam:Object=null):void {
 			//Register callback 
-			//StandardCallback.register(StandardCallback.REQUEST_SEND_MESSAGE, callback);
+			StandardCallback.register(StandardCallback.REQUEST_SEND_MESSAGE, optCallback);
 			//Add the callback
-			//ExternalInterface.addCallback("requestSendMessageCallback", StandardCallback.requestSendMessageCallback);
+			ExternalInterface.addCallback("requestSendMessageCallback", StandardCallback.requestSendMessageCallback);
 			
 			// convert message from Message object to generic object.
 			ExternalInterface.call(StandardRequestSendMessageJs.requestSendMessage, ExternalInterface.objectID, recipients, message.write(), optParam);
