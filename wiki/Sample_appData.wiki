@@ -60,3 +60,6 @@
 	}
 
 }}}
+
+
+A full sample code can be found here: http://opensocial-tutorial-trial.googlecode.com/svn-history/r180/trunk/os-as-lib-081-test/src/AppDataExampleOrkut.mxml
