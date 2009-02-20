@@ -1,9 +1,7 @@
-#summary One-sentence summary of this page.
 #labels example
+#Examples for writing and reading appData using Opensocial api.
 
-= Examples for writing and reading appData using Opensocial api =
-
-== Example of update appData ==
+= Example of update appData =
 
 {{{
 
@@ -23,7 +21,7 @@
 
 }}}
 
-== Examples of fetch appData ==
+= Examples of fetch appData =
 
 {{{
         private function fetchData():void
