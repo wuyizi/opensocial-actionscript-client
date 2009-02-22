@@ -10,6 +10,6 @@ package com.nextgenapp.opensocial.dataRequest
 		/**
 		 * How to escape person data returned from the server; defaults to HTML_ESCAPE. 
 		 */
-		public static var ESCAPE_TYPE:String = "ESCAPE_TYPE";
+		public static var ESCAPE_TYPE:String = "escapeType";
 	}
 }
