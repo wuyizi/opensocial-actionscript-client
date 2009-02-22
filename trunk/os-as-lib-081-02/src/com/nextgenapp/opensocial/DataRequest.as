@@ -13,10 +13,10 @@ package com.nextgenapp.opensocial
 	
 	public class DataRequest 
 	{
-		public static const PeopleRequestFields:Class = com.nextgenapp.opensocial.DataRequest.PeopleRequestFields;
-		public static const DataRequestFields:Class = com.nextgenapp.opensocial.DataRequest.DataRequestFields;
-		public static const FilterType:Class = com.nextgenapp.opensocial.DataRequest.FilterType;
-		public static const SortOrder:Class = com.nextgenapp.opensocial.DataRequest.SortOrder;
+		public static var PeopleRequestFields:Class = com.nextgenapp.opensocial.DataRequest.PeopleRequestFields;
+		public static var DataRequestFields:Class = com.nextgenapp.opensocial.DataRequest.DataRequestFields;
+		public static var FilterType:Class = com.nextgenapp.opensocial.DataRequest.FilterType;
+		public static var SortOrder:Class = com.nextgenapp.opensocial.DataRequest.SortOrder;
 		
 		/**
 		 * Adds an item to fetch (get) or update (set) data from the server. A single DataRequest 
