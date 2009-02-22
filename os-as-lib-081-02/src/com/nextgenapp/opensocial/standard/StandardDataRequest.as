@@ -7,12 +7,12 @@ package com.nextgenapp.opensocial.standard
 {
 	import com.nextgenapp.opensocial.Container;
 	import com.nextgenapp.opensocial.DataRequest;
-	import com.nextgenapp.opensocial.dataRequest.PeopleRequestFields;
 	import com.nextgenapp.opensocial.FetchPersonAppDataRequest;
 	import com.nextgenapp.opensocial.IdSpec;
 	import com.nextgenapp.opensocial.Request;
 	import com.nextgenapp.opensocial.UpdatePersonAppDataRequest;
 	import com.nextgenapp.opensocial.WorkRequest;
+	import com.nextgenapp.opensocial.dataRequest.PeopleRequestFields;
 	
 	import flash.external.ExternalInterface;
 
@@ -55,7 +55,7 @@ package com.nextgenapp.opensocial.standard
 			switch (req.type){
 			case Request.PERSON_REQUEST:
 				var optFields:Array = req.opt_params as Array;
-				obj.params[com.nextgenapp.opensocial.DataRequest.PeopleRequestFields.PROFILE_DETAILS] = optFields;
+				obj.params[com.nextgenapp.opensocial.dataRequest.PeopleRequestFields.PROFILE_DETAILS] = optFields;
 				//check to see if this is owner or viewer
 				obj.view = req.id;
 				//Register callback with MySpaceCallback

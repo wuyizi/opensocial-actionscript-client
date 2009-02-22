@@ -17,7 +17,7 @@ package com.nextgenapp.opensocial.escapeType
 		/**
 		 * When used will not escape the data. This field may be used interchangeably with the string 'none'.
 		 */
-		public static const BODY_ID:String = "none";
+		public static const NONE:String = "none";
 
 		/**
 		 * Returns collection of fields. 
