@@ -77,7 +77,7 @@ package com.nextgenapp.opensocial.myspace
 			return null;
 		}
 		
-		public override function newFetchPersonAppDataRequest(idSpec:IdSpec, keys:Array, optParam:Object):Object
+		public override function newFetchPersonAppDataRequest(idSpec:IdSpec, keys:Array, optParam:Object=null):Object
 		{
 			return null;
 		}

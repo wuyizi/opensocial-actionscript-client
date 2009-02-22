@@ -70,7 +70,7 @@ package com.nextgenapp.opensocial
 		 * @return A request object. 
 		 * 
 		 */		
-		public function newFetchPersonAppDataRequest(idSpec:IdSpec, keys:Array, optParam:Object):Object {
+		public function newFetchPersonAppDataRequest(idSpec:IdSpec, keys:Array, optParam:Object=null):Object {
 			throw new Error("Not implemented");
 		}
 

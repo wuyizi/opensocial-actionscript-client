@@ -141,7 +141,7 @@ package com.nextgenapp.opensocial.standard
 			return new Request(Request.PEOPLE_REQUEST, optParams, null, idSpec);
 		}
 		
-		public override function newFetchPersonAppDataRequest(idSpec:IdSpec, keys:Array, optParam:Object):Object
+		public override function newFetchPersonAppDataRequest(idSpec:IdSpec, keys:Array, optParam:Object=null):Object
 		{
 			return new FetchPersonAppDataRequest(idSpec, keys, optParam);
 		}
