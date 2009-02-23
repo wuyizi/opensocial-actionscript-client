@@ -7,8 +7,8 @@ package com.nextgenapp.opensocial.standard
 {
 	import com.nextgenapp.opensocial.Collection;
 	import com.nextgenapp.opensocial.DataResponse;
-	import com.nextgenapp.opensocial.ResponseItem;
 	import com.nextgenapp.opensocial.Person;
+	import com.nextgenapp.opensocial.ResponseItem;
 	import com.nextgenapp.opensocial.idSpec.PersonId;
 	
 	public class StandardCallback
@@ -156,21 +156,33 @@ package com.nextgenapp.opensocial.standard
 		 * @param obj - JS returned object
 		 */		
 		public static function newFetchPersonCallback(obj:Object):void {
-			var p:Person = new Person(null, obj.isOwner, obj.isViewer);
-			//read the object's data
-			p.read(obj.data);
 			//create an map of data response
-			var responseItems:Object = new Object();
-			//create a response item
-			var r:ResponseItem = new ResponseItem(null, p);
-			if ( p.isOwner()){
+			var responseItems:Object = null;
+			var p:Person = null;
+			var r:ResponseItem = null;
+			var hadError:Boolean = false;
+			var errorMesg:String = "";
+			if ( obj.hadError ){
+				hadError = true;
+				errorMesg = obj.errorMessage;
+			}else {
+				p = new Person(null, obj.isOwner, obj.isViewer);
+				//read the object's data
+				p.read(obj.data);
+				//create a response item
+			    r = new ResponseItem(null, p);
+			    responseItems = new Object();
+			    if ( p.isOwner()){
 				responseItems[PersonId.OWNER] = r;
+				}
+				if  ( p.isViewer() ) {
+					responseItems[PersonId.VIEWER] = r;
+				}
 			}
-			if  ( p.isViewer() ) {
-				responseItems[PersonId.VIEWER] = r;
-			}
+			
+			
 			//create the DataResponse
-			var dr:DataResponse = new DataResponse(responseItems, false);
+			var dr:DataResponse = new DataResponse(responseItems, hadError, errorMesg);
 			//check to see if there is any registration for this object
 			if ( regMap[StandardCallback.FETCH_PERSON] != null ){
 				//call the callback
