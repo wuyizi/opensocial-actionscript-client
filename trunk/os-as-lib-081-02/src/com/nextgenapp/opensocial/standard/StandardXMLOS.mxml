@@ -239,63 +239,75 @@
 
 					function getResponse(response)
 					{
-						alert('getResponse(): flash obj name='+oParam.name+'.  view='+oParam.view+".  response="+response);
+						//alert('getResponse(): flash obj name='+oParam.name+'.  view='+oParam.view+".  response="+response);
 						
 						var flashobj = document.getElementById(oParam.name);
 						var OWNER = response.get(oParam.view).getData();
-						alert('owner='+OWNER);
-						var returnData = {};
-						returnData.data = {};
-						//tells whether viewer or owner
-						returnData.isViewer = OWNER.isViewer();
-						alert('isviewer()=" + OWNER.isViewer());
-						returnData.isOwner = OWNER.isOwner();
-						alert('isOwner()=" + OWNER.isOwner());
-						//returnData.errorMessage = response.getErrorMessage();
-						//returnData.hadError = response.hadError();
-						returnData.owner = {};
-						returnData.owner.name = OWNER.getField(opensocial.Person.Field.NAME);
-						returnData.owner.age = OWNER.getField(opensocial.Person.Field.AGE);
-						returnData.owner.myArray = ['AGE', 'NAME', 'FIELD'];
-						returnData.owner.osParam = oParam.osParam;
-
-
-
-  						//get the array of the profile details
-  						var profDet = oParam.params['PROFILE_DETAILS'];
-  						for (var j in profDet){
-  							switch(profDet[j]) {
-  							case 'NAME':
-  								var tmpName = OWNER.getField(oParam.osParam[j]);
-  								returnData.data['NAME'] = {};
-  								returnData.data['NAME'].ADDITIONAL_NAME = tmpName.getField(opensocial.Name.Field.ADDITIONAL_NAME);
-  								returnData.data['NAME'].FAMILY_NAME = tmpName.getField(opensocial.Name.Field.FAMILY_NAME);
-  								returnData.data['NAME'].GIVEN_NAME = tmpName.getField(opensocial.Name.Field.GIVEN_NAME);
-  								returnData.data['NAME'].HONORIFIC_PREFIX = tmpName.getField(opensocial.Name.Field.HONORIFIC_PREFIX);
-  								returnData.data['NAME'].HONORIFIC_SUFFIX = tmpName.getField(opensocial.Name.Field.HONORIFIC_SUFFIX);
-  								returnData.data['NAME'].UNSTRUCTURED = tmpName.getField(opensocial.Name.Field.UNSTRUCTURED);
-  								
-  							break;
-  							//case 'GENDER':
-  							//	var tmpGender = OWNER.getField(oParam.osParam[j]);
-  							//	returnData.data['GENDER'] = {};
-  							//	returnData.data['GENDER'].key = tmpGender.getKey();
-  							//	returnData.data['GENDER'].displayValue = tmpGender.getDisplayValue();
-  							//break;
-  							default:
-  								var tmpProp = OWNER.getField(oParam.osParam[j]);
-  								// if it is Enum object (eg. gender) (note: opensocial uses "gender" for field name, but our Flex constant currently uses "GENDER"
-  								if (tmpProp instanceof opensocial.Enum) {  									
-  									//alert('param=' + oParam.osParam[j]);
- 	 								returnData.data[profDet[j]] = {};
-  									returnData.data[profDet[j]].key = tmpProp.getKey();
-  									returnData.data[profDet[j]].displayValue = tmpProp.getDisplayValue();
-  								} else {
-  									returnData.data[profDet[j]] = OWNER.getField(oParam.osParam[j]);
-  								}
-  							break;
-  							} // switch  							
-  						} // for
+						//alert('owner='+OWNER);
+						if ( OWNER != null ){
+							var returnData = {};
+							returnData.data = {};
+							//tells whether viewer or owner
+							returnData.isViewer = OWNER.isViewer();
+							//alert('isviewer()=' + OWNER.isViewer());
+							returnData.isOwner = OWNER.isOwner();
+							//alert('isOwner()=' + OWNER.isOwner());
+							//returnData.errorMessage = response.getErrorMessage();
+							//returnData.hadError = response.hadError();
+							returnData.owner = {};
+							returnData.owner.name = OWNER.getField(opensocial.Person.Field.NAME);
+							returnData.owner.age = OWNER.getField(opensocial.Person.Field.AGE);
+							returnData.owner.myArray = ['AGE', 'NAME', 'FIELD'];
+							returnData.owner.osParam = oParam.osParam;
+	
+	
+	
+	  						//get the array of the profile details
+	  						var profDet = oParam.params['PROFILE_DETAILS'];
+	  						for (var j in profDet){
+	  							switch(profDet[j]) {
+	  							case 'NAME':
+	  								var tmpName = OWNER.getField(oParam.osParam[j]);
+	  								returnData.data['NAME'] = {};
+	  								returnData.data['NAME'].ADDITIONAL_NAME = tmpName.getField(opensocial.Name.Field.ADDITIONAL_NAME);
+	  								returnData.data['NAME'].FAMILY_NAME = tmpName.getField(opensocial.Name.Field.FAMILY_NAME);
+	  								returnData.data['NAME'].GIVEN_NAME = tmpName.getField(opensocial.Name.Field.GIVEN_NAME);
+	  								returnData.data['NAME'].HONORIFIC_PREFIX = tmpName.getField(opensocial.Name.Field.HONORIFIC_PREFIX);
+	  								returnData.data['NAME'].HONORIFIC_SUFFIX = tmpName.getField(opensocial.Name.Field.HONORIFIC_SUFFIX);
+	  								returnData.data['NAME'].UNSTRUCTURED = tmpName.getField(opensocial.Name.Field.UNSTRUCTURED);
+	  								
+	  							break;
+	  							//case 'GENDER':
+	  							//	var tmpGender = OWNER.getField(oParam.osParam[j]);
+	  							//	returnData.data['GENDER'] = {};
+	  							//	returnData.data['GENDER'].key = tmpGender.getKey();
+	  							//	returnData.data['GENDER'].displayValue = tmpGender.getDisplayValue();
+	  							//break;
+	  							default:
+	  								var tmpProp = OWNER.getField(oParam.osParam[j]);
+	  								// if it is Enum object (eg. gender) (note: opensocial uses "gender" for field name, but our Flex constant currently uses "GENDER"
+	  								if (tmpProp instanceof opensocial.Enum) {  									
+	  									//alert('param=' + oParam.osParam[j]);
+	 	 								returnData.data[profDet[j]] = {};
+	  									returnData.data[profDet[j]].key = tmpProp.getKey();
+	  									returnData.data[profDet[j]].displayValue = tmpProp.getDisplayValue();
+	  								} else {
+	  									returnData.data[profDet[j]] = OWNER.getField(oParam.osParam[j]);
+	  								}
+	  							break;
+	  							} // switch  							
+	  						} // for
+	  					}else {
+	  						var respItem = response.get(oParam.view);
+	  						//alert('respItem.errorCode=' + respItem.getErrorCode());
+	  						//alert('respItem.errorMessage=' + respItem.getErrorMessage());
+	  						//alert('response error = ' + response.getErrorMessage());
+	  						//alert('response hadError = ' + response.hadError());
+	  						returnData = {};
+	  						returnData.errorMessage = "Person returned is null.  App not installed";
+							returnData.hadError = response.hadError();
+							//alert('done');
+	  					}
 
 					  	flashobj.fetchPersonRequestCallback(returnData);
 				  	}//getResponse
