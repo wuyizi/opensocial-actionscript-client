@@ -239,15 +239,18 @@
 
 					function getResponse(response)
 					{
-						//alert('getResponse(): flash obj name='+oParam.name+'.  view='+oParam.view+".  response="+response);
+						alert('getResponse(): flash obj name='+oParam.name+'.  view='+oParam.view+".  response="+response);
 						
 						var flashobj = document.getElementById(oParam.name);
 						var OWNER = response.get(oParam.view).getData();
+						alert('owner='+OWNER);
 						var returnData = {};
 						returnData.data = {};
 						//tells whether viewer or owner
 						returnData.isViewer = OWNER.isViewer();
+						alert('isviewer()=" + OWNER.isViewer());
 						returnData.isOwner = OWNER.isOwner();
+						alert('isOwner()=" + OWNER.isOwner());
 						//returnData.errorMessage = response.getErrorMessage();
 						//returnData.hadError = response.hadError();
 						returnData.owner = {};
