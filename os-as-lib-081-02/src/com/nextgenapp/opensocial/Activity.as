@@ -1,7 +1,7 @@
 /**
  * Activity - Opensocial activity object
  * 
- * @author Aaron Tong
+ * @author Aaron Tong & sol wu
  */
 package com.nextgenapp.opensocial {
 	import com.nextgenapp.opensocial.activity.*;
@@ -22,9 +22,8 @@ package com.nextgenapp.opensocial {
 		 * @param optFields Optional field set for activity.
 		 * 
 		 */		
-		public function Activity(id:String, optFields:Object = null):void {
+		public function Activity(optFields:Object = null):void {
 			super(optFields);
-			setField(ID, id);
 		}
 		
 		/**

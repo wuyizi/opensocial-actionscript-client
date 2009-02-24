@@ -7,7 +7,6 @@ package com.nextgenapp.opensocial.standard
 {
 	import com.nextgenapp.opensocial.*;
 	import com.nextgenapp.opensocial.activity.*;
-	import com.nextgenapp.opensocial.activity.MediaItem;
 	
 	import flash.external.ExternalInterface;
 	
@@ -68,7 +67,7 @@ package com.nextgenapp.opensocial.standard
 		 * 
 		 */		
 		override public function newActivity(optParams:Object = null/*Map<opensocial.Activity.Field, String*/):Activity {
-			throw new Error("method not implemented!");
+			return new Activity(optParams);
 		}
 				
 		/**
@@ -129,7 +128,13 @@ package com.nextgenapp.opensocial.standard
 		 * 
 		 */		
 		override public function requestCreateActivity(activity:Activity, priority:String, optCallback:Function = null):void { 
-			throw new Error("method not implemented!");
+			//Register callback 
+			//StandardCallback.register(StandardCallback.REQUEST_CREATE_ACTIVITY, optCallback);
+			//Add the callback
+			//ExternalInterface.addCallback("requestCreateActivityCallback", StandardCallback.requestCreateActivityCallback);
+			
+			// convert message from Message object to generic object.
+			ExternalInterface.call(StandardRequestCreateActivityJs.requestCreateActivity, ExternalInterface.objectID, activity.write(), priority);
 		}
 		
 		/**
