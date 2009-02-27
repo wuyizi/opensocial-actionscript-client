@@ -61,13 +61,21 @@ package com.nextgenapp.opensocial.standard
 		}
 
 		/**
+		 * Creates an activity object, which represents an activity on the server.
+		 * 
+		 * It is only required to set one of TITLE_ID or TITLE. In addition, if you are using any variables in your title or title template, you must set TEMPLATE_PARAMS.
+		 * Other possible fields to set are: URL, MEDIA_ITEMS, BODY_ID, BODY, EXTERNAL_ID, PRIORITY, STREAM_TITLE, STREAM_URL, STREAM_SOURCE_URL, and STREAM_FAVICON_URL.
+		 * Containers are only required to use TITLE_ID or TITLE, and may choose to ignore additional parameters.
+		 * See Field for more details.
+		 *
 		 * Creates an activity object, which represents an activity on the server. 
 		 * @param optParams Any other fields that should be set on the activity object; all of the defined Fields are supported.
 		 * @return The new activity object.
 		 * 
+		 * @see requestCreateActivity()
 		 */		
-		override public function newActivity(optParams:Object = null/*Map<opensocial.Activity.Field, String*/):Activity {
-			return new Activity(optParams);
+		override public function newActivity(params:Object = null/*Map<opensocial.Activity.Field, String*/):Activity {
+			return new Activity(params);
 		}
 				
 		/**
@@ -121,7 +129,13 @@ package com.nextgenapp.opensocial.standard
 		 }
 		
 		/**
-		 * Takes an activity and tries to create it, without waiting for the operation to complete. Optionally calls a function when the operation completes. 
+		 * Takes an activity and tries to create it, without waiting for the operation to complete. Optionally calls a function when the operation completes.
+		 * @See newActivity()
+		 * 
+		 * Note: If this is the first activity that has been created for the user and the request is marked as HIGH priority then this call may open a user flow and navigate away from your gadget.
+		 * This callback will either be called or the gadget will be reloaded from scratch. This function will be passed one parameter, an opensocial.ResponseItem. The error code will be set to reflect whether there were any problems with the request. If there was no error, the activity was created. If there was an error, you can use the response item's getErrorCode method to determine how to proceed. The data on the response item will not be set.
+		 * If the container does not support this method the callback will be called with a opensocial.ResponseItem. The response item will have its error code set to NOT_IMPLEMENTED.
+		 *  
 		 * @param activity The activity to create.
 		 * @param priority The priority for this request.
 		 * @param optCallback The function to call once the request has been processed. This callback will either be called or the gadget will be reloaded from scratch.
@@ -129,9 +143,9 @@ package com.nextgenapp.opensocial.standard
 		 */		
 		override public function requestCreateActivity(activity:Activity, priority:String, optCallback:Function = null):void { 
 			//Register callback 
-			//StandardCallback.register(StandardCallback.REQUEST_CREATE_ACTIVITY, optCallback);
+			StandardCallback.register(StandardCallback.REQUEST_CREATE_ACTIVITY, optCallback);
 			//Add the callback
-			//ExternalInterface.addCallback("requestCreateActivityCallback", StandardCallback.requestCreateActivityCallback);
+			ExternalInterface.addCallback("requestCreateActivityCallback", StandardCallback.requestCreateActivityCallback);
 			
 			// convert message from Message object to generic object.
 			ExternalInterface.call(StandardRequestCreateActivityJs.requestCreateActivity, ExternalInterface.objectID, activity.write(), priority);
@@ -155,7 +169,7 @@ package com.nextgenapp.opensocial.standard
 		 * @param optCallback The function to call once the request has been processed; either this callback will be called or the gadget will be reloaded from scratch 
 		 * @param optParams (todo) The optional parameters indicating where to send a user when a request is made, or when a request is accepted; options are of type  NavigationParameters.DestinationType
 		 */
-		 override public function requestSendMessage(recipients:Array, message:Message, optCallback:Function = null, optParam:Object=null):void {
+		override public function requestSendMessage(recipients:Array, message:Message, optCallback:Function = null, optParam:Object=null):void {
 			//Register callback 
 			StandardCallback.register(StandardCallback.REQUEST_SEND_MESSAGE, optCallback);
 			//Add the callback

@@ -26,7 +26,7 @@ package com.nextgenapp.opensocial.standard
 				function requestCreateActivity(flashName, activity, priority){
 					var activityJs = opensocial.newActivity(activity);
 					opensocial.requestCreateActivity(activityJs, priority, getResponse);
-
+					
 					/**
 					 * Note: response is an instance of ResponseItem, not DataResponse.  
 					 */
@@ -39,7 +39,7 @@ package com.nextgenapp.opensocial.standard
 						returnData.hadError = response.hadError();
 						returnData.errorCode = response.getErrorCode();
 						
-						flashobj.requestSendMessageCallback(returnData);
+						flashobj.requestCreateActivityCallback(returnData);
 					}//getResponse 
   
 			  	}//requestCreateActivity

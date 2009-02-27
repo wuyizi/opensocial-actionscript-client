@@ -27,6 +27,8 @@ package com.nextgenapp.opensocial.standard
 		
 		public static const REQUEST_SEND_MESSAGE:int = 6;
 		
+		public static const REQUEST_CREATE_ACTIVITY:int = 7;
+		
 		public static var regMap:Object = new Object();
 		
 		/**
@@ -254,7 +256,7 @@ package com.nextgenapp.opensocial.standard
 		 */		
 		public static function requestSendMessageCallback(obj:Object):void {
 			trace("requestSendMessageCallback()...");
-			// note, js requestSendMessage returns a ResponseItem, not DataResponse.  so the javascript here returns different value.  
+			// note, js requestSendMessage returns a ResponseItem, not DataResponse.  
 			// retrieve the standard error data for all response.
 			// set hadError and errorMessage
 			var hadError:Boolean = false;
@@ -288,6 +290,50 @@ package com.nextgenapp.opensocial.standard
 			}else {
 				//no one register to retrieve this object.
 				trace("*** Error. No one register to receive this object " + StandardCallback.REQUEST_SEND_MESSAGE);
+			}
+		}
+
+		/**
+		 * Callback function for requestCreateActivity
+		 * 
+		 * @param obj - JS returned object, follows the format of DataResponse. 
+		 */		
+		public static function requestCreateActivityCallback(obj:Object):void {
+			trace("requestCreateActivityCallback()...");
+			// note, js requestCreateActivity returns a ResponseItem, not DataResponse. 
+			// retrieve the standard error data for all response.
+			// set hadError and errorMessage
+			var hadError:Boolean = false;
+			if (obj.hadError) { // hadError is populated by js
+				hadError = true;
+			}
+			
+			var errorMessage:String = null;
+			if (obj.errorMessage) { // errorMessage is populated by js
+				errorMessage = obj.errorMessage;
+			}
+			
+			var errorCode:String = null;
+			if (obj.errorCode) {
+				errorCode = obj.errorCode;
+			}
+
+			//create an map of data response
+			var responseItems:Object = new Object();
+			//create a response item
+			var responseItem:ResponseItem = new ResponseItem(null, null, errorCode, errorMessage);
+
+			
+			//check to see if there is any registration for this object
+			if ( regMap[StandardCallback.REQUEST_CREATE_ACTIVITY] != null ){
+				//call the callback
+				var func:Function = regMap[StandardCallback.REQUEST_CREATE_ACTIVITY] as Function;
+				//remove the registration after the call
+				regMap[StandardCallback.REQUEST_CREATE_ACTIVITY] = null;
+				func(responseItem); 
+			}else {
+				//no one register to retrieve this object.
+				trace("*** Error. No one register to receive this object " + StandardCallback.REQUEST_CREATE_ACTIVITY);
 			}
 		}
 		

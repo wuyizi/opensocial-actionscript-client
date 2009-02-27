@@ -8,14 +8,14 @@ package com.nextgenapp.opensocial.activity.mediaItem {
 		/**
 		 * The MIME type of media, specified as a String.
 		 */
-		public static const MIME_TYPE:String = "MIME_TYPE";
+		public static const MIME_TYPE:String = "mimeType";
   		/**
   		 * The type of media, specified as a MediaItem.Type object. 
   		 */		
-  		public static const TYPE:String = "TYPE";
+  		public static const TYPE:String = "type";
 		/**
 		 * A string specifying the URL where the media can be found.  
 		 */  		
-		public static const URL:String = "URL";
+		public static const URL:String = "url";
 	}
 }
