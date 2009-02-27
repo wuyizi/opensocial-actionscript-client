@@ -8,8 +8,8 @@ package com.nextgenapp.opensocial.activity {
 	 * @author Aaron Tong
 	 */	
 	public class MediaItem extends OSResource {
-		public static const Type:Class = com.nextgenapp.opensocial.Activity.MediaItem.Type;
-		public static const Field:Class = com.nextgenapp.opensocial.Activity.MediaItem.Field;
+		public static const Type:Class = com.nextgenapp.opensocial.activity.mediaItem.Type;
+		public static const Field:Class = com.nextgenapp.opensocial.activity.mediaItem.Field;
 		
 		public function MediaItem(opt_params:Array) {
 			super(opt_params);
