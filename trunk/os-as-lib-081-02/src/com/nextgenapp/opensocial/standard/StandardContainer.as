@@ -169,14 +169,40 @@ package com.nextgenapp.opensocial.standard
 		 * @param optCallback The function to call once the request has been processed; either this callback will be called or the gadget will be reloaded from scratch 
 		 * @param optParams (todo) The optional parameters indicating where to send a user when a request is made, or when a request is accepted; options are of type  NavigationParameters.DestinationType
 		 */
-		override public function requestSendMessage(recipients:Array, message:Message, optCallback:Function = null, optParam:Object=null):void {
+		override public function requestSendMessage(recipients:Array, message:Message, optCallback:Function = null, optParams:Object=null):void {
 			//Register callback 
 			StandardCallback.register(StandardCallback.REQUEST_SEND_MESSAGE, optCallback);
 			//Add the callback
 			ExternalInterface.addCallback("requestSendMessageCallback", StandardCallback.requestSendMessageCallback);
 			
 			// convert message from Message object to generic object.
-			ExternalInterface.call(StandardRequestSendMessageJs.requestSendMessage, ExternalInterface.objectID, recipients, message.write(), optParam);
-		 }
+			ExternalInterface.call(StandardRequestSendMessageJs.requestSendMessage, ExternalInterface.objectID, recipients, message.write(), optParams);
+		}
+		
+		/**
+		 * Requests the container to share this gadget with the specified users.
+		 * The callback function is passed one parameter, an opensocial.ResponseItem. 
+		 * The error code will be set to reflect whether there were any problems with the request. 
+		 * If there was no error, the sharing request was sent. 
+		 * If there was an error, you can use the response item's getErrorCode method to determine how to proceed. 
+		 * The data on the response item will not be set.
+		 * If the container does not support this method the callback will be called with a opensocial.ResponseItem. 
+		 * The response item will have its error code set to NOT_IMPLEMENTED.
+		 * Parameters:
+		 * @param recipients  Array.<String>, String  - An ID, array of IDs, or a group reference; the supported keys are VIEWER, OWNER, VIEWER_FRIENDS, OWNER_FRIENDS, or a single ID within one of those groups
+		 * @param reason   opensocial.Message - The reason the user wants the gadget to share itself. This reason can be used by the container when prompting the user for permission to share the app. It may also be ignored.
+		 * @param optCallback   Function - The function to call once the request has been processed; either this callback will be called or the gadget will be reloaded from scratch
+		 * @param optParams    opensocial.NavigationParameters - The optional parameters indicating where to send a user when a request is made, or when a request is accepted; options are of type NavigationParameters.DestinationType
+ 		 *  
+		 */
+		override public function requestShareApp(recipients:Array, reason:Message, optCallback:Function = null, optParams:Object=null):void {
+			//Register callback 
+			StandardCallback.register(StandardCallback.REQUEST_SHARE_APP, optCallback);
+			//Add the callback
+			ExternalInterface.addCallback("requestShareAppCallback", StandardCallback.requestShareAppCallback);
+			
+			// convert message from Message object to generic object.
+			ExternalInterface.call(StandardRequestShareAppJs.requestShareApp, ExternalInterface.objectID, recipients, reason.write(), optParams);
+		}
 	}
 }

@@ -34,7 +34,7 @@ package com.nextgenapp.opensocial.standard
 					var escapedText = gadgets.util.escapeString(body);
 					
 					var messageJs = opensocial.newMessage(escapedText, msgParams);
-					// todo: implement callback and opt_params
+					// todo: implement opt_params
 					opensocial.requestSendMessage(recipients, messageJs, getResponse); 
 					
 					

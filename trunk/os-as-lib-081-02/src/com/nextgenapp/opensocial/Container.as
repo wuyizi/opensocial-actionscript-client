@@ -241,10 +241,33 @@ package com.nextgenapp.opensocial
 		 * @param optCallback The function to call once the request has been processed; either this callback will be called or the gadget will be reloaded from scratch 
 		 * @param optParams The optional parameters indicating where to send a user when a request is made, or when a request is accepted; options are of type  NavigationParameters.DestinationType
 		 */
-		 public function requestSendMessage(recipients:Array, message:Message, optCallback:Function = null, optParam:Object=null):void {
+		 public function requestSendMessage(recipients:Array, message:Message, optCallback:Function = null, optParams:Object=null):void {
 		 	if(_container == null) 
 				throw new Error("Container delegate must be set before calling requestSendMessage");
-			_container.requestSendMessage(recipients, message, optCallback, optParam);
+			_container.requestSendMessage(recipients, message, optCallback, optParams);
 		 }
+		 
+ 		/**
+		 * Requests the container to share this gadget with the specified users.
+		 * The callback function is passed one parameter, an opensocial.ResponseItem. 
+		 * The error code will be set to reflect whether there were any problems with the request. 
+		 * If there was no error, the sharing request was sent. 
+		 * If there was an error, you can use the response item's getErrorCode method to determine how to proceed. 
+		 * The data on the response item will not be set.
+		 * If the container does not support this method the callback will be called with a opensocial.ResponseItem. 
+		 * The response item will have its error code set to NOT_IMPLEMENTED.
+		 * Parameters:
+		 * @param recipients  Array.<String>, String  - An ID, array of IDs, or a group reference; the supported keys are VIEWER, OWNER, VIEWER_FRIENDS, OWNER_FRIENDS, or a single ID within one of those groups
+		 * @param reason   opensocial.Message - The reason the user wants the gadget to share itself. This reason can be used by the container when prompting the user for permission to share the app. It may also be ignored.
+		 * @param optCallback   Function - The function to call once the request has been processed; either this callback will be called or the gadget will be reloaded from scratch
+		 * @param optParams    opensocial.NavigationParameters - The optional parameters indicating where to send a user when a request is made, or when a request is accepted; options are of type NavigationParameters.DestinationType
+ 		 *  
+		 */
+		public function requestShareApp(recipients:Array, reason:Message, optCallback:Function = null, optParams:Object=null):void {
+			if(_container == null) 
+				throw new Error("Container delegate must be set before calling requestShareApp");
+			_container.requestShareApp(recipients, reason, optCallback, optParams);
+		}
+
 	}
 }
