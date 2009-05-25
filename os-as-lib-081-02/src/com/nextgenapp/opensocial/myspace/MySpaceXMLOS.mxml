@@ -276,12 +276,8 @@
 			function(objParam)
 			{	
 				function fetchPerson(oParam){  	
-<<<<<<< .mine
-					alert('test');
-					var os = opensocial.Container.get();  // different from standard
-=======
 					var os = opensocial.Container.get(); // different from standard
->>>>>>> .r33
+
 	  				var dataRequest = os.newDataRequest();
 	  				var param = {};
 	  				//lets fill out the params
