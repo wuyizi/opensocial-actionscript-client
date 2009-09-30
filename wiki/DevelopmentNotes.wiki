@@ -1,4 +1,4 @@
-#labels architecture Deprecated
+#labels architecture,Deprecated
 #Development Notes
 
 = Here are some notes explaining the library's internal architecture =
