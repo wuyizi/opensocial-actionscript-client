@@ -1,4 +1,4 @@
-#labels example Deprecated
+#labels example,Deprecated
 #Sample Code for requestSendMessage().
 
 = Sample Code for requestSendMessage() =
