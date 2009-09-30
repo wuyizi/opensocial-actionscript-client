@@ -1,5 +1,3 @@
-[http://opensocial-actionscript-client.googlecode.com/files/icon_128.png] 
-
 There is a new Opensocial Actionscript Library at http://code.google.com/p/opensocial-as3-client.  We are consolidating with them.   
 
 Actionscript/Flex/Flash library for accessing Opensocial API.  The API mimics Opensocial Javascript API.  
