@@ -1,5 +1,5 @@
-#labels Featured
 #summary Release note for this client library in English
+#labels Featured
 
 =Welcome to the !OpenSocial family, !ActionScript3 client library!=
 
@@ -21,7 +21,7 @@ Included in this release:
 
   * There's a important abstract class "!OpenSocialClient" defined in the library, from which all asynchronous requests are sent. A reference implementation "!JsWrapperClient" is also provided that it resides in the !OpenSocial container and calls outer native !JavaScript APIs to implement !OpenSocialClient's functions.
 
-The detailed design doc can be found here: http://opensocial-as3-client.googlecode.com/svn/trunk/doc/index.html
+The detailed design doc can be found here: http://opensocial-actionscript-client.googlecode.com/svn/trunk/doc/index.html
 
 Besides the existing features, this library's scalable architecture provides flexible extensibility on the following aspects:
 
@@ -32,4 +32,4 @@ Besides the existing features, this library's scalable architecture provides fle
 
   * Data structure between different containers. For the same feature and data structure, different SNS may have their special attributes to support more functions. E.g. users may change their "familyVideo" field in the Person objects representing themselves. !JsWrapperClient has already supports automatic discovery for extend fields in the outer !JavaScript object, and we are expecting the similar technology could also be applied on the up-coming clients.
 
-Please contact us on http://code.google.com/p/opensocial-as3-client if you have more suggestions or questions. And the most important, welcome to join us on developing more features and extensions! Let's make the world better! :) 
+Please contact us on http://code.google.com/p/opensocial-actionscript-client if you have more suggestions or questions. And the most important, welcome to join us on developing more features and extensions! Let's make the world better! :) 
