@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+-->
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" 
+           width="600" height="500" color="#FFFFFF" 
+           backgroundGradientAlphas="[1.0, 1.0]" 
+           backgroundGradientColors="[#666666, #666666]" 
+           initialize="init()">
+
+  <mx:Metadata>
+    <![CDATA[
+    /**
+     * Sample Application using the OpenSocial AS3 Client Library in Flex 3.
+     * Build the SampleApp.mxml with Flex SDK to swf file and it works with the gadget spec XML 
+     * (//sample/SampleApp.xml).
+     * 
+     * <p>
+     * Usage:<br>
+     * 1. Create a JsWrapperClient instance.
+     * <br> 
+     * 2. Add a eventhandler for READY event and call the start() method.
+     * <br>
+     * 3. When the client is ready, use the any of the <code>AsyncRequest</code> objects and 
+     * <code>SyncHelper</code> objects to interact with OpenSocial API. All these are located in
+     * <code>org.opensocial.client.features</code> package.
+     * <br>
+     * </p>
+     * 
+     * @author yiziwu@google.com (Yizi Wu)
+     */
+    ]]>
+  </mx:Metadata>
+  <mx:Script>
+    <![CDATA[
+      import mx.collections.ArrayCollection;
+
+      import org.opensocial.client.base.*;
+      import org.opensocial.client.features.*;
+      import org.opensocial.client.jswrapper.*;
+      import org.opensocial.client.core.*;
+      import org.opensocial.client.util.*;
+
+      private var client:JsWrapperClient;
+      private var helper:SyncHelper;
+
+      private static var logger:Logger = new Logger(SampleApp);
+
+      [Bindable]
+      public var people:ArrayCollection = new ArrayCollection();
+      
+      private function init():void {
+
+        // Create the output box for information displaying
+        var printer:TextFieldPrinter = new TextFieldPrinter(2, 160, 450, 330);
+        this.rawChildren.addChild(printer);
+        Logger.initialize(printer);
+        
+        // Initialize Client and start
+        client = new JsWrapperClient("opensocial.flash");
+        client.addEventListener(OpenSocialClientEvent.CLIENT_READY, onReady);
+        client.start();
+        
+        helper = new SyncHelper(client);
+     
+        logger.info("OpenSocial(0.8) AS3 Client Library in Flex 3");
+        logger.log(new Date());
+      }
+
+      private function onReady(event:OpenSocialClientEvent):void {
+        logger.info("Domain: " + helper.getDomain());
+        logger.info("ContainerDomain: " + helper.getContainerDomain());
+        logger.info("CurrentView: " + helper.getCurrentView());
+        logger.info("Client Ready.");
+      }
+
+
+      // -------------------------------------------------------------
+      //  Demo Actions
+      // -------------------------------------------------------------
+
+      // ----------------- Fetch Me ------------------
+      private function fetchMe():void {
+        var req:AsyncDataRequest = new AsyncDataRequest(
+            Feature.PEOPLE_GET,
+            new PeopleRequestOptions()
+                .setUserId("@me")
+                .setGroupId("@self"));
+        req.addEventListener(ResponseItemEvent.COMPLETE, fetchMeEventHandler);
+        req.send(client);
+        people.removeAll();
+      }
+
+      private function fetchMeEventHandler(event:ResponseItemEvent):void {
+        var p:Person = event.response.getData();
+        logger.info(p.getDisplayName());
+        people.addItem(p);
+      }
+
+
+      // ----------------- Fetch Friends ------------------
+      private function fetchFriends():void {
+        var req:AsyncDataRequest = new AsyncDataRequest(
+            Feature.PEOPLE_GET,
+            new PeopleRequestOptions()
+                .setUserId("@me")
+                .setGroupId("@friends")
+                .setCount(5)
+                .setStartIndex(0));
+        req.addEventListener(ResponseItemEvent.COMPLETE, fetchFriendsEventHandler);
+        req.send(client);
+        people.removeAll();
+      }
+
+      private function fetchFriendsEventHandler(event:ResponseItemEvent):void {
+        var c:Collection = event.response.getData();
+        logger.info(c.toDebugString());
+        var arr:Array = c.getArray();
+        for (var i:int = 0; i < arr.length; i++) {
+          var p:Person = arr[i];
+          logger.info(p.getDisplayName());
+          people.addItem(p);
+        }
+        
+        if (c.getRemainingSize() > 0) {
+          var req:AsyncDataRequest = event.target as AsyncDataRequest;
+          (req.getOptions() as PeopleRequestOptions).setStartIndex(c.getNextOffset());
+          req.send(client);
+        }
+      }
+      
+      
+      // ----------------- Send Message ------------------
+      private function sendMessage():void {
+        var message:Message = Message.newInstance("Hello World...", "My new message.");
+        logger.log(message.toRawObject());
+        
+        var req:AsyncDataRequest = new AsyncDataRequest(
+            Feature.REQUEST_SEND_MESSAGE,
+            new UIRequestOptions()
+                .setRecipientIds(["@viewer"])
+                .setMessage(message));
+        req.addEventListener(ResponseItemEvent.COMPLETE, sendMessageEventHandler);
+        req.addEventListener(ResponseItemEvent.ERROR, sendMessageEventErrorHandler);
+        req.send(client);
+      }
+      
+      private function sendMessageEventHandler(event:ResponseItemEvent):void {
+        logger.info("msg sent.");
+      }
+      private function sendMessageEventErrorHandler(event:ResponseItemEvent):void {
+        logger.info("msg sending failed: " + event.response.getErrorMessage());
+      }
+
+
+      // ----------------- Create Activity ------------------
+      private function createActivity():void {
+        var activity:Activity = Activity.newInstance("My new activity!", "Hello World...");
+        logger.log(activity.toRawObject());
+        var req:AsyncDataRequest = new AsyncDataRequest(
+            Feature.REQUEST_CREATE_ACTIVITY,
+            new UIRequestOptions()
+                .setActivity(activity));
+        req.addEventListener(ResponseItemEvent.COMPLETE, createActivityEventHandler);
+        req.addEventListener(ResponseItemEvent.ERROR, createActivityEventErrorHandler);
+        req.send(client);
+      }
+
+      private function createActivityEventHandler(event:ResponseItemEvent):void {
+        logger.info("activity created");
+      }
+      private function createActivityEventErrorHandler(event:ResponseItemEvent):void {
+        logger.info("activity creation failed: " + event.response.getErrorMessage());
+      }
+
+
+      // ----------------- Make Request ------------------
+      private function makeRequest():void {
+        var req:ProxiedRequest = new ProxiedRequest(
+            "http://www.google.com/crossdomain.xml",
+            new ProxiedRequestOptions()
+                .setContentType(GadgetsIo.ContentType.TEXT));
+        req.addEventListener(ProxiedRequestEvent.COMPLETE, makeRequestEventHandler);
+        req.addEventListener(ProxiedRequestEvent.ERROR, makeRequestEventErrorHandler);
+        req.send(client);
+      }
+      
+      private function makeRequestEventHandler(event:ProxiedRequestEvent):void {
+        logger.info(event.response.getData());
+      }
+
+      private function makeRequestEventErrorHandler(event:ProxiedRequestEvent):void {
+        logger.info("make request failed: " + event.response.getRC() 
+                    + "|" + event.response.getText());
+      }
+
+
+      // ----------------- Call RPC ------------------
+      private function callRpc():void {
+        // To use this, you need to first register the rpc service with name "srv-parent" on 
+        // container side. If you are using firefox+firebug and looking on a shindig container,
+        // before clicking the "Call Rpc" button in the flash to call this method, copy+paste the 
+        // following codes to the console window:
+        // 
+        // <code>
+        // gadgets.rpc.register("srv-parent",function(){console.log(arguments);return "'srv-parent' returned."});
+        // </code>
+        var req:RPCRequest = new RPCRequest(null, "srv-parent", "abc", 123, {'xyz':456});
+        req.addEventListener(RPCRequestEvent.RPC_CALLBACK, callRpcEventHandler);
+        req.send(client);
+      }
+
+      private function callRpcEventHandler(event:RPCRequestEvent):void {
+        logger.info("--- invoked by the returning of 'srv-parent' ---");
+        logger.log(event.returnValue);
+      }
+
+
+      // ----------------- Register RPC Service ------------------
+      private function registerService():void {
+        // To use this, you need to make a rpc call to "srv-app" from container side. If you are 
+        // using firefox+firebug and shindig container, click the "Register Srv" button in the 
+        // flash to call this method, then copy+paste the following codes to the console window
+        // to test the rpc. 
+        // ("remote_iframe_0" assumes this flash app is the first app on the page)
+        // 
+        // <code>
+        // gadgets.rpc.call("remote_iframe_0","srv-app",function(r){console.log(r);},"abc", 123, {'xyz':456});
+        // </code>
+        var srv:RPCService = new RPCService("srv-app");
+        srv.register(client);
+        srv.addEventListener(RPCServiceEvent.RPC_SERVICE, serviceEventHandler);
+      }
+      
+      private function serviceEventHandler(event:RPCServiceEvent):void {
+        logger.info("--- invoked by 'srv-app' get called ---");
+        logger.log(event.params);
+        event.callback("'srv-app' returned.");
+      }
+
+    ]]>
+  </mx:Script>
+  <mx:Button x="468" y="47" label="Fetch Me" id="fetchMeBtn" height="22" width="123" click="fetchMe()"/>
+  <mx:Button x="468" y="77" label="Fetch Friends" height="22" width="123" id="fetchFriendsBtn" click="fetchFriends()"/>
+  <mx:Button x="468" y="107" label="Send Message" height="22" width="123" id="sendMessageBtn" click="sendMessage()"/>
+  <mx:Button x="468" y="137" label="Create Activity" height="22" id="createActivityBtn" click="createActivity()" width="123"/>
+  <mx:Button x="468" y="167" label="Make Request" height="22" width="123" id="makeRequestBtn" click="makeRequest()"/>
+  <mx:Button x="468" y="197" label="Call Rpc" height="22" width="123" id="rpcCallBtn" click="callRpc()"/>
+  <mx:Button x="468" y="227" label="Register Srv" height="22" width="123" id="rpcRegisterBtn" click="registerService()"/>
+  <mx:TileList width="450" height="120" dataProvider="{people}" x="10" y="26" backgroundColor="#666666">
+    <mx:itemRenderer>
+      <mx:Component>
+        <mx:Box width="96" height="128">
+          <mx:Script>
+            <![CDATA[
+              import org.opensocial.client.base.Person;
+            ]]>
+          </mx:Script>
+          <mx:Image source="{Person(data).getThumbnailUrl()}" />
+          <mx:Label text="{Person(data).getDisplayName()}" />
+        </mx:Box>
+      </mx:Component>
+    </mx:itemRenderer>
+  </mx:TileList>
+  <mx:Text x="348" y="5" text="OpenSocial (0.8) AS3 Client Library (M4)&#xa;Sample App - Flex 3" width="247" height="34" textAlign="right"/>
+</mx:Application>

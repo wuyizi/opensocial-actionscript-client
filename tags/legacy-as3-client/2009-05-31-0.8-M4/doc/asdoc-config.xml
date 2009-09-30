@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<flex-config xmlns="http://www.adobe.com/2006/flex-config">
+  <compiler>
+    <source-path>
+      <path-element>..\src</path-element>
+    </source-path>
+    <library-path>
+      <path-element>C:\LocalHome\Code\flex_sdk_3\frameworks\libs</path-element>
+    </library-path>
+  </compiler>
+ 
+  <doc-sources>
+    <path-element>..\src</path-element>
+  </doc-sources>
+  
+  <output>
+    asdoc
+  </output>
+  
+  <left-frameset-width>320</left-frameset-width>
+  
+  <main-title>
+    OpenSocial AS3 Client Library - Actionscript Reference
+  </main-title>
+  
+  <window-title>
+    OpenSocial Actionscript 3.0 Client Library Documentation
+  </window-title>
+  
+  <footer>
+    2009 OpenSocial
+  </footer>
+
+  <packages>
+    <package> 
+      <string>org.opensocial.client.base</string> 
+      <string>Opensocial AS3 Client Library basic types definitions.</string> 
+    </package> 
+    <package> 
+      <string>org.opensocial.client.core</string> 
+      <string>Core package of the client library.</string> 
+    </package>
+    <package> 
+      <string>org.opensocial.client.features</string> 
+      <string>Features package with all feature-wise interfaces.</string> 
+    </package>
+    <package> 
+      <string>org.opensocial.client.jswrapper</string> 
+      <string>Javascript Wrapper Client implementation.</string> 
+    </package>
+    <package> 
+      <string>org.opensocial.client.restful</string> 
+      <string>RESTful Client implementation (under construction).</string> 
+    </package>
+    <package> 
+      <string>org.opensocial.client.util</string> 
+      <string>Utilities for the client library.</string> 
+    </package>
+  </packages> 
+</flex-config>
