@@ -104,6 +104,21 @@ public class OpenSocialClient extends EventDispatcher {
     featureBook_[feature.name] = feature;
   }
 
+
+  /**
+   * Removes the feature by its name. This method is to customize the client for special containers.
+   * @param featureName The feature name to remove.
+   * @return The feature instance.
+   */
+  public function removeFeature(featureName:String):Feature {
+    var feature:Feature = featureBook_[featureName] as Feature;
+    if (feature != null) {
+      delete featureBook_[featureName];
+    }
+    return feature;
+  }
+
+
   /**
    * Initializes the feature book. This method should be overriden for customizing features.
    */

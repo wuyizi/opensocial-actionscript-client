@@ -18,6 +18,7 @@
  */
 
 package org.opensocial.client.base {
+import org.opensocial.client.util.Utils;
 
 /**
  * Wrapper of <code><j>opensocial.Collection</j></code> object in javascript.
@@ -31,12 +32,7 @@ package org.opensocial.client.base {
  *
  * @author yiziwu@google.com (Yizi Wu)
  */
-public class Collection extends BaseType {
-  /**
-   * The wrapped object from Js-side passed by the <code>ExternalInterface</code>.
-   * @private
-   */
-  protected var obj_:Object;
+public class Collection extends AbstractDataType {
 
   /**
    * The item's type.
@@ -48,7 +44,7 @@ public class Collection extends BaseType {
    * The array container to hold the items.
    * @private
    */
-  private var array_:Array;
+  private var array_:ArrayType;
 
   /**
    * The offset of this collection within a larger result set.
@@ -79,13 +75,15 @@ public class Collection extends BaseType {
    * @param elementType The type of the items in this collection.
    * @private
    */
-  public function Collection(rawObj:Object, elementType:Class) {
-    this.elementType_ = elementType;
-    this.array_ = new ArrayType(rawObj["array"], elementType);
+  public function Collection(rawObj:Object) {
+    super(rawObj);
+    this.array_ = new ArrayType(rawObj["array"]);
+    this.elementType_ = this.array_.elementType;
     this.offset_ = rawObj["offset"];
     this.totalSize_ = rawObj["totalSize"];
     this.size_ = rawObj["size"];
-    if (this.array_ == null || this.size_ != this.array_.length) {
+    
+    if (this.size_ != this.array_.length) {
       // error!
     }
   }
@@ -168,7 +166,7 @@ public class Collection extends BaseType {
       // cannot be concated if the offsets and size don't match
       return false;
     }
-    this.array_ = this.array_.concat(another.array_);
+    this.array_.extend(another.array_);
     this.size_ = this.size_ + another.size_;
     return true;
   }

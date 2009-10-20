@@ -75,5 +75,14 @@ public class Utils {
     }
     return false;
   }
+  
+  
+  public static function getClass(className:String):Class {
+    if (className == null) {
+      return null; 
+    }
+    var type:Class = getDefinitionByName(className) as Class;
+    return type;
+  }
 }
 }

@@ -16,26 +16,22 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
-package org.opensocial.client.util {
+ 
+package org.opensocial.client.ext.myspace.core {
 
 /**
- * Simple trace printer implementation. It is usually used in your IDE to
- * debug your swf.
- *
- * @see IPrinter
- * @see Logger
- *
+ * Atomized Myspace extended action item.
+ * NOTE: This class is not inherited from <code>org.opensocial.client.core.Feature</code>, but just
+ * a set of enums.
+ * 
  * @author yiziwu@google.com (Yizi Wu)
  */
-public class TracePrinter implements IPrinter {
-  /**
-   * Prints the text to console.
-   * @param text The string to print.
-   */
-  public function print(text:String):void {
-    trace(text);
-  }
+public class MyspaceFeature {
+  
+  // -- photos for myspace--
+  public static const PHOTOS_GET:String =                 "photos.get";
+  
+  // TODO: Add more features.
+  
 }
 }
-

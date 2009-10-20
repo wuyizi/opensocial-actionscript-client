@@ -125,7 +125,7 @@ public class ActivitiesRequestOptions extends RequestOptions {
 
 
   /**
-   * Sets the nunber of activities to be fetch. Only used in the <code>ACTIVITIES_GET</code>
+   * Sets the number of activities to be fetch. Only used in the <code>ACTIVITIES_GET</code>
    * feature.
    * @param count The number of the counts.
    * @return The options itself.

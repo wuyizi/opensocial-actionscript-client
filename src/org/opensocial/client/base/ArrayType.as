@@ -33,6 +33,8 @@ public dynamic class ArrayType extends Array {
 
   private static var logger:Logger = new Logger(ArrayType);
 
+  protected var elementType_ : Class = null;
+  
   /**
    * Convert an array of raw object to an array primitives or DataType instances.
    * <p>
@@ -40,21 +42,27 @@ public dynamic class ArrayType extends Array {
    * this package.
    * </p>
    * @param raw The object which is an array from Js-side.
-   * @param type The type of each item in this array. Null for primitives, otherwise the type
-   *             should be subtype of <code>DataType</code>.
+   * @param type The type of each item in this array. Null for primitives and auto detect, otherwise
+   *             the type should be subtype of <code>DataType</code>.
    * @private
    */
   public function ArrayType(rawObj:Object, type:Class = null) {
-    if (type != null && !Utils.isAncestor(DataType, type)) {
-      throw new OpenSocialError("Element type '" + getQualifiedClassName(type) +
-                                "' mismatched when creating an array.");
-    }
-
+    
     var rawArray:Array = rawObj as Array;
     if (rawArray == null) {
       logger.warning("Raw object is null or non-array in type '" +
                      getQualifiedClassName(this) + "'.");
       return;
+    }
+    
+    if (type == null && rawArray.length != 0) {
+      type = AbstractDataType.getType(rawArray[0]);
+    }
+
+    
+    if (type != null && !Utils.isAncestor(DataType, type)) {
+      throw new OpenSocialError("Element type '" + getQualifiedClassName(type) +
+                                "' mismatched when creating an array.");
     }
 
     for each (var item:Object in rawArray) {
@@ -64,8 +72,42 @@ public dynamic class ArrayType extends Array {
         this.push(item);
       }
     }
+    
+    this.elementType_ = type;
+  }
+  
+  
+  /**
+   * Gets the type of the elements.
+   * @return The elements' type.
+   */
+  public function get elementType():Class {
+    return elementType_;
   }
 
+  
+  public function extend(another:ArrayType):ArrayType {
+    if (another == null || another.length == 0) {
+      return this;
+    }
+    
+    if (this.length == 0) {
+      this.push.apply(this, another);
+      this.elementType_ = another.elementType_;
+      return this;
+    }
+    
+    if (this.elementType_ != another.elementType_) {
+      // Collections with different element types cannot be merged.
+      throw new OpenSocialError("Element type '" + getQualifiedClassName(another.elementType_) +
+                                "' and '" + getQualifiedClassName(this.elementType_) + 
+                                "' mismatched when concatting.");
+    }
+    this.push.apply(this, another);
+    return this;
+  }
+  
+  
   /**
    * Gets an array by the field key and join all items to a flat string. Use
    * comma as a delim by default.

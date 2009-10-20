@@ -19,13 +19,15 @@
 
 package org.opensocial.client.jswrapper {
 
+import flash.utils.getDefinitionByName;
+
 import org.opensocial.client.base.*;
 
 /**
  * Collection of parser functions for <code>JsWrapperClient</code>.
  * @author yiziwu@google.com (Yizi Wu)
  */
-internal class JsWrapperParsers {
+public class JsWrapperParsers {
 
   public static function parseParams(params:Array):Array {
     if (params != null) {
@@ -44,31 +46,22 @@ internal class JsWrapperParsers {
     return new ResponseItem(null, error.code, error.message);
   }
 
-  public static function parsePeople(data:*):ResponseItem {
-    if (data is OpenSocialError) return parseError(data);
-    if (data['array']) {
-      return new ResponseItem(new Collection(data, Person));
-    } else {
-      return new ResponseItem(new Person(data));
-    }
+  public static function parseWrappedData(obj:*):ResponseItem {
+    if (obj is OpenSocialError) return parseError(obj);
+    return new ResponseItem(AbstractDataType.create(obj));
   }
 
-  public static function parseActivities(data:*):ResponseItem {
-    if (data is OpenSocialError) return parseError(data);
-    return new ResponseItem(new Collection(data, Activity));
+  public static function parseRawData(obj:*):ResponseItem {
+    if (obj is OpenSocialError) return parseError(obj);
+    return new ResponseItem(obj);
   }
 
-  public static function parseRawData(data:*):ResponseItem {
-    if (data is OpenSocialError) return parseError(data);
-    return new ResponseItem(data);
+  public static function parseProxiedResponse(obj:*):ProxiedResponse {
+    return new ProxiedResponse(obj);
   }
 
-  public static function parseProxiedResponse(data:*):ProxiedResponse {
-    return new ProxiedResponse(data);
-  }
-
-  public static function parseEmpty(data:*):ResponseItem {
-    if (data is OpenSocialError) return parseError(data);
+  public static function parseEmpty(obj:*):ResponseItem {
+    if (obj is OpenSocialError) return parseError(obj);
     return ResponseItem.SIMPLE_SUCCESS;
   }
 }

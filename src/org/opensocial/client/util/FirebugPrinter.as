@@ -22,13 +22,16 @@ package org.opensocial.client.util {
 import flash.external.ExternalInterface;
 
 /**
- * Firebug console printer implementation. It requires the javascript envionment and firebug on
- * firefox browser.
+ * Firebug console printer implementation. It requires the javascript
+ * envionment and firebug plugin on Firefox browser. So use this printer
+ * when you are view your flash when it's embeded in a web page.
+ *
+ * @see IPrinter
+ * @see Logger
  *
  * @author yiziwu@google.com (Yizi Wu)
  */
 public class FirebugPrinter implements IPrinter {
-
   /**
    * Prints the text to firebug console.
    * @param text The string to print.
@@ -41,3 +44,4 @@ public class FirebugPrinter implements IPrinter {
   }
 }
 }
+

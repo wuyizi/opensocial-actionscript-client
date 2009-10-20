@@ -19,17 +19,19 @@
 
 package org.opensocial.client.util {
 
+/**
+ * Interface for all printers for the logger. Developers can implement this
+ * interface for special printers.
+ *
+ * @see Logger
+ *
+ * @author yiziwu@google.com (Yizi Wu)
+ */
+public interface IPrinter {
   /**
-   * Interface for all printers for the logger.
-   *
-   * @author yiziwu@google.com (Yizi Wu)
+   * Prints the text.
+   * @param text The string to print.
    */
-  public interface IPrinter {
-
-    /**
-     * Prints the text.
-     * @param text The string to print.
-     */
-    function print(text:String):void;
-  }
+  function print(text:String):void;
+}
 }

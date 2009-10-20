@@ -26,21 +26,9 @@
   <mx:Metadata>
     <![CDATA[
     /**
-     * Sample Application using the OpenSocial AS3 Client Library in Flex 3.
-     * Build the SampleApp.mxml with Flex SDK to swf file and it works with the gadget spec XML 
-     * (//sample/SampleApp.xml).
+     * Myspace Sample App to try out the Myspace extensions.
      * 
-     * <p>
-     * Usage:<br>
-     * 1. Create a JsWrapperClient instance.
-     * <br> 
-     * 2. Add a eventhandler for READY event and call the start() method.
-     * <br>
-     * 3. When the client is ready, use the any of the <code>AsyncRequest</code> objects and 
-     * <code>SyncHelper</code> objects to interact with OpenSocial API. All these are located in
-     * <code>org.opensocial.client.features</code> package.
-     * <br>
-     * </p>
+     * @see SampleApp.mxml for most of the codes.
      * 
      * @author yiziwu@google.com (Yizi Wu)
      */
@@ -48,40 +36,48 @@
   </mx:Metadata>
   <mx:Script>
     <![CDATA[
-      import mx.collections.ArrayCollection;
+      import org.opensocial.client.ext.myspace.base.MyspacePhoto;
+      import org.opensocial.client.ext.myspace.core.MyspaceFeature;
+      import org.opensocial.client.ext.myspace.features.MyspacePhotosRequestOptions;
+      import org.opensocial.client.ext.myspace.jswrapper.MyspaceJsWrapperClient;
       import mx.events.ListEvent;
-      
+      import mx.collections.ArrayCollection;
+
       import org.opensocial.client.base.*;
-      import org.opensocial.client.core.*;
       import org.opensocial.client.features.*;
       import org.opensocial.client.jswrapper.*;
+      import org.opensocial.client.core.*;
       import org.opensocial.client.util.*;
 
-      private var client:JsWrapperClient;
+      private var client:MyspaceJsWrapperClient;
       private var helper:SyncHelper;
 
-      private static var logger:Logger = new Logger(SampleApp);
+      private static var logger:Logger = new Logger(MyspaceSampleApp);
 
       [Bindable]
       public var people:ArrayCollection = new ArrayCollection();
       
+      [Bindable]
+      public var photos:ArrayCollection = new ArrayCollection();
+      
       private function init():void {
 
         // Create the output box for information displaying
-        var printer:TextFieldPrinter = new TextFieldPrinter(2, 160, 450, 330);
-        this.rawChildren.addChild(printer);
-        //var printer:FirebugPrinter = new FirebugPrinter();
+        //var printer:TextFieldPrinter = new TextFieldPrinter(2, 260, 450, 230);
+        //this.rawChildren.addChild(printer);
+        var printer:FirebugPrinter = new FirebugPrinter();
         Logger.initialize(printer, 1);
         logger.info("OpenSocial(0.8) AS3 Client Library in Flex 3");
         logger.log(new Date());
         
-        // Initialize Client and start
-        client = new JsWrapperClient();
+        // Initialize Client and start, using the extended Myspace client.
+		
+		// Create the extended Myspace client.
+        client = new MyspaceJsWrapperClient("opensocial.flash");
         client.addEventListener(OpenSocialClientEvent.CLIENT_READY, onReady);
         client.start();
-        
-        helper = new SyncHelper(client);
 
+        helper = new SyncHelper(client);
       }
 
       private function onReady(event:OpenSocialClientEvent):void {
@@ -216,48 +212,32 @@
       }
 
 
-      // ----------------- Call RPC ------------------
-      private function callRpc():void {
-        // To use this, you need to first register the rpc service with name "srv-parent" on 
-        // container side. If you are using firefox+firebug and looking on a shindig container,
-        // before clicking the "Call Rpc" button in the flash to call this method, copy+paste the 
-        // following codes to the console window:
-        // 
-        // <code>
-        // gadgets.rpc.register("srv-parent",function(){console.log(arguments);return "'srv-parent' returned."});
-        // </code>
-        var req:RPCRequest = new RPCRequest(null, "srv-parent", "abc", 123, {'xyz':456});
-        req.addEventListener(RPCRequestEvent.RPC_CALLBACK, callRpcEventHandler);
+      // ----------------- Fetch Photos --------------------------
+      private function fetchPhotos():void {
+        var req:AsyncDataRequest = new AsyncDataRequest(
+            MyspaceFeature.PHOTOS_GET,
+            new MyspacePhotosRequestOptions()
+                .setUserId("@me"));
+        req.addEventListener(ResponseItemEvent.COMPLETE, fetchPhotosEventHandler);
         req.send(client);
-      }
-
-      private function callRpcEventHandler(event:RPCRequestEvent):void {
-        logger.info("--- invoked by the returning of 'srv-parent' ---");
-        logger.log(event.returnValue);
-      }
-
-
-      // ----------------- Register RPC Service ------------------
-      private function registerService():void {
-        // To use this, you need to make a rpc call to "srv-app" from container side. If you are 
-        // using firefox+firebug and shindig container, click the "Register Srv" button in the 
-        // flash to call this method, then copy+paste the following codes to the console window
-        // to test the rpc. 
-        // ("remote_iframe_0" assumes this flash app is the first app on the page)
-        // 
-        // <code>
-        // gadgets.rpc.call("remote_iframe_0","srv-app",function(r){console.log(r);},"abc", 123, {'xyz':456});
-        // </code>
-        var srv:RPCService = new RPCService("srv-app");
-        srv.register(client);
-        srv.addEventListener(RPCServiceEvent.RPC_SERVICE, serviceEventHandler);
+        photos.removeAll();
       }
       
-      private function serviceEventHandler(event:RPCServiceEvent):void {
-        logger.info("--- invoked by 'srv-app' get called ---");
-        logger.log(event.params);
-        event.callback("'srv-app' returned.");
+      private function fetchPhotosEventHandler(event:ResponseItemEvent):void {
+        var c:Collection = event.response.getData();
+        logger.info(c.toDebugString());
+        var arr:Array = c.getArray();
+        for (var i:int = 0; i < arr.length; i++) {
+          var p:MyspacePhoto = arr[i];
+          photos.addItem(p);
+        }
+        if (c.getRemainingSize() > 0) {
+          var req:AsyncDataRequest = event.target as AsyncDataRequest;
+          (req.getOptions() as MyspacePhotosRequestOptions).setStartIndex(c.getNextOffset());
+          req.send(client);
+        }
       }
+      
 
       // ----------------- Share App ------------------
       private function shareApp(event:ListEvent):void {
@@ -290,19 +270,35 @@
   <mx:Button x="468" y="107" label="Send Message" height="22" width="123" id="sendMessageBtn" click="sendMessage()"/>
   <mx:Button x="468" y="137" label="Create Activity" height="22" id="createActivityBtn" click="createActivity()" width="123"/>
   <mx:Button x="468" y="167" label="Make Request" height="22" width="123" id="makeRequestBtn" click="makeRequest()"/>
-  <mx:Button x="468" y="197" label="Call Rpc" height="22" width="123" id="rpcCallBtn" click="callRpc()"/>
-  <mx:Button x="468" y="227" label="Register Srv" height="22" width="123" id="rpcRegisterBtn" click="registerService()"/>
-  <mx:TileList width="450" height="120" id="titleList" dataProvider="{people}" itemClick="shareApp(event)" x="10" y="26" backgroundColor="#666666">
+  <mx:Button x="468" y="197" label="Call Rpc" height="22" width="123" id="rpcCallBtn" enabled="false"/>
+  <mx:Button x="468" y="227" label="Register Srv" height="22" width="123" id="rpcRegisterBtn" enabled="false"/>
+  <mx:Button x="468" y="257" label="Fetch Photos" height="22" width="123" id="fetchPhotosBtn" click="fetchPhotos()"/>
+  <mx:TileList width="450" height="160" id="titleList" dataProvider="{people}" itemClick="shareApp(event)" x="10" y="26" backgroundColor="#666666" mouseFocusEnabled="true">
     <mx:itemRenderer>
       <mx:Component>
-        <mx:Box width="96" height="128">
+        <mx:Box width="96" height="140" focusEnabled="false" horizontalScrollPolicy="off" verticalScrollPolicy="off">
           <mx:Script>
             <![CDATA[
               import org.opensocial.client.base.Person;
             ]]>
           </mx:Script>
-          <mx:Image source="{Person(data).getThumbnailUrl()}" />
+          <mx:Image source="{Person(data).getThumbnailUrl()}" width="96" height="96" />
           <mx:Label text="{Person(data).getDisplayName()}" />
+        </mx:Box>
+      </mx:Component>
+    </mx:itemRenderer>
+  </mx:TileList>
+  <mx:TileList width="450" height="100" id="titleList2" dataProvider="{photos}" x="10" y="160" backgroundColor="#666666" mouseFocusEnabled="true">
+    <mx:itemRenderer>
+      <mx:Component>
+        <mx:Box width="96" height="96" focusEnabled="false" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+          <mx:Script>
+            <![CDATA[
+              import org.opensocial.client.ext.myspace.base.MyspacePhoto;
+            ]]>
+          </mx:Script>
+          <mx:Image source="{MyspacePhoto(data).getImageUri()}" width="96" height="96" />
+          <mx:Label text="{MyspacePhoto(data).getCaption()}" />
         </mx:Box>
       </mx:Component>
     </mx:itemRenderer>
