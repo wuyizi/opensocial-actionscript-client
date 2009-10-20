@@ -1,0 +1,178 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN"
+"http://www.w3.org/TR/html4/frameset.dtd">
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<title>Developer's Guide</title>
+<link href="http://code.google.com/css/semantic_headers.css" type="text/css" rel="stylesheet">
+</link>
+<link href="http://code.google.com/css/codesite.pack.01312008.css" type="text/css" rel="stylesheet">
+</link>
+</head>
+<body style="font-family: Verdana;">
+<div style="font-size:2.7em; font-weight:bold; font-family: Verdana;"> OpenSocial Actionscript Client Library</div>
+<div id="gc-pagecontent" class="g-unit" style="position: relative; border-left:0px;"> <a name="updates"></a>
+  <h2>Last Update: 09/30/2009</h2>
+  <dl style="padding-left:1em;">
+    <dt>09/30/2009</dt>
+    <dd>Finished the consolidation and finally moved to <a href="http://code.google.com/p/opensocial-actionscript-client/">opensocial-actionscript-client</a> (M4):
+      <ol>
+        <li>We had done the consolidation of this project with <a href="http://code.google.com/p/opensocial-actionscript-client/">opensocial-actionscript-client</a> project's developers. The main branch and all codes are relocated to there and we will continue developing in the new place. Thus we are deprecating the old <a href="http://code.google.com/p/opensocial-as3-client/" target="_blank">opensocial-as3-client</a> project.</li>
+        <li>Fixed some bugs for myspace environment.</li>
+      </ol>
+      <br>
+    </dd>
+    <dt>05/31/2009</dt>
+    <dd>Summitted new CLs for the os-Lite style re-organization (M4):
+      <ol>
+        <li>Followed the <a href="http://www.opensocial.org/Technical-Resources/opensocial-spec-v09/OpenSocial-Specification.html#LightweightJSAPI" target="_blank">0.9 Lightweight Javascript</a> style for the data requests and re-organized part of this client library.</li>
+        <li>Deprecates the asynchronous callback helper functions. So the API is fully moved to event-driven model for asynchronous call. All the feature-wise interfaces are defined in the <code>org.opensocial.client.features</code> package.</li>
+        <li>Fixed some bugs.</li>
+        <li>Cut the previous code base to the M4 milestone branch <a href="/svn/tags/legacy-as3-client/2009-05-31-0.8-M4/">2009-05-31-0.8-M4</a>. The <a href="/svn/trunk/">trunk branch</a> will continue to M4 version with more testings and new features. For M3 version, the <a href="/svn/tags/legacy-as3-client/2009-04-18-0.8-M3/doc/index.html">doc</a> and <a href="/svn/tags/legacy-as3-client/2009-04-18-0.8-M3/src/">codes</a>  are still available.</li>
+      </ol>
+      <br>
+    </dd>
+    <dt>05/26/2009</dt>
+    <dd>
+      <ol>
+        <li>Met the developers from <a href="http://code.google.com/p/opensocial-actionscript-client/" target="_blank">opensocial-actionscript-client</a> project and we decided to consolidate each other then finally merge into one library.</li>
+      </ol>
+      <br>
+    </dd>
+    <dt>04/18/2009</dt>
+    <dd>Summitted new CLs for the some fixes and testing (M3):
+      <ol>
+        <li> Move the whole project to &quot;<a href="http://code.google.com/p/opensocial-as3-client">opensocial-as3-client</a>&quot; and rename the 'Client SDK' to 'Client Library' to aline with other client libraries.</li>
+        <li>Finished the testings under org.opensocial.client.base.* package. See the <a href="http://opensocial-as3-client.googlecode.com/svn/trunk/test/AllTests.html">AllTests</a> page and play around in Firefox.</li>
+        <li>Fixed some bugs.</li>
+        <li>Cut the previous code base to the M3 milestone branch <a href="/svn/tags/legacy-as3-client/2009-04-18-0.8-M3/">2009-04-18-0.8-M3</a>. The <a href="/svn/trunk/">trunk branch</a> will continue to M4 version with more testings and new features.</li>
+      </ol>
+      <br>
+    </dd>
+    <dt>03/21/2009</dt>
+    <dd>Summitted a new CL  for the new version (M3):
+      <ol>
+        <li> Added an architecture graph to illustrate the SDK more clearly.</li>
+        <li> Added event dispatchers to allow event-driven model for the client.</li>
+        <li> Added testing framework. See the <a href="/svn/trunk/test/AllTests.html">AllTests</a> page.</li>
+        <li> Finished the JsUnit test cases and started the FlexUnit part.</li>
+        <li> SampleApp is moved from a zip file to '<a href="/svn/trunk/sample/">/sample</a>' directory, with Flex style and Adobe Flash CS style.</li>
+      </ol>
+      <br>
+    </dd>
+    <dt>03/21/2009</dt>
+    <dd>Cut the previous code base to the M2 milestone branch <a href="/svn/tags/legacy-as3-client/2009-03-21-0.8-M2/">2009-03-21-0.8-M2</a>. The <a href="/svn/trunk/">trunk branch</a> will continue to M3 version.</dd>
+    <dt>02/17/2009</dt>
+    <dd>Summitted a refactoring CL  to:
+      <ol>
+        <li> Broke down the huge <code>OpensocialClient</code> class to a light weight client called <code>JsWrapperClient</code> and several features defined as <code>JsFeature</code> objects. With this structure, the client is more extensible and testable.</li>
+        <li> Add the gadgets.rpc wrapped feature. </li>
+        <li> Update the <a href="/svn/tags/legacy-as3-client/2009-03-21-0.8-M2/oacs_0_8.zip">demo zip</a> to current code structure.</li>
+      </ol>
+      <br>
+      See <a href="http://sandbox.orkut.com/Main#AppInfo.aspx?appId=644056445741" target="_blank">sample app on orkut</a> as the demo.<br>
+      If you sync to this revision, your exsiting codes will break. But just some renaming will work. Please diff the sample app in the demo zip. Old branch (M1) is still available in this tag: <a href="/svn/tags/legacy-as3-client/2009-02-16-0.8-M1/">2009-02-16-0.8-M1</a>.</dd>
+    <dt>02/16/2009</dt>
+    <dd>Cut the existing codes to the first milestone branch <a href="/svn/tags/legacy-as3-client/2009-02-16-0.8-M1/">2009-02-16-0.8-M1</a>.<br>
+      The <a href="/svn/trunk/">trunk branch</a> will continue on developing. Codes are not very stable at this stage and some refactoring in <code>jswrapper</code> package is ongoing.</dd>
+  </dl>
+  <a name="overview"></a>
+  <h2>Overview</h2>
+  <p>We all believe that Flash is a good thing. This is a client SDK to make <a href="http://code.google.com/apis/opensocial/" target="_parent">OpenSocial API</a> used in <strong>ActionScript 3.0</strong> for Flash or Flex Apps.</p>
+  <p>The SDK is planned to have two parts: The Javascript Wrapper Client and the RESTful Client. See the graph blow for the whole SDK structure.</p>
+  <blockquote><img src="architechture-M4.png"></blockquote>
+  <p>Currently only the Javascript Wrapper Client is included in the current version, which is based on the <a href="http://code.google.com/apis/opensocial/docs/0.8/reference/" target="_blank">0.8 API reference</a> and part of the interfaces follow os-lite from <a href="http://www.opensocial.org/Technical-Resources/opensocial-spec-v09/OpenSocial-Specification.html#LightweightJSAPI" target="_blank">0.9 specs</a>.</p>
+  <p>The RESTful client is still in the designing stage. It will be based on <a href="http://www.opensocial.org/Technical-Resources/opensocial-spec-v081/restful-protocol" target="_blank">RESTful Protocol</a> or <a href="http://www.opensocial.org/Technical-Resources/opensocial-spec-v081/rpc-protocol" target="_blank">RPC Protocol</a> without javascripts. There are some auth issues.  Hope we could work it out soon.</p>
+  <p>If you are interested, please join <a href="http://groups.google.com/group/opensocial-client-libraries" target="_parent">this group</a> and discuss.</p>
+  <a name="gettingstart"></a>
+  <h2>Getting start</h2>
+  <p>We are preparing some sample apps for tutorial. But right now you can simply follow these steps and consult the api reference if you are building a gadget.</p>
+  <ol>
+    <li>
+      <p>Checkout the <a href="/svn/trunk/src/org/opensocial/client/">source codes</a> and include those packages in your flash project. </p>
+    </li>
+    <li>
+      <p>First please read the <a href="/svn/trunk/sample/"><code>SampleApp</code></a> codes. The SampleApp is a simple app that just illustrates several OpenSocial features. It is written in both <a href="/svn/trunk/sample/flex/SampleApp.mxml">Flex 3 style</a> and <a href="/svn/trunk/sample/flash/SampleApp.as">Adobe Flash CS3 style</a> for your flavors. Note that the former one is illustrating how to use helpers and the latter is illustrating how to use event dispatchers.</p>
+    </li>
+    <li>
+      <p>Start your project by copying some code snippet from SampleApp.</p>
+    </li>
+    <li>
+      <p>Use the <a href="/svn/trunk/doc/asdoc/org/opensocial/client/jswrapper/JsWrapperClient.html"><code>JsWrapperClient</code></a> object and async event dispatchers (e.g. <a href="/svn/trunk/doc/asdoc/org/opensocial/client/features/AsyncDataRequest.html"><code>AsyncDataRequest</code></a>, <a href="/svn/trunk/doc/asdoc/org/opensocial/client/features/ProxiedRequest.html"><code>ProxiedRequest</code></a>, <a href="/svn/trunk/doc/asdoc/org/opensocial/client/features/RPCRequest.html"><code>RPCRequest</code></a> or <a href="/svn/trunk/doc/asdoc/org/opensocial/client/features/RPCService.html"><code>RPCService</code></a>) and the sync helper  (e.g. <a href="/svn/trunk/doc/asdoc/org/opensocial/client/features/SyncHelper.html"><code>SyncHelper</code></a>) to due with OpenSocial data or Rpc operations and fill your app with social functionalities. See SampleApp to learn how it works, and the <a href="/svn/trunk/doc/asdoc/index.html">reference</a> for this SDK is also your friend.</p>
+    </li>
+    <li>
+      <p>Build your project to a SWF file. You can either use Flex 3 SDK or Adobe Flash CS3 IDE.</p>
+    </li>
+    <li>
+      <p>Take the spec XML listed below and edit it in your case (you can use proxy url to let the container cache your swf files), or use the <a href="/svn/trunk/sample/SampleApp.xml" target="_blank">SampleApp.xml</a> codes if you want to bypass the container cache when you are debugging. Then upload the spec, swf file together with the <a href="/svn/trunk/doc/jsdoc/symbols/src/opensocial-flashsdk.js.html">opensocial-flashsdk.js</a> file to somewhere publicly accessible. And you app is done.
+      <pre>
+&lt;?xml version="1.0" encoding="UTF-8" ?&gt;
+&lt;Module&gt;
+&lt;ModulePrefs title="Your App Name"&gt;
+  &lt;Require feature="flash"/&gt;
+  &lt;Require feature="views"/&gt;
+  &lt;Require feature="dynamic-height"/&gt;
+  &lt;Require feature="opensocial-0.8"/&gt;
+&lt;/ModulePrefs&gt;
+&lt;Content type="html"&gt;
+&lt;![CDATA[
+  &lt;!-- The JS-Side javascript code lib used in the Flash API. --&gt;
+  &lt;script src="http://some-where/opensocial-flashsdk.js" type="text/javascript"&gt;&lt;/script&gt;
+
+  &lt;!-- The flash element --&gt;
+  &lt;div id="flashcontainer" style="text-align: center;"&gt;&lt;/div&gt;
+
+  &lt;!-- Embed the swf file --&gt;
+  &lt;script type="text/javascript"&gt;
+    opensocial.flash.embedFlash(
+      "http://some-where/yourfile.swf",
+      "flashcontainer", "9", {
+        quality: "high",
+        wmode: "window",
+        allowScriptAccess: "always"
+      });
+    gadgets.window.adjustHeight();
+  &lt;/script&gt;
+]]&gt;
+&lt;/Content&gt;
+&lt;/Module&gt;
+        </pre>
+      </p>
+    </li>
+    <li>
+      <p>Try your app on some containers like <a href="http://sandbox.orkut.com" target="_blank">orkut.com</a>, <a href="http://www.hi5.com/" target="_blank">hi5.com</a>, <a href="http://www.xiaonei.com" target="_blank">xiaonei.com</a>, <a href="http://apps.51.com" target="_blank">51.com</a>, <a href="http://www.google.com/ig/sandbox" target="_blank">igoogle</a> or <a href="http://www.opensocial.org" target="_blank">opensocial.org</a>, and many many others ...</p>
+    </li>
+  </ol>
+  <a name="todo"></a>
+  <h2>TODO list</h2>
+  <p>This library is coming more and more stable after 4 milestones. Please come and join us to shape these codes to make it better. </p>
+  <p>Key things that are still missing:</p>
+  <ul>
+    <li>
+      Unittests. Half done.
+    </li>
+    <li>
+      Batch mode.
+    </li>
+    <li>
+      Tutorial and Reference Game.
+    </li>
+    <li>
+      The RESTful part of the client.
+    </li>
+  </ul>
+  <a name="contacts"></a>
+  <h2>Contacts</h2>
+  <ul>
+    <li style="display:inline;"><a href="mailto:yiziwu@google.com">Yizi Wu</a></li>
+    <li style="display:inline;"><a href="mailto:chaowang@google.com">Chao Wang</a></li>
+    <li style="display:inline;"><a href="mailto:shamayn@google.com">Sha-mayn Teh</a></li>
+    <li style="display:inline;"><a href="mailto:opensocial-china-eng@google.com">Team</a></li>
+  </ul>
+</div>
+<hr>
+<center style="color:#808080; padding:10px;">
+  2009 OpenSocial
+</center>
+</body>
+</html>
