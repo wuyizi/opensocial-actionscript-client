@@ -15,7 +15,7 @@
   <h2>Last Update: 10/20/2009</h2>
   <dl style="padding-left:1em;">
     <dt>10/20/2009</dt>
-    <dd>Cut the previous trunk base to <a href="/svn/tags/release-1.0/">release-1.0</a> tag. The <a href="/svn/trunk/">current trunk</a> is moving to extension driven model.
+    <dd>Cut the previous stable trunk base to <a href="/svn/tags/release-1.0/" target=_blank>release-1.0</a> tag. Please use the release version for your app development. The <a href="/svn/trunk/" target=_blank>current trunk</a> is moving to extension driven model, which is not stable and may have many bugs.
       <ol>
 	    <li>In this update, we decided to deprecated the external javascript file since it's not convinient for deploying and not easy to have extension for different special containers. Instead, we generated the javascript codes dynamically from the default XML file and container specific extended XML file and inject the javascript codes to DOM tree at runtime. <p>Basically, we are using XML node manipulation, which is easy, instead of using complex javascript inheritance and overriding to archieve the customization work for specific containers. </p></li>
 		<ul>
