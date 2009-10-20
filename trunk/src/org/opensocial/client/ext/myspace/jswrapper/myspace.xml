@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+-->
+
+<global name="myspace">
+
+  <gadgets action="replace">
+    <script><![CDATA[
+    var gadgets = window['gadgets'];
+    var MyOpenSpace = window['MyOpenSpace'];
+    ]]></script>
+  </gadgets>
+
+  <opensocial>
+    <flash>
+      <kernel>
+        <helper>
+          <dataTypes action="insert">
+            <script><![CDATA[
+              me.dataTypes['org.opensocial.client.ext.myspace.base.MyspacePhoto'] =
+                  MyOpenSpace.Photo;
+            ]]></script>
+          </dataTypes>
+        </helper>
+        <api>
+
+          <photos action="insert">
+            <script><![CDATA[
+              api.photos = {};
+            ]]></script>
+            <get>
+              <script><![CDATA[
+              /**
+               * Sends request to a remote site to get photos.
+               * @param {string} reqID The request id.
+               * @param {Object.<string, Object>?} options An object unwrapped from
+               *        MyspacePhotosRequestOptions.
+               * @member opensocial.flash.ext.myspace.photos
+               */
+              api.photos.get = function(reqID, options) {
+                var photoId = options['photoId'];
+                var userId = options['userId'];
+                userId = me.translateIds(userId);
+                var params = me.translatePaginationParams(options);
+
+                var req = opensocial.newDataRequest();
+                if (photoId == null) {
+
+                  if (options['albumId']) {
+                    params[MyOpenSpace.DataRequest.PhotoRequestFields.ALBUM_ID] =
+                        options['albumId'];
+                  }
+
+                  req.add(MyOpenSpace.DataRequest.newFetchPhotosRequest(userId, params), 'p');
+                  req.send(function(dataResponse) {
+                    try {
+                      var respPhotos = me.wrapObject(me.getData(dataResponse, 'p'));
+                      me.handleAsync(reqID, respPhotos);
+                    } catch (e) {
+                      me.handleError(reqID, e);
+                    }
+                  });
+                } else {
+                  req.add(MyOpenSpace.DataRequest.newFetchPhotoRequest(userId, photoId), 'p');
+                  req.send(function(dataResponse) {
+                    try {
+                      var respPhoto = me.wrapObject(me.getData(dataResponse, 'p'));
+                      me.handleAsync(reqID, respPhoto);
+                    } catch (e) {
+                      me.handleError(reqID, e);
+                    }
+                  });
+                }
+              };
+              ]]></script>
+            </get>
+          </photos>
+        </api>
+
+      </kernel>
+    </flash>
+  </opensocial>
+
+</global>
+

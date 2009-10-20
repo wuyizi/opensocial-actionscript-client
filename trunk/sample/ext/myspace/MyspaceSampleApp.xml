@@ -1,29 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Module>
 <ModulePrefs
-    title="SampleApp"
-    description="Just a sample to demo OpenSocial AS3 Client Library."
-    height="500"
-    directory_title="Sample App for OpenSocial AS3 Client Library"
-    author_email="yiziwu@google.com"
-    author_affiliation="Google Inc."
-    author_location="Beijing, China"
-    scaling="true"
-    scrolling="false"
-    singleton="false">
+    title="SampleApp - Myspace Extension"
+    description="Just a sample to demo OpenSocial AS3 Client Library - Myspace Extension."
+    height="500">
   <Require feature="opensocial-0.8"/>
   <Require feature="dynamic-height"/>
   <Require feature="views"/>
-  <Require feature="rpc"/>
-  <Require feature="settitle"/>
-
 </ModulePrefs>
-<Content type="html">
+<Content type="html" view="canvas">
 <![CDATA[
 
-<h1 style="font-size:32px; font-weight:bold; font-family:verdana; text-align: center;">Sample App</h1>
+<h1 style="font-size:32px; font-weight:bold; font-family:verdana; text-align: center;">Sample App for Myspace</h1>
 <div id="flashcontainer" style="text-align: center;"></div>
-
 
 <script type="text/javascript">
   var DEBUG = true;
@@ -36,7 +25,7 @@
   function loadSwf() {
 
     embedFlash(
-       baseUrl + "SampleApp.swf?bpc=" + nocache,
+       baseUrl + "MyspaceSampleApp.swf?bpc=" + nocache,
        "flashcontainer",
        "9.0.115.0",
        {
@@ -48,6 +37,7 @@
        });
     gadgets.window.adjustHeight();
   };
+
 
 
   // TODO: refine this function
@@ -98,7 +88,6 @@
   loadSwf();
 
 </script>
-
 
 ]]>
 </Content>

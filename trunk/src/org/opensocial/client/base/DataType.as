@@ -20,36 +20,25 @@
 package org.opensocial.client.base {
 
 import flash.utils.getQualifiedClassName;
-import flash.utils.getQualifiedSuperclassName;
 
 import org.opensocial.client.util.Logger;
 import org.opensocial.client.util.Utils;
 
 /**
- * Base type wrapped for all opensocial data structure. It's an abstract class logically.
+ * Base type wrapped for simple opensocial data structure with fields data. It's an abstract class 
+ * logically.
  *
  * <p>
  * All these types will have a common property set: "fields" and some <code>getField</code>
  * related methods. Types like <code>Person</code>, <code>Activity</code>, <code>Url</code>,
  * <code>Email</code> are the extended from this type.
  * </p>
- * <p>
- * Complex types like <code>Collection</code>, or non-information related class like
- * <code>ResponseItem</code> are extended from this type because there is no "fields"
- * property in it's raw object.
- * </p>
  *
  * @author yiziwu@google.com (Yizi Wu)
  */
-public class DataType extends BaseType {
+public class DataType extends AbstractDataType {
 
   private static var logger:Logger = new Logger(DataType);
-
-  /**
-   * The wrapped object from Js-side passed by the <code>ExternalInterface</code>.
-   * @private
-   */
-  protected var obj_:Object;
 
   /**
    * Constructor.
@@ -61,41 +50,7 @@ public class DataType extends BaseType {
    * @private
    */
   public function DataType(rawObj:Object) {
-    if (rawObj == null) {
-      var e:OpenSocialError =
-          new OpenSocialError("Null raw object in type '" + getQualifiedClassName(this) + "'.");
-      logger.error(e);
-      throw e;
-    }
-    this.obj_ = rawObj;
-  }
-
-  /**
-   * Accessor to the original wrapped object.
-   */
-  protected final function getRawObj():Object {
-    return obj_;
-  }
-
-  /**
-   * Get the property in the wrapped object.
-   * <p>
-   * Throw an <code>OpenSocialError</code> if the property not exists.
-   * </p>
-   * @param key The key.
-   * @return The value.
-   *
-   */
-  protected final function getRawProperty(key:String):* {
-    if (key in getRawObj()) {
-      return getRawObj()[key];
-    } else {
-      var e:OpenSocialError =
-          new OpenSocialError("Property '" + key + "' does not exist in raw object of type '" +
-                              getQualifiedClassName(this) + "'");
-      logger.error(e);
-      throw e;
-    }
+    super(rawObj);
   }
 
   /**
@@ -213,15 +168,6 @@ public class DataType extends BaseType {
   public function getFieldDataArray(key:String, type:Class):ArrayType {
     return new ArrayType(getField(key), type);
   }
-
-  /**
-   * Converts the <code>DataType</code> object to a string. This method should be overridden.
-   * @return The string representing this object.
-   */
-  public function toString():String {
-    return obj_ == null ? null : obj_.toString();
-  }
-
 
 }
 

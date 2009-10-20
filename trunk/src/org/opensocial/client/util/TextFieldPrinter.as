@@ -19,17 +19,20 @@
 
 package org.opensocial.client.util {
 
+import flash.display.DisplayObjectContainer;
 import flash.text.TextField;
 import flash.text.TextFormat;
 
 /**
- * A text field printer.
- * Apps can add it to the flash stage wherelse visible.
+ * Text field printer implementation. Apps can add it to the flash stage
+ * wherelse visible.
+ *
+ * @see IPrinter
+ * @see Logger
  *
  * @author yiziwu@google.com (Yizi Wu)
  */
 public class TextFieldPrinter extends TextField implements IPrinter {
-
   /**
    * The constructor.
    * @param x The x position, default = 0.
@@ -57,9 +60,9 @@ public class TextFieldPrinter extends TextField implements IPrinter {
     this.width = width;
     this.height = height;
   }
-
+  
   /**
-   * Prints the text to the info box.
+   * Prints the text to the info box and scrolls if needed.
    * @param text The text to output.
    */
   public function print(text:String):void {

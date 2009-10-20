@@ -102,7 +102,7 @@ public class JsWrapperClient extends OpenSocialClient {
    * @private
    */
   private var isReady_:Boolean;
-
+  
 
   /**
    * Javascrip Wrapper Client constructor, initializing some empty collections and values.
@@ -118,9 +118,11 @@ public class JsWrapperClient extends OpenSocialClient {
     isStarted_ = false;
     isReady_ = false;
 
-    if (jsNamespace_) {
+    if (jsNamespace) {
       jsNamespace_ = jsNamespace;
     }
+    
+    initJsBridge();
   }
 
   // ---------------------------------------------------------------------------
@@ -169,9 +171,11 @@ public class JsWrapperClient extends OpenSocialClient {
    * @private
    */
   final private function checkJavascriptReady():void {
-    var timer:Timer = new Timer(100, 10);
+    logger.info("Checking JavaScript status : " + 
+        jsNamespace_ + ".jsReady('" + ExternalInterface.objectID + "')");
+    
+    var timer:Timer = new Timer(200, 20);
     timer.addEventListener(TimerEvent.TIMER, function(event:TimerEvent):void {
-      logger.info("Checking JavaScript status...");
       var jsReady:Boolean = ExternalInterface.call(jsNamespace_ + ".jsReady",
                                                    ExternalInterface.objectID);
       if (jsReady) {
@@ -208,7 +212,7 @@ public class JsWrapperClient extends OpenSocialClient {
   /**
    * Asserts the client.ready property. Throws error if not ready.
    */
-  final internal function assertReady():void {
+  final protected function assertReady():void {
     if (!isReady_) throw new OpenSocialError("The OpenSocial JsWrapper Client is not ready.");
   }
 
@@ -312,64 +316,54 @@ public class JsWrapperClient extends OpenSocialClient {
     ExternalInterface.call.apply(null, parsedParams);
   }
 
-
   /**
    * @inheritDoc
    * @private
    */
   override protected function initFeatureBook():void {
     super.initFeatureBook();
-
-    var features:Array = [
-        [Feature.PEOPLE_GET,                true, "parseParams", "parsePeople"],
-
-        [Feature.APP_DATA_GET,              true, "parseParams", "parseRawData"],
-        [Feature.APP_DATA_UPDATE,           true, "parseParams", "parseEmpty"],
-        [Feature.APP_DATA_DELETE,           true, "parseParams", "parseEmpty"],
-
-        [Feature.ACTIVITIES_GET,            true, "parseParams", "parseActivities"],
-
-        [Feature.REQUEST_CREATE_ACTIVITY,   true, "parseParams", "parseEmpty"],
-        [Feature.REQUEST_SEND_MESSAGE,      true, "parseParams", "parseEmpty"],
-        [Feature.REQUEST_SHARE_APP,         true, "parseParams", "parseEmpty"],
-        [Feature.REQUEST_PERMISSION,        true, "parseParams", "parseEmpty"],
-
-        [Feature.GET_CONTAINER_DOMAIN,      false],
-        [Feature.GET_DOMAIN,                false],
-        [Feature.SUPPORTS_FIELD,            false],
-
-        [Feature.MAKE_REQUEST,              true, null, "parseProxiedResponse"],
-
-        [Feature.RPC_CALL,                  true],
-        [Feature.RPC_SERVICE_RETURN,        false],
-        [Feature.RPC_SERVICE_REGISTER,      false],
-        [Feature.RPC_SERVICE_UNREGISTER,    false],
-
-        [Feature.GET_CURRENT_VIEW,          false],
-        [Feature.IS_ONLY_VISIBLE,           false],
-        [Feature.GET_VIEW_PARAMS,           false],
-
-        [Feature.SET_STAGE_HEIGHT,          false],
-        [Feature.SET_STAGE_WIDTH,           false],
-        [Feature.SET_TITLE,                 false]
-    ];
-
-
-    for each(var item:Array in features) {
-      var args:Array = [item[0], item[1]];
-      if (item[2]) {
-        args.push(JsWrapperParsers[item[2]]);
-      } else {
-        args.push(null);
-      }
-      if (item[3]) {
-        args.push(JsWrapperParsers[item[3]]);
-      } else {
-        args.push(null);
-      }
-      addFeature.apply(this, args);
+    
+    with (JsWrapperParsers) {
+      addFeature(Feature.PEOPLE_GET,                true, parseParams, parseWrappedData);
+   
+      addFeature(Feature.APP_DATA_GET,              true, parseParams, parseRawData);
+      addFeature(Feature.APP_DATA_UPDATE,           true, parseParams, parseEmpty);
+      addFeature(Feature.APP_DATA_DELETE,           true, parseParams, parseEmpty);
+    
+      addFeature(Feature.ACTIVITIES_GET,            true, parseParams, parseWrappedData);
+    
+      addFeature(Feature.REQUEST_CREATE_ACTIVITY,   true, parseParams, parseEmpty);
+      addFeature(Feature.REQUEST_SEND_MESSAGE,      true, parseParams, parseEmpty);
+      addFeature(Feature.REQUEST_SHARE_APP,         true, parseParams, parseEmpty);
+      addFeature(Feature.REQUEST_PERMISSION,        true, parseParams, parseEmpty);
+    
+      addFeature(Feature.GET_CONTAINER_DOMAIN,      false);
+      addFeature(Feature.GET_DOMAIN,                false);
+      addFeature(Feature.SUPPORTS_FIELD,            false);
+    
+      addFeature(Feature.MAKE_REQUEST,              true, null, parseProxiedResponse);
+    
+      addFeature(Feature.RPC_CALL,                  true);
+      addFeature(Feature.RPC_SERVICE_RETURN,        false);
+      addFeature(Feature.RPC_SERVICE_REGISTER,      false);
+      addFeature(Feature.RPC_SERVICE_UNREGISTER,    false);
+    
+      addFeature(Feature.GET_CURRENT_VIEW,          false);
+      addFeature(Feature.IS_ONLY_VISIBLE,           false);
+      addFeature(Feature.GET_VIEW_PARAMS,           false);
+    
+      addFeature(Feature.SET_STAGE_HEIGHT,          false);
+      addFeature(Feature.SET_STAGE_WIDTH,           false);
+      addFeature(Feature.SET_TITLE,                 false);
     }
-
+  }
+  
+  /**
+   * Initializes the javascript bridge. This method should be overriden for 
+   * special clients.
+   */
+  protected function initJsBridge():void {
+    new JsWrapperBridge().render();
   }
 }
 

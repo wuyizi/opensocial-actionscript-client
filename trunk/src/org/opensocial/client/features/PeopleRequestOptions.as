@@ -114,7 +114,7 @@ public class PeopleRequestOptions extends RequestOptions {
 
 
   /**
-   * Sets the nunber of activities to be fetch. Only used in the <code>PEOPLE_GET</code>
+   * Sets the number of people to be fetch. Only used in the <code>PEOPLE_GET</code>
    * feature.
    * @param count The number of the counts.
    * @return The options itself.
