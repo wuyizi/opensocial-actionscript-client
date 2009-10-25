@@ -36,6 +36,6 @@ public class MyspaceJsWrapperBridge extends JsWrapperBridge {
     var xml:XML = initializeScripts(MyspaceScript);
     extend(xml);
   }
- 
+
 }
 }
