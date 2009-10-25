@@ -107,13 +107,13 @@ public class JsWrapperClient extends OpenSocialClient {
   /**
    * Javascrip Wrapper Client constructor, initializing some empty collections and values.
    * @param jsNamespace The javascript namespace used in the Js-Side, null to use the default value.
-   * @param jsDomain The allowed scripting domain for Js calls.
+   * @param jsAllowedDomain The allowed scripting domain for Js calls.
    */
-  public function JsWrapperClient(jsNamespace:String = null, jsDomain:String = "*") {
+  public function JsWrapperClient(jsNamespace:String = null, jsAllowedDomain:String = "*") {
     super();
 
-    // TODO: do some security check on this jsDomain string's format, to eliminate illegal input.
-    Security.allowDomain(jsDomain);
+    // TODO: do some security check on jsAllowedDomain string's format, to eliminate illegal input.
+    Security.allowDomain(jsAllowedDomain);
 
     isStarted_ = false;
     isReady_ = false;

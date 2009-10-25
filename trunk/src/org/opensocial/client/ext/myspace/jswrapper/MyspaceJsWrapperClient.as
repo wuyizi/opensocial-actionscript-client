@@ -31,8 +31,8 @@ import org.opensocial.client.jswrapper.*;
  */
 public class MyspaceJsWrapperClient extends JsWrapperClient {
 
-  public function MyspaceJsWrapperClient(jsNamespace:String = null, jsDomain:String = "*") {
-    super(jsNamespace, jsDomain);
+  public function MyspaceJsWrapperClient(jsNamespace:String = null, jsAllowedDomain:String = "*") {
+    super(jsNamespace, jsAllowedDomain);
   }
   
   /**
