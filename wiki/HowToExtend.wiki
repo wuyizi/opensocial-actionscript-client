@@ -1,0 +1,4 @@
+#summary How to extend OpenSocial ActionScript client
+#labels Featured,Extend
+
+Please refer to this document: <a href="http://tinyurl.com/HowToExtendAS3Client" target="_blank">How to extend !OpenSocial !ActionScript client</a>.
