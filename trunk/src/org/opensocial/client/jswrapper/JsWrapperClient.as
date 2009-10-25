@@ -103,6 +103,13 @@ public class JsWrapperClient extends OpenSocialClient {
    */
   private var isReady_:Boolean;
   
+  
+  /**
+   * The js bridge object holding the xml script.
+   * @private 
+   */ 
+  private var jsBridge_:JsWrapperBridge;
+  
 
   /**
    * Javascrip Wrapper Client constructor, initializing some empty collections and values.
@@ -122,7 +129,9 @@ public class JsWrapperClient extends OpenSocialClient {
       jsNamespace_ = jsNamespace;
     }
     
-    initJsBridge();
+    // Initialize and inject the javascript bridge
+    jsBridge_ = initJsBridge();
+    jsBridge_.render();
   }
 
   // ---------------------------------------------------------------------------
@@ -362,8 +371,8 @@ public class JsWrapperClient extends OpenSocialClient {
    * Initializes the javascript bridge. This method should be overriden for 
    * special clients.
    */
-  protected function initJsBridge():void {
-    new JsWrapperBridge().render();
+  protected function initJsBridge():JsWrapperBridge {
+    return new JsWrapperBridge();
   }
 }
 

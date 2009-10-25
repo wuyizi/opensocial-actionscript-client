@@ -21,12 +21,14 @@ package org.opensocial.client.ext.myspace.jswrapper {
 
 import org.opensocial.client.core.Feature;
 import org.opensocial.client.ext.myspace.core.MyspaceFeature;
-import org.opensocial.client.jswrapper.*;
+import org.opensocial.client.jswrapper.JsWrapperBridge;
+import org.opensocial.client.jswrapper.JsWrapperClient;
+import org.opensocial.client.jswrapper.JsWrapperParsers;
 
 /**
  * Extenstion of normal JsWrapperClient for myspace container. This container doesn't support
  * rpc and settitle feature. But it supports photos, albums, videos and many other extensions.
- *  
+ * 
  * @author yiziwu@google.com (Yizi Wu)
  */
 public class MyspaceJsWrapperClient extends JsWrapperClient {
@@ -57,8 +59,8 @@ public class MyspaceJsWrapperClient extends JsWrapperClient {
     }
   }
   
-  override protected function initJsBridge():void {
-    new MyspaceJsWrapperBridge().render();
+  override protected function initJsBridge():JsWrapperBridge {
+    return new MyspaceJsWrapperBridge();
   }
 }
 }
