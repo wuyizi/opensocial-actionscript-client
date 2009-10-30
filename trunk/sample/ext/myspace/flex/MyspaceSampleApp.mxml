@@ -63,16 +63,16 @@
       private function init():void {
 
         // Create the output box for information displaying
-        //var printer:TextFieldPrinter = new TextFieldPrinter(2, 260, 450, 230);
-        //this.rawChildren.addChild(printer);
-        var printer:FirebugPrinter = new FirebugPrinter();
+        var printer:TextFieldPrinter = new TextFieldPrinter(2, 260, 450, 230);
+        this.rawChildren.addChild(printer);
+        //var printer:FirebugPrinter = new FirebugPrinter();
         Logger.initialize(printer, 1);
         logger.info("OpenSocial(0.8) AS3 Client Library in Flex 3");
         logger.log(new Date());
-        
+
         // Initialize Client and start, using the extended Myspace client.
-		
-		// Create the extended Myspace client.
+
+        // Create the extended Myspace client.
         client = new MyspaceJsWrapperClient("opensocial.flash");
         client.addEventListener(OpenSocialClientEvent.CLIENT_READY, onReady);
         client.start();
