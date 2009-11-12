@@ -30,7 +30,7 @@
   // Change nocache to version number when releasing other than random timestamps.
   var nocache = new Date().getTime();
   
-  var baseUrl = "http://www.unickway.org.cn/asClient/release/";
+  var baseUrl = "http://opensocial-actionscript-client.googlecode.com/svn/tags/release-1.0/";
   function loadJs() {
     var script = document.createElement("script");
     script.src = baseUrl + "src/org/opensocial/client/jswrapper/javascript/opensocial-flashsdk.js?bpc=" + nocache;
