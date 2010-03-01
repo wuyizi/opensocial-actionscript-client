@@ -78,10 +78,10 @@ public class SampleApp extends MovieClip {
   }
 
   private function onReady(event:OpenSocialClientEvent):void {
-    logger.info("Domain: " + helper.getDomain());
-    logger.info("ContainerDomain: " + helper.getContainerDomain());
-    logger.info("CurrentView: " + helper.getCurrentView());
-    logger.info("Client Ready.");
+    logger.log("Domain: " + helper.getDomain());
+    logger.log("ContainerDomain: " + helper.getContainerDomain());
+    logger.log("CurrentView: " + helper.getCurrentView());
+    logger.log("Client Ready.");
   }
   
   // -------------------------------------------------------------
@@ -101,7 +101,7 @@ public class SampleApp extends MovieClip {
   
   private function fetchMeEventHandler(event:ResponseItemEvent):void {
     var p:Person = event.response.getData();
-    logger.info(p.getDisplayName());
+    logger.log(p.getDisplayName());
     drawPerson(p, 0);
   }
 
@@ -121,11 +121,11 @@ public class SampleApp extends MovieClip {
 
   private function fetchFriendsEventHandler(event:ResponseItemEvent):void {
     var c:Collection = event.response.getData();
-    logger.info(c.toDebugString());
+    logger.log(c.toDebugString());
     var arr:Array = c.getArray();
     for (var i:int = 0; i < arr.length; i++) {
       var p:Person = arr[i];
-      logger.info(p.getDisplayName());
+      logger.log(p.getDisplayName());
       drawPerson(p, i + 1);
     }
     
@@ -153,10 +153,10 @@ public class SampleApp extends MovieClip {
   }
   
   private function sendMessageEventHandler(event:ResponseItemEvent):void {
-    logger.info("msg sent.");
+    logger.log("msg sent.");
   }
   private function sendMessageEventErrorHandler(event:ResponseItemEvent):void {
-    logger.info("msg sending failed: " + event.response.getErrorMessage());
+    logger.log("msg sending failed: " + event.response.getErrorMessage());
   }
   
   
@@ -164,9 +164,6 @@ public class SampleApp extends MovieClip {
   private function createActivity():void {
     var activity:Activity = Activity.newInstance("My new activity!", "Hello World...");
     // the change for myspace. myspace's Activity object need set 'TITLE_ID'.
-    activity.setField(Activity.Field.TITLE_ID,"Msg");
-    activity.setField(Activity.Field.TEMPLATE_PARAMS, {"body":"lkjasldkjflksjdlkfjslkdjfdsj"});
-
     logger.log(activity.toRawObject());
     var req:AsyncDataRequest = new AsyncDataRequest(
         Feature.REQUEST_CREATE_ACTIVITY,
@@ -178,10 +175,10 @@ public class SampleApp extends MovieClip {
   }
 
   private function createActivityEventHandler(event:ResponseItemEvent):void {
-    logger.info("activity created");
+    logger.log("activity created");
   }
   private function createActivityEventErrorHandler(event:ResponseItemEvent):void {
-    logger.info("activity creation failed: " + event.response.getErrorMessage());
+    logger.log("activity creation failed: " + event.response.getErrorMessage());
   }
   
   
@@ -197,10 +194,10 @@ public class SampleApp extends MovieClip {
   }
   
   private function makeRequestEventHandler(event:ProxiedRequestEvent):void {
-    logger.info(event.response.getData());
+    logger.log(event.response.getData());
   }
   private function makeRequestEventErrorHandler(event:ProxiedRequestEvent):void {
-    logger.info("make request failed: " + event.response.getRC() + "|" + 
+    logger.log("make request failed: " + event.response.getRC() + "|" + 
                 event.response.getText());
   }
 
@@ -221,7 +218,7 @@ public class SampleApp extends MovieClip {
   }
 
   private function callRpcEventHandler(event:RPCRequestEvent):void {
-    logger.info("--- invoked by the returning of 'srv-parent' ---");
+    logger.log("--- invoked by the returning of 'srv-parent' ---");
     logger.log(event.returnValue);
   }
 
@@ -243,7 +240,7 @@ public class SampleApp extends MovieClip {
   }
   
   private function serviceEventHandler(event:RPCServiceEvent):void {
-    logger.info("--- invoked by 'srv-app' get called ---");
+    logger.log("--- invoked by 'srv-app' get called ---");
     logger.log(event.params);
     event.callback("'srv-app' returned.");
   }
@@ -264,14 +261,98 @@ public class SampleApp extends MovieClip {
      req.addEventListener(ResponseItemEvent.ERROR, shareAppEventErrorHandler);
      req.send(client);
   }
-       
+  
   private function shareAppEventHandler(event:ResponseItemEvent):void {
-    logger.info("msg sent.");
+    logger.log("msg sent.");
   }
   private function shareAppEventErrorHandler(event:ResponseItemEvent):void {
-    logger.info("msg sending failed: " + event.response.getErrorMessage());
+    logger.log("msg sending failed: " + event.response.getErrorMessage());
+  }
+  // ----------------- Batch Request------------------
+  private function batchRequest():void {
+    var batch:BatchRequest = new BatchRequest();
+    var req:AsyncDataRequest = new AsyncDataRequest(
+    Feature.PEOPLE_GET,
+    new PeopleRequestOptions()
+        .setUserId("@me")
+        .setGroupId("@self"));
+
+    req.addEventListener(ResponseItemEvent.COMPLETE, batchFetchMeEventHandler);
+    req.addEventListener(ResponseItemEvent.ERROR, batchFetchMeEventErrorHandler);
+
+        
+    batch.add(req, "meProfile");
+ 
+    req = new AsyncDataRequest(
+    Feature.PEOPLE_GET,
+    new PeopleRequestOptions()
+        .setUserId("@me")
+        .setGroupId("@friends")
+        .setCount(2)
+        .setStartIndex(0));
+
+    req.addEventListener(ResponseItemEvent.COMPLETE, batchFetchFriendsEventHandler);
+    req.addEventListener(ResponseItemEvent.ERROR, batchFetchFriendsEventErrorHandler);
+        
+    batch.add(req, "friendList");
+
+    batch.addEventListener(ResponseItemEvent.COMPLETE, batchDataRequestEventHandler);
+    batch.addEventListener(ResponseItemEvent.ERROR, batchDataRequestErrorHandler);
+    batch.send(client);
+  }
+
+  private function batchDataRequestEventHandler(event:ResponseItemEvent):void {
+    logger.log("===============  Batch Success   ================");
+    var p:Person = event.response.getData("meProfile");
+    logger.log("meProfile ===============  " + p.getDisplayName());
+    
+    var c:Collection = event.response.getData("friendList");
+    var arr:Array = c.getArray();
+    for (var i:int = 0; i < arr.length; i++) {
+      var person:Person = arr[i];
+      logger.log("friendList ===============  " + person.getDisplayName());
+    }
+
+    logger.log("===============  Batch Success   ================");
   }
   
+  private function batchDataRequestErrorHandler(event:ResponseItemEvent):void {
+    logger.log("===============  Batch Error   ================");
+    logger.log(event.response.getErrorMessage());
+    logger.log("===============  Batch Error   ================");
+  }
+  
+  private function batchFetchMeEventHandler(event:ResponseItemEvent):void {
+    var p:Person = event.response.getData();
+    logger.log(p.getDisplayName());
+    drawPerson(p, 0);
+  }  
+  
+  private function batchFetchMeEventErrorHandler(event:ResponseItemEvent):void {
+    logger.log("fetch me failed: " + event.response.getErrorMessage());
+  }
+
+  private function batchFetchFriendsEventHandler(event:ResponseItemEvent):void {
+    var c:Collection = event.response.getData();
+    logger.log(c.toDebugString());
+    var arr:Array = c.getArray();
+    for (var i:int = 0; i < arr.length; i++) {
+      var p:Person = arr[i];
+      logger.log(p.getDisplayName());
+      drawPerson(p, i + 1);
+    }
+    
+    if (c.getRemainingSize() > 0) {
+      var req:AsyncDataRequest = event.target as AsyncDataRequest;
+      (req.getOptions() as PeopleRequestOptions).setStartIndex(c.getNextOffset());
+      req.send(client);
+    }
+  }
+
+  private function batchFetchFriendsEventErrorHandler(event:ResponseItemEvent):void {
+    logger.log("fetch friends failed: " + event.response.getErrorMessage());
+  }
+
   // -------------------------------------------------------------
   //  Helper functions for action and display
   // -------------------------------------------------------------
@@ -325,6 +406,13 @@ public class SampleApp extends MovieClip {
         registerService();
       });
     }
+	
+    if (this['batchRequestBtn']) {
+      var btn8:TextField = this['batchRequestBtn'] as TextField;
+      btn8.addEventListener(MouseEvent.CLICK, function(event:MouseEvent):void {
+        batchRequest();
+      });
+    }
   }
 
   private function drawPerson(person:Person, index:int):void {
@@ -348,7 +436,7 @@ public class SampleApp extends MovieClip {
 
     try {
       var url:String = person.getThumbnailUrl();
-      //logger.info(url);
+      //logger.log(url);
       if (url != null) {
         var request:URLRequest = new URLRequest(url);
         var thumb:Loader = new Loader();

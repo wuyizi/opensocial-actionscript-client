@@ -44,6 +44,38 @@
             <script><![CDATA[
               api.photos = {};
             ]]></script>
+            <getRequest>
+              <script><![CDATA[
+              /**
+               * According to operation mode, get request object.
+               * @param {Object.<string, Object>?} options An object unwrapped from
+               *        PeopleRequestOptions.
+               * @param {string} mode The operation mode.
+               * @param {DataRequest} req An exist DataRequest.               
+               * @member opensocial.flash.ext.myspace.photos
+               */
+              api.photos.getRequest = function(options, mode, req) {
+                switch (mode){
+                  case 'get':
+                    var photoId = options['photoId'];
+                    var userId = options['userId'];
+                    userId = me.translateIds(userId);
+                    var params = me.translatePaginationParams(options);
+                    if (photoId == null) {
+    
+                      if (options['albumId']) {
+                        params[MyOpenSpace.DataRequest.PhotoRequestFields.ALBUM_ID] =
+                            options['albumId'];
+                      }
+                      
+                      return MyOpenSpace.DataRequest.newFetchPhotosRequest(userId, params);
+                    } else {
+                      return MyOpenSpace.DataRequest.newFetchPhotoRequest(userId, photoId);
+                    }
+                }
+              };
+              ]]></script>
+            </getRequest>
             <get>
               <script><![CDATA[
               /**
@@ -54,39 +86,17 @@
                * @member opensocial.flash.ext.myspace.photos
                */
               api.photos.get = function(reqID, options) {
-                var photoId = options['photoId'];
-                var userId = options['userId'];
-                userId = me.translateIds(userId);
-                var params = me.translatePaginationParams(options);
-
                 var req = opensocial.newDataRequest();
-                if (photoId == null) {
-
-                  if (options['albumId']) {
-                    params[MyOpenSpace.DataRequest.PhotoRequestFields.ALBUM_ID] =
-                        options['albumId'];
+                var request = me.api.appdata.getRequest(options, 'get', req);
+                req.add(request, 'p');
+                req.send(function(dataResponse) {
+                  try {
+                    var response = me.wrapObject(me.getData(dataResponse, 'p'));
+                    me.handleAsync(reqID, response);
+                  } catch (e) {
+                    me.handleError(reqID, e);
                   }
-
-                  req.add(MyOpenSpace.DataRequest.newFetchPhotosRequest(userId, params), 'p');
-                  req.send(function(dataResponse) {
-                    try {
-                      var respPhotos = me.wrapObject(me.getData(dataResponse, 'p'));
-                      me.handleAsync(reqID, respPhotos);
-                    } catch (e) {
-                      me.handleError(reqID, e);
-                    }
-                  });
-                } else {
-                  req.add(MyOpenSpace.DataRequest.newFetchPhotoRequest(userId, photoId), 'p');
-                  req.send(function(dataResponse) {
-                    try {
-                      var respPhoto = me.wrapObject(me.getData(dataResponse, 'p'));
-                      me.handleAsync(reqID, respPhoto);
-                    } catch (e) {
-                      me.handleError(reqID, e);
-                    }
-                  });
-                }
+                });
               };
               ]]></script>
             </get>

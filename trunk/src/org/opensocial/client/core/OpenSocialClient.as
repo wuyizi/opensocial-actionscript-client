@@ -157,6 +157,17 @@ public class OpenSocialClient extends EventDispatcher {
   }
 
   /**
+   * Executes batch request.
+   * @param requests request collection.
+   * @param callback The callback to handle the response.
+   *
+   */
+  public function callBatch(requests:Dictionary, handler:Function):void {
+    // Must be overriden
+    throw new OpenSocialError("This method in this abstract class must be overriden.");
+  }
+
+  /**
    * Registers a callback handler on this client.
    * @param callbackName The name or id of the callback.
    * @param callback The callback function.

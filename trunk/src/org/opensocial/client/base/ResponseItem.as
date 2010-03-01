@@ -120,10 +120,15 @@ public class ResponseItem extends BaseType {
 
   /**
    * Gets the data.
+   * @param resKey The response key.
    * @return The data object.
    */
-  public function getData():* {
-    return data_;
+  public function getData(resKey:String = null):* {
+    if (resKey) {    
+      return data_[resKey].getData();
+    } else {
+      return data_;
+    }
   }
 }
 }

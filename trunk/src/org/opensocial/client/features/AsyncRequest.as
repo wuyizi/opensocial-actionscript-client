@@ -40,7 +40,8 @@ public class AsyncRequest extends EventDispatcher {
   protected var featureName_:String;
 
   /**
-   * Indicates this request instance is waiting for response or not.
+   * Indicates this request instance is running or not.
+   * And you can't re-establish the running request concurrently.
    * @private
    */
   protected var isRunning_:Boolean;
@@ -75,8 +76,9 @@ public class AsyncRequest extends EventDispatcher {
   }
 
   /**
-   * Indicates this request instance is waiting for response or not.
-   * @return True if it's waiting.
+   * Indicates this request instance is running or not.
+   * And you can't re-establish the running request concurrently.
+   * @return True if it's running.
    */
   public function get isRunning():Boolean {
     return isRunning_;
@@ -99,6 +101,14 @@ public class AsyncRequest extends EventDispatcher {
   internal function setParams(...params:Array):AsyncRequest {
     params_ = params;
     return this;
+  }
+
+  /**
+   * Returns the request featrue name.
+   * @return The featrue name.
+   */
+  public function get featureName():String {
+    return featureName_;
   }
 
   /**
@@ -126,7 +136,7 @@ public class AsyncRequest extends EventDispatcher {
    */
   public function send(client:OpenSocialClient):void {
     if (isRunning_) {
-      return;
+      throw new OpenSocialError("The request instance already running.");
     }
     var args:Array = [featureName_, callback];
     if (params_ != null) {
