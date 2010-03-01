@@ -19,8 +19,6 @@
 
 package org.opensocial.client.jswrapper {
 
-import flash.utils.getDefinitionByName;
-
 import org.opensocial.client.base.*;
 
 /**
@@ -48,11 +46,15 @@ public class JsWrapperParsers {
 
   public static function parseWrappedData(obj:*):ResponseItem {
     if (obj is OpenSocialError) return parseError(obj);
+    if (obj && obj["name"] == "OpenSocialError")
+      return new ResponseItem(null, obj["code"], obj["message"]);
     return new ResponseItem(AbstractDataType.create(obj));
   }
 
   public static function parseRawData(obj:*):ResponseItem {
     if (obj is OpenSocialError) return parseError(obj);
+    if (obj && obj["name"] == "OpenSocialError")
+      return new ResponseItem(null, obj["code"], obj["message"]);      
     return new ResponseItem(obj);
   }
 
@@ -62,6 +64,8 @@ public class JsWrapperParsers {
 
   public static function parseEmpty(obj:*):ResponseItem {
     if (obj is OpenSocialError) return parseError(obj);
+    if (obj && obj["name"] == "OpenSocialError")
+      return new ResponseItem(null, obj["code"], obj["message"]);
     return ResponseItem.SIMPLE_SUCCESS;
   }
 }

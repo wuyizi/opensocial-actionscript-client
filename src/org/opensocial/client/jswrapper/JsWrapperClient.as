@@ -22,10 +22,12 @@ package org.opensocial.client.jswrapper {
 import flash.events.TimerEvent;
 import flash.external.ExternalInterface;
 import flash.system.Security;
+import flash.utils.Dictionary;
 import flash.utils.Timer;
 
 import org.opensocial.client.base.*;
 import org.opensocial.client.core.*;
+import org.opensocial.client.features.AsyncDataRequest;
 import org.opensocial.client.util.*;
 
 /**
@@ -324,6 +326,35 @@ public class JsWrapperClient extends OpenSocialClient {
     parsedParams.unshift(jsNamespace_ + "." + featureName, reqID);
     ExternalInterface.call.apply(null, parsedParams);
   }
+  
+  /**
+   * @inheritDoc 
+   */
+  override public function callBatch(requests:Dictionary, handler:Function):void {
+    assertReady();
+    var callback:Function = function(rawData:*):void {
+      var data:Dictionary = new Dictionary();
+      for (var resKey:String in requests) {
+        var dataRequest:AsyncDataRequest = requests[resKey];
+        var feature:Feature = checkFeature(dataRequest.featureName);
+        data[resKey] = feature.resParser(rawData[resKey]);
+      }
+      handler(data);
+    };
+    
+    var jsRequests:Object = new Object();
+    var reqID:String = callbacks_.push(callback);    
+    for (var resKey:String in requests) {
+      var dataRequest:AsyncDataRequest = requests[resKey];
+      var feature:Feature = checkFeature(dataRequest.featureName);      
+      var params:Array = feature.reqParser(dataRequest.params);
+      params.unshift(jsNamespace_ + "." + dataRequest.featureName); 
+      jsRequests[resKey] = params;
+    }
+    var parsedParams:Array = [jsNamespace_ + ".batch.send", reqID, jsRequests];
+    ExternalInterface.call.apply(null, parsedParams);
+  } 
+  
 
   /**
    * @inheritDoc

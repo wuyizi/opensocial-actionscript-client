@@ -329,7 +329,7 @@
               EXPORT('DATA_RESPONSE', {'key': key, 'data': dataResponse});
 
               if (!dataResponse) return null;
-              if (dataResponse.hadError()) {
+              if (dataResponse.hadError() && dataResponse.getErrorMessage()) {
                 var e = new Error(dataResponse.getErrorMessage());
                 e['name'] = "OpensocialError";
                 throw e;
@@ -1120,6 +1120,60 @@
           </io>
 
 
+          <!-- ========================== Batch Request =========================== -->
+          <batch>
+            <script><![CDATA[
+              api.batch = {}; 
+            ]]></script>
+
+            <send>
+              <script><![CDATA[
+              /**
+               * send a batch request.
+               * @param {string} reqID The request id.
+               * @param {Object.<string, Object>?} The request collection.
+               * @member opensocial.flash.batch
+               */
+              api.batch.send = function(reqID, requests) {
+                var req = opensocial.newDataRequest();
+                for (resKey in requests) {
+                  var featureName = requests[resKey][0];
+                  var splitIndex = featureName.lastIndexOf('.');
+                  var operationMode = featureName.slice(splitIndex + 1);
+                  var getRequestFuncitonName = featureName.slice(0, splitIndex) + ".getRequest";
+                  var options = requests[resKey][1];
+                  var getRequestFunciton = new Function('return ' + getRequestFuncitonName);
+                  var getRequest = getRequestFunciton();
+                  var request = getRequest(options, operationMode, req);
+                  req.add(request, resKey);
+                }
+                    
+                req.send(function(dataResponse) {
+                  var response = {};
+                  for (resKey in requests) {
+                    var featureName = requests[resKey][0];
+                    if (featureName.indexOf('.appdata.') > -1) { 
+                      try {
+                        response[resKey] = me.getData(dataResponse, resKey);
+                      } catch (e) {
+                        response[resKey] = e;
+                      }
+                    } else {
+                      try {
+                        response[resKey] = me.wrapObject(me.getData(dataResponse, resKey));
+                      } catch (e) {
+                        response[resKey] = e;
+                      }
+                    }
+                  }
+                  me.handleAsync(reqID, response);
+                });
+              };
+              ]]></script>
+            </send>
+          </batch>
+
+
           <!-- ========================== OSAPI Services =========================== -->
           <!--
             NOTE: Currently not all container support osapi.
@@ -1133,6 +1187,34 @@
               api.people = {};
             ]]></script>
 
+            <getRequest>
+              <script><![CDATA[
+              /**
+               * According to operation mode, get request object.
+               * @param {Object.<string, Object>?} options An object unwrapped from
+               *        PeopleRequestOptions.
+               * @param {string} mode The operation mode.
+               * @param {DataRequest} req An exist DataRequest.               
+               * @member opensocial.flash.people
+               */
+              api.people.getRequest = function(options, mode, req) {
+                switch (mode){
+                  case 'get':
+                    var params = me.translatePeopleRequestParams(options);
+                    params = me.translatePaginationParams(options, params);
+                    var idSpec = me.translateIdSpec(options);
+                    var userId = idSpec.getField(opensocial.IdSpec.Field.USER_ID);
+                    var groupId = idSpec.getField(opensocial.IdSpec.Field.GROUP_ID);                 
+                    
+                    if (groupId == opensocial.IdSpec.GroupId.SELF) {
+                      return req.newFetchPersonRequest(userId, params);
+                    } else {
+                      return req.newFetchPeopleRequest(idSpec, params);
+                    }
+                }
+              };
+              ]]></script>
+            </getRequest>
             <get>
               <script><![CDATA[
               /**
@@ -1143,35 +1225,17 @@
                * @member opensocial.flash.people
                */
               api.people.get = function(reqID, options) {
-                var params = me.translatePeopleRequestParams(options);
-                params = me.translatePaginationParams(options, params);
-                var idSpec = me.translateIdSpec(options);
-                var userId = idSpec.getField(opensocial.IdSpec.Field.USER_ID);
-                var groupId = idSpec.getField(opensocial.IdSpec.Field.GROUP_ID);
                 var req = opensocial.newDataRequest();
-
-                if (groupId == opensocial.IdSpec.GroupId.SELF) {
-                  req.add(req.newFetchPersonRequest(userId, params), 'p');
-                  req.send(function(dataResponse) {
-                    try {
-                      var respPerson = me.wrapObject(me.getData(dataResponse, 'p'));
-                      me.handleAsync(reqID, respPerson);
-                    } catch (e) {
-                      me.handleError(reqID, e);
-                    }
-                  });
-
-                } else {
-                  req.add(req.newFetchPeopleRequest(idSpec, params), 'f');
-                  req.send(function(dataResponse) {
-                    try {
-                      var respPeople = me.wrapObject(me.getData(dataResponse, 'f'));
-                      me.handleAsync(reqID, respPeople);
-                    } catch (e) {
-                      me.handleError(reqID, e);
-                    }
-                  });
-                }
+                var request = me.api.people.getRequest(options, 'get', req);
+                req.add(request, 'p');
+                req.send(function(dataResponse) {
+                  try {
+                    var response = me.wrapObject(me.getData(dataResponse, 'p'));
+                    me.handleAsync(reqID, response);
+                  } catch (e) {
+                    me.handleError(reqID, e);
+                  }
+                });       
               };
               ]]></script>
             </get>
@@ -1184,6 +1248,27 @@
               api.activities = {};
             ]]></script>
 
+            <getRequest>
+              <script><![CDATA[
+              /**
+               * According to operation mode, get request object.
+               * @param {Object.<string, Object>?} options An object unwrapped from
+               *        PeopleRequestOptions.
+               * @param {string} mode The operation mode.
+               * @param {DataRequest} req An exist DataRequest.               
+               * @member opensocial.flash.people
+               */
+              api.activities.getRequest = function(options, mode, req) {
+                switch (mode){
+                  case 'get':
+                    var params = me.translateActivityRequestParams(options);
+                    params = me.translatePaginationParams(options, params);
+                    var idSpec = me.translateIdSpec(options);                    
+                    return req.newFetchActivitiesRequest(idSpec, params); 
+                }
+              };
+              ]]></script>
+            </getRequest>
             <get>
               <script><![CDATA[
               /**
@@ -1194,11 +1279,9 @@
                * @member opensocial.flash.activities
                */
               api.activities.get = function(reqID, options) {
-                var params = me.translateActivityRequestParams(options);
-                params = me.translatePaginationParams(options, params);
-                var idSpec = me.translateIdSpec(options);
                 var req = opensocial.newDataRequest();
-                req.add(req.newFetchActivitiesRequest(idSpec, params), 'a');
+                var request = me.api.activities.getRequest(options, 'get', req);
+                req.add(request, 'a');
                 req.send(function(dataResponse) {
                   try {
                     var respActivities = me.wrapObject(me.getData(dataResponse, 'a'));
@@ -1219,6 +1302,41 @@
               api.appdata = {};
             ]]></script>
 
+            <getRequest>
+              <script><![CDATA[
+              /**
+               * According to operation mode, get request object.
+               * @param {Object.<string, Object>?} options An object unwrapped from
+               *        PeopleRequestOptions.
+               * @param {string} mode The operation mode.
+               * @param {DataRequest} req An exist DataRequest.               
+               * @member opensocial.flash.people
+               */
+              api.appdata.getRequest = function(options, mode, req) {
+                switch (mode){
+                  case 'get':
+                    var idSpec = me.translateIdSpec(options);
+                    var keys = options['keys'];     
+                    return req.newFetchPersonAppDataRequest(idSpec, keys);
+                  case 'update':
+                    var idSpec = me.translateIdSpec(options);
+                    var userId = idSpec.getField(opensocial.IdSpec.Field.USER_ID);
+                    var key;
+                    var value;
+                    for (key in options['data']) {
+                      value = options['data'][key];
+                      break;
+                    }
+                    return req.newUpdatePersonAppDataRequest(userId, key, value);
+                  case 'deleteData':
+                    var idSpec = me.translateIdSpec(options);
+                    var userId = idSpec.getField(opensocial.IdSpec.Field.USER_ID);
+                    var keys = options['keys'];
+                    return req.newRemovePersonAppDataRequest(userId, keys);
+                }
+              };
+              ]]></script>
+            </getRequest>
             <get>
               <script><![CDATA[
               /**
@@ -1228,15 +1346,15 @@
                *        AppDataRequestOptions.
                * @member opensocial.flash.appdata
                */
-              api.appdata.get = function(reqID, options) {
-                var idSpec = me.translateIdSpec(options);
-                var keys = options['keys'];
+              api.appdata.get = function(reqID, options, req, resKey) {
                 var req = opensocial.newDataRequest();
-                req.add(req.newFetchPersonAppDataRequest(idSpec, keys), 'd');
+                var request = me.api.appdata.getRequest(options, 'get', req);
+                req.add(request, 'd');
                 req.send(function(dataResponse) {
                   try {
                     var dataSet = me.getData(dataResponse, 'd');
-                    /* dataSet�s type: Object.<opensocial.IdSpec.PersonId, Object.<string, Object>>
+                    /* dataSet's type:
+                     *     Object.<opensocial.IdSpec.PersonId, Object.<string, Object>>
                      */
                     me.handleAsync(reqID, dataSet);
                   } catch (e) {
@@ -1256,17 +1374,9 @@
                * @member opensocial.flash.appdata
                */
               api.appdata.update = function(reqID, options) {
-                var idSpec = me.translateIdSpec(options);
-                var userId = idSpec.getField(opensocial.IdSpec.Field.USER_ID);
-                var key;
-                var value;
-                for (key in options['data']) {
-                  value = options['data'][key];
-                  break;
-                }
-
                 var req = opensocial.newDataRequest();
-                req.add(req.newUpdatePersonAppDataRequest(userId, key, value), 'u');
+                var request = me.api.appdata.getRequest(options, 'update', req);
+                req.add(request, 'u');
                 req.send(function(dataResponse) {
                   try {
                     me.getData(dataResponse, 'u');
@@ -1288,12 +1398,9 @@
                * @member opensocial.flash.appdata
                */
               api.appdata.deleteData = function(reqID, options) {
-                var idSpec = me.translateIdSpec(options);
-                var userId = idSpec.getField(opensocial.IdSpec.Field.USER_ID);
-                var keys = options['keys'];
-
                 var req = opensocial.newDataRequest();
-                req.add(req.newRemovePersonAppDataRequest(userId, keys), 'r');
+                var request = me.api.appdata.getRequest(options, 'deleteData', req);
+                req.add(request, 'r');
                 req.send(function(dataResponse) {
                   try {
                     me.getData(dataResponse, 'r');
