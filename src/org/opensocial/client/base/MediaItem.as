@@ -35,9 +35,27 @@ public class MediaItem extends MutableDataType {
    */
   public static const Field:ConstType = new ConstType(
       "opensocial.MediaItem.Field", {
-          TYPE        : 'type',         /* MediaItem.Type */
-          MIME_TYPE   : 'mimeType',
-          URL         : 'url'
+          ALBUM_ID       : 'albumId',
+          CREATED        : 'created',
+          DESCRIPTION    : 'description',
+          DURATION       : 'duration',
+          FILE_SIZE      : 'fileSize',
+          ID             : 'id',
+          LANGUAGE       : 'language',
+          LAST_UPDATED   : 'lastUpdated',
+          LOCATION       : 'location',
+          MIME_TYPE      : 'mimeType',
+          NUM_COMMENTS   : 'numComments',
+          NUM_VIEWS      : 'numViews',
+          NUM_VOTES      : 'numVotes',
+          RATING         : 'rating',
+          START_TIME     : 'startTime',
+          TAGGED_PEOPLE  : 'taggedPeople',    /* Array.<String> */
+          TAGS           : 'tags',            /* Array.<String> */
+          THUMBNAIL_URL  : 'thumbnailUrl',
+          TITLE          : 'title',
+          TYPE           : 'type',            /* MediaItem.Type */
+          URL            : 'url'
       });
 
   /**
@@ -83,6 +101,30 @@ public class MediaItem extends MutableDataType {
    */
   public function MediaItem(rawObj:Object) {
     super(rawObj);
+  }
+  
+  /**
+   * Gets the ID that can be permanently associated with this media item.
+   * @return The id string.
+   */
+  public function getId():String {
+    return getRawProperty("id") as String;
+  }
+  
+  /**
+   * Get the thumbnail url field of the media item. Will not throw error if not exists.
+   * @return The thumbnail url if exists.
+   */
+  public function getThumbnailUrl():String {
+    return getFieldString(Field.THUMBNAIL_URL);
+  }
+  
+  /**
+   * Get the title field of the media item. Will not throw error if not exists.
+   * @return The title if exists.
+   */
+  public function getTitle():String {
+    return getFieldString(Field.TITLE);
   }
 
   /**

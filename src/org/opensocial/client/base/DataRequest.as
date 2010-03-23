@@ -96,6 +96,17 @@ public class DataRequest extends BaseType {
           MAX               : 'max'                 /* Number */
       });
 
+  /**
+   * <code><j>opensocial.DataRequest.AlbumRequestFields</j></code> constants.
+   * @see http://www.opensocial.org/Technical-Resources/opensocial-spec-v09/
+   *      OpenSocial-Specification.html#opensocial.DataRequest.AlbumRequestFields
+   *      opensocial.DataRequest.AlbumRequestFields
+   */
+  public static const AlbumRequestFields:ConstType = new ConstType(
+      "opensocial.DataRequest.AlbumRequestFields", {
+          FIRST             : 'first',              /* Number */
+          MAX               : 'max'                 /* Number */
+      });
 
   /**
    * Prepare a people request parameter object. Keys are defined in

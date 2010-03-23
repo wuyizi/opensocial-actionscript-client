@@ -351,7 +351,14 @@
              */
             me.getDataItem = function(responseItem) {
               if (!responseItem) return null;
-              if (responseItem.hadError()) {
+              
+              /**
+               * NOTE:  
+               *      For orkut. When delete not exist photo, The responseItem.hadError() is false,
+               *      But the responseItem.getErrorMessage() has error message.
+               */
+              
+              if (responseItem.hadError() || responseItem.getErrorMessage()) {
                 var e = new Error(responseItem.getErrorMessage());
                 e['name'] = "OpenSocialError";
                 e['code'] = responseItem.getErrorCode();
@@ -382,7 +389,8 @@
                 'org.opensocial.client.base.MediaItem'            : opensocial.MediaItem,
                 'org.opensocial.client.base.Message'              : opensocial.Message,
                 'org.opensocial.client.base.NavigationParameters' : opensocial.NavigationParameters,
-                'org.opensocial.client.base.Collection'           : opensocial.Collection
+                'org.opensocial.client.base.Collection'           : opensocial.Collection,
+                'org.opensocial.client.base.Album'                : opensocial.Album
             };
             ]]></script>
           </dataTypes>
@@ -527,6 +535,8 @@
                     fields[opensocial.Activity.Field.MEDIA_ITEMS] = richItems;
                   }
                   return opensocial.newActivity(fields);
+                } else if (type == opensocial.Album) {
+                  return new opensocial.Album(fields);
                 }
 
               }
@@ -1414,6 +1424,227 @@
             </deleteData>
           </appdata>
 
+          
+          <!-- ========================== OSAPI.ALBUMS =========================== -->
+          <albums>
+            <script><![CDATA[
+              api.albums = {};
+            ]]></script>
+
+            <getRequest>
+              <script><![CDATA[
+              /**
+               * According to operation mode, get request object.
+               * @param {Object.<string, Object>?} options An object unwrapped from
+               *        PeopleRequestOptions.
+               * @param {string} mode The operation mode.
+               * @param {DataRequest} req An exist DataRequest.               
+               * @member opensocial.flash.albums
+               */
+              api.albums.getRequest = function(options, mode, req) {
+                switch (mode){
+                  case 'create':
+                    var idSpec = me.translateIdSpec(options);
+                    var album = me.unwrapObject(options['album'], opensocial.Album);
+                    return req.newCreateAlbumRequest(idSpec, album);
+                  case 'get':
+                    var params = me.translatePaginationParams(options);
+                    var idSpec = me.translateIdSpec(options);
+                    return req.newFetchAlbumsRequest(idSpec, params); 
+                  case 'update':
+                    var album = options['album']['fields'];
+                    var idSpec = me.translateIdSpec(options);
+                    var albumId = options['albumId'];
+                    return req.newUpdateAlbumRequest(idSpec, albumId, album); 
+                  case 'delete':
+                    var idSpec = me.translateIdSpec(options);
+                    var albumId = options['albumId'];
+                    return req.newDeleteAlbumRequest(idSpec, albumId);
+                }
+              };
+              ]]></script>
+            </getRequest>
+            <create>
+              <script><![CDATA[
+              /**
+               * Sends request to remote site to create album.
+               * @param {string} reqID The request id.
+               * @param {Object.<string, Object>?} options An object unwrapped from
+               *        AlbumsRequestOptions.
+               * @member opensocial.flash.albums
+               */
+              api.albums.create = function(reqID, options, req, resKey) {
+                var req = opensocial.newDataRequest();
+                var request = me.api.albums.getRequest(options, 'create', req);
+                req.add(request, 'a');
+                req.send(function(dataResponse) {
+                  try {
+                    me.getData(dataResponse, 'a');
+                    me.handleAsync(reqID);
+                  } catch (e) {
+                    me.handleError(reqID, e);
+                  }
+                });
+              };
+              ]]></script>
+            </create>
+            <get>
+              <script><![CDATA[
+              /**
+               * Sends request to remote site to get albums.
+               * @param {string} reqID The request id.
+               * @param {Object.<string, Object>?} options An object unwrapped from
+               *        AlbumsRequestOptions.
+               * @member opensocial.flash.albums
+               */
+              api.albums.get = function(reqID, options, req, resKey) {
+                var req = opensocial.newDataRequest();
+                var request = me.api.albums.getRequest(options, 'get', req);
+                req.add(request, 'a');
+                req.send(function(dataResponse) {
+                  try {
+                    var response = me.wrapObject(me.getData(dataResponse, 'a'));
+                    me.handleAsync(reqID, response);
+                  } catch (e) {
+                    me.handleError(reqID, e);
+                  }
+                });
+              };
+              ]]></script>
+            </get>
+            <update>
+              <script><![CDATA[
+              /**
+               * Sends request to remote site to update album.
+               * @param {string} reqID The request id.
+               * @param {Object.<string, Object>?} options An object unwrapped from
+               *        AlbumsRequestOptions.
+               * @member opensocial.flash.albums
+               */
+              api.albums.update = function(reqID, options, req, resKey) {
+                var req = opensocial.newDataRequest();
+                var request = me.api.albums.getRequest(options, 'update', req);
+                req.add(request, 'a');
+                req.send(function(dataResponse) {
+                  try {
+                    me.getData(dataResponse, 'a');
+                    me.handleAsync(reqID);
+                  } catch (e) {
+                    me.handleError(reqID, e);
+                  }
+                });
+              };
+              ]]></script>
+            </update>
+            <deleteData>
+              <script><![CDATA[
+              /**
+               * Sends request to remote site to update album.
+               * @param {string} reqID The request id.
+               * @param {Object.<string, Object>?} options An object unwrapped from
+               *        AlbumsRequestOptions.
+               * @member opensocial.flash.albums
+               */
+              api.albums.deleteData = function(reqID, options, req, resKey) {
+                var req = opensocial.newDataRequest();
+                var request = me.api.albums.getRequest(options, 'delete', req);
+                req.add(request, 'a');
+                req.send(function(dataResponse) {
+                  try {
+                    me.getData(dataResponse, 'a');
+                    me.handleAsync(reqID);
+                  } catch (e) {
+                    me.handleError(reqID, e);
+                  }
+                });
+              };
+              ]]></script>
+            </deleteData>
+          </albums>
+
+          
+          <!-- ========================== OSAPI.MEDIAITEMS =========================== -->
+          <mediaItems>
+            <script><![CDATA[
+              api.mediaItems = {};
+            ]]></script>
+
+            <getRequest>
+              <script><![CDATA[
+              /**
+               * According to operation mode, get request object.
+               * @param {Object.<string, Object>?} options An object unwrapped from
+               *        PeopleRequestOptions.
+               * @param {string} mode The operation mode.
+               * @param {DataRequest} req An exist DataRequest.               
+               * @member opensocial.flash.mediaItems
+               */
+              api.mediaItems.getRequest = function(options, mode, req) {
+                switch (mode){
+                  case 'get':
+                    var params = me.translatePaginationParams(options);
+                    var idSpec = me.translateIdSpec(options);
+                    var albumId = options['albumId'];
+                    return req.newFetchMediaItemsRequest(idSpec, albumId, params);
+                  case 'update':
+                    var mediaItem = options['mediaItem']['fields'];
+                    var idSpec = me.translateIdSpec(options);
+                    var albumId = options['albumId'];
+                    var mediaItemId = options['mediaItemId'];
+                    return req.newUpdateMediaItemRequest (idSpec, albumId, mediaItemId, mediaItem);
+                }
+              };
+              ]]></script>
+            </getRequest>
+            <get>
+              <script><![CDATA[
+              /**
+               * Sends request to remote site to get mediaitems.
+               * @param {string} reqID The request id.
+               * @param {Object.<string, Object>?} options An object unwrapped from
+               *        AlbumsRequestOptions.
+               * @member opensocial.flash.mediaItems
+               */
+              api.mediaItems.get = function(reqID, options, req, resKey) {
+                var req = opensocial.newDataRequest();
+                var request = me.api.mediaItem.getRequest(options, 'get', req);
+                req.add(request, 'm');
+                req.send(function(dataResponse) {
+                  try {
+                    var response = me.wrapObject(me.getData(dataResponse, 'm'));
+                    me.handleAsync(reqID, response);
+                  } catch (e) {
+                    me.handleError(reqID, e);
+                  }
+                });
+              };
+              ]]></script>
+            </get>
+            <update>
+              <script><![CDATA[
+              /**
+               * Sends request to remote site to update mediaItem.
+               * @param {string} reqID The request id.
+               * @param {Object.<string, Object>?} options An object unwrapped from
+               *        AlbumsRequestOptions.
+               * @member opensocial.flash.mediaItems
+               */
+              api.mediaItems.update = function(reqID, options, req, resKey) {
+                var req = opensocial.newDataRequest();
+                var request = me.api.mediaItem.getRequest(options, 'update', req);
+                req.add(request, 'm');
+                req.send(function(dataResponse) {
+                  try {
+                    me.getData(dataResponse, 'm');
+                    me.handleAsync(reqID);
+                  } catch (e) {
+                    me.handleError(reqID, e);
+                  }
+                });
+              };
+              ]]></script>
+            </update>
+          </mediaItems>
 
           <!-- ========================== OSAPI.UI =========================== -->
           <ui>
@@ -1513,6 +1744,28 @@
               };
               ]]></script>
             </requestPermission>
+            <requestUploadMediaItem>
+              <script><![CDATA[
+              /**
+               * Sends request to remote site to request an mediaitem upload.
+               * @param {string} reqID The request id.
+               * @param {Object.<string, Object>?} options An object unwrapped from
+               *        UIRequestOptions.
+               * @member opensocial.flash.ui
+               */
+              api.ui.requestUploadMediaItem = function(reqID, options) {
+                var albumId = options['albumId'];
+                opensocial.requestUploadMediaItem(albumId, function(responseItem) {
+                  try {
+                    me.getDataItem(responseItem);
+                    me.handleAsync(reqID);
+                  } catch (e) {
+                    me.handleError(reqID, e);
+                  }
+                });
+              };
+              ]]></script>
+            </requestUploadMediaItem>
           </ui>
         </api>
 
