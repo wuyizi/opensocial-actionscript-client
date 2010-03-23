@@ -44,6 +44,8 @@ import org.opensocial.client.base.*;
  *      opensocial.requestCreateActivity
  * @see http://code.google.com/apis/opensocial/docs/0.8/reference/#opensocial.requestPermission
  *      opensocial.requestPermission
+ * @see http://www.opensocial.org/Technical-Resources/opensocial-spec-v09/
+ *      OpenSocial-Specification.html#opensocial.requestUploadMediaItem
  *
  * @author yiziwu@google.com (Yizi Wu)
  */
@@ -120,5 +122,15 @@ public class UIRequestOptions extends RequestOptions {
     modify("permission", permission);
     return this;
   }
+  
+  /**
+   * Sets the album id. Only used in the <code>REQUEST_UPLOAD_MEDIAITEM</code> feature.
+   * @param albumId the album id.
+   * @return The options itself.
+   */
+  public function setAlbumId(albumId:String):UIRequestOptions {
+    modify("albumId", albumId);
+    return this;
+  } 
 }
 }

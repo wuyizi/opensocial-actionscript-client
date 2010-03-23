@@ -51,6 +51,16 @@ public class Feature {
   /** The feature of fetching activities. */
   public static const ACTIVITIES_GET:String =             "activities.get";
 
+  // -- osapi.albums --
+  public static const ALBUMS_GET:String =                 "albums.get";
+  public static const ALBUMS_CREATE:String =              "albums.create";
+  public static const ALBUMS_UPDATE:String =              "albums.update";
+  public static const ALBUMS_DELETE:String =              "albums.deleteData";
+
+  // -- osapi.mediaItems --
+  public static const MEDIAITEMS_GET:String =             "mediaItems.get";
+  public static const MEDIAITEMS_UPDATE:String =          "mediaItems.update";
+
   // -- osapi.ui --
   /** The feature of creating an activity */
   public static const REQUEST_CREATE_ACTIVITY:String =    "ui.requestCreateActivity";
@@ -60,7 +70,9 @@ public class Feature {
   public static const REQUEST_SHARE_APP:String =          "ui.requestShareApp";
   /** The feature of requesting permission. */
   public static const REQUEST_PERMISSION:String =         "ui.requestPermission";
-
+  /** The feature of upload an mediaitem */
+  public static const REQUEST_UPLOAD_MEDIAITEM:String =   "ui.requestUploadMediaItem";  
+  
   // -- opensocial.Environment --
   /** The feature of checking supported fields. */
   public static const SUPPORTS_FIELD:String =             "env.supportsField";
