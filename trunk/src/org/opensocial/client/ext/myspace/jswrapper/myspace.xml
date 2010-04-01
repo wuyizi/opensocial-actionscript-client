@@ -44,7 +44,7 @@
             <script><![CDATA[
               api.photos = {};
             ]]></script>
-            <getRequest>
+            <newRequest>
               <script><![CDATA[
               /**
                * According to operation mode, get request object.
@@ -75,7 +75,7 @@
                 }
               };
               ]]></script>
-            </getRequest>
+            </newRequest>
             <get>
               <script><![CDATA[
               /**

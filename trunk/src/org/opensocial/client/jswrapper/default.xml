@@ -1152,9 +1152,9 @@
                   var operationMode = featureName.slice(splitIndex + 1);
                   var getRequestFuncitonName = featureName.slice(0, splitIndex) + ".getRequest";
                   var options = requests[resKey][1];
-                  var getRequestFunciton = new Function('return ' + getRequestFuncitonName);
-                  var getRequest = getRequestFunciton();
-                  var request = getRequest(options, operationMode, req);
+                  var newRequestFunciton = new Function('return ' + getRequestFuncitonName);
+                  var newRequest = newRequestFunciton();
+                  var request = newRequest(options, operationMode, req);
                   req.add(request, resKey);
                 }
                     
@@ -1197,7 +1197,7 @@
               api.people = {};
             ]]></script>
 
-            <getRequest>
+            <newRequest>
               <script><![CDATA[
               /**
                * According to operation mode, get request object.
@@ -1207,7 +1207,7 @@
                * @param {DataRequest} req An exist DataRequest.               
                * @member opensocial.flash.people
                */
-              api.people.getRequest = function(options, mode, req) {
+              api.people.newRequest = function(options, mode, req) {
                 switch (mode){
                   case 'get':
                     var params = me.translatePeopleRequestParams(options);
@@ -1224,7 +1224,7 @@
                 }
               };
               ]]></script>
-            </getRequest>
+            </newRequest>
             <get>
               <script><![CDATA[
               /**
@@ -1236,7 +1236,7 @@
                */
               api.people.get = function(reqID, options) {
                 var req = opensocial.newDataRequest();
-                var request = me.api.people.getRequest(options, 'get', req);
+                var request = me.api.people.newRequest(options, 'get', req);
                 req.add(request, 'p');
                 req.send(function(dataResponse) {
                   try {
@@ -1258,7 +1258,7 @@
               api.activities = {};
             ]]></script>
 
-            <getRequest>
+            <newRequest>
               <script><![CDATA[
               /**
                * According to operation mode, get request object.
@@ -1268,7 +1268,7 @@
                * @param {DataRequest} req An exist DataRequest.               
                * @member opensocial.flash.people
                */
-              api.activities.getRequest = function(options, mode, req) {
+              api.activities.newRequest = function(options, mode, req) {
                 switch (mode){
                   case 'get':
                     var params = me.translateActivityRequestParams(options);
@@ -1278,7 +1278,7 @@
                 }
               };
               ]]></script>
-            </getRequest>
+            </newRequest>
             <get>
               <script><![CDATA[
               /**
@@ -1290,7 +1290,7 @@
                */
               api.activities.get = function(reqID, options) {
                 var req = opensocial.newDataRequest();
-                var request = me.api.activities.getRequest(options, 'get', req);
+                var request = me.api.activities.newRequest(options, 'get', req);
                 req.add(request, 'a');
                 req.send(function(dataResponse) {
                   try {
@@ -1312,7 +1312,7 @@
               api.appdata = {};
             ]]></script>
 
-            <getRequest>
+            <newRequest>
               <script><![CDATA[
               /**
                * According to operation mode, get request object.
@@ -1322,7 +1322,7 @@
                * @param {DataRequest} req An exist DataRequest.               
                * @member opensocial.flash.people
                */
-              api.appdata.getRequest = function(options, mode, req) {
+              api.appdata.newRequest = function(options, mode, req) {
                 switch (mode){
                   case 'get':
                     var idSpec = me.translateIdSpec(options);
@@ -1346,7 +1346,7 @@
                 }
               };
               ]]></script>
-            </getRequest>
+            </newRequest>
             <get>
               <script><![CDATA[
               /**
@@ -1358,7 +1358,7 @@
                */
               api.appdata.get = function(reqID, options, req, resKey) {
                 var req = opensocial.newDataRequest();
-                var request = me.api.appdata.getRequest(options, 'get', req);
+                var request = me.api.appdata.newRequest(options, 'get', req);
                 req.add(request, 'd');
                 req.send(function(dataResponse) {
                   try {
@@ -1385,7 +1385,7 @@
                */
               api.appdata.update = function(reqID, options) {
                 var req = opensocial.newDataRequest();
-                var request = me.api.appdata.getRequest(options, 'update', req);
+                var request = me.api.appdata.newRequest(options, 'update', req);
                 req.add(request, 'u');
                 req.send(function(dataResponse) {
                   try {
@@ -1409,7 +1409,7 @@
                */
               api.appdata.deleteData = function(reqID, options) {
                 var req = opensocial.newDataRequest();
-                var request = me.api.appdata.getRequest(options, 'deleteData', req);
+                var request = me.api.appdata.newRequest(options, 'deleteData', req);
                 req.add(request, 'r');
                 req.send(function(dataResponse) {
                   try {
@@ -1431,7 +1431,7 @@
               api.albums = {};
             ]]></script>
 
-            <getRequest>
+            <newRequest>
               <script><![CDATA[
               /**
                * According to operation mode, get request object.
@@ -1441,7 +1441,7 @@
                * @param {DataRequest} req An exist DataRequest.               
                * @member opensocial.flash.albums
                */
-              api.albums.getRequest = function(options, mode, req) {
+              api.albums.newRequest = function(options, mode, req) {
                 switch (mode){
                   case 'create':
                     var idSpec = me.translateIdSpec(options);
@@ -1463,7 +1463,7 @@
                 }
               };
               ]]></script>
-            </getRequest>
+            </newRequest>
             <create>
               <script><![CDATA[
               /**
@@ -1475,7 +1475,7 @@
                */
               api.albums.create = function(reqID, options, req, resKey) {
                 var req = opensocial.newDataRequest();
-                var request = me.api.albums.getRequest(options, 'create', req);
+                var request = me.api.albums.newRequest(options, 'create', req);
                 req.add(request, 'a');
                 req.send(function(dataResponse) {
                   try {
@@ -1499,7 +1499,7 @@
                */
               api.albums.get = function(reqID, options, req, resKey) {
                 var req = opensocial.newDataRequest();
-                var request = me.api.albums.getRequest(options, 'get', req);
+                var request = me.api.albums.newRequest(options, 'get', req);
                 req.add(request, 'a');
                 req.send(function(dataResponse) {
                   try {
@@ -1523,7 +1523,7 @@
                */
               api.albums.update = function(reqID, options, req, resKey) {
                 var req = opensocial.newDataRequest();
-                var request = me.api.albums.getRequest(options, 'update', req);
+                var request = me.api.albums.newRequest(options, 'update', req);
                 req.add(request, 'a');
                 req.send(function(dataResponse) {
                   try {
@@ -1547,7 +1547,7 @@
                */
               api.albums.deleteData = function(reqID, options, req, resKey) {
                 var req = opensocial.newDataRequest();
-                var request = me.api.albums.getRequest(options, 'delete', req);
+                var request = me.api.albums.newRequest(options, 'delete', req);
                 req.add(request, 'a');
                 req.send(function(dataResponse) {
                   try {
@@ -1569,7 +1569,7 @@
               api.mediaItems = {};
             ]]></script>
 
-            <getRequest>
+            <newRequest>
               <script><![CDATA[
               /**
                * According to operation mode, get request object.
@@ -1595,7 +1595,7 @@
                 }
               };
               ]]></script>
-            </getRequest>
+            </newRequest>
             <get>
               <script><![CDATA[
               /**
@@ -1607,7 +1607,7 @@
                */
               api.mediaItems.get = function(reqID, options, req, resKey) {
                 var req = opensocial.newDataRequest();
-                var request = me.api.mediaItem.getRequest(options, 'get', req);
+                var request = me.api.mediaItem.newRequest(options, 'get', req);
                 req.add(request, 'm');
                 req.send(function(dataResponse) {
                   try {
