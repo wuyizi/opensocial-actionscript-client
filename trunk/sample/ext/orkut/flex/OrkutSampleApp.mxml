@@ -26,30 +26,17 @@
   <mx:Metadata>
     <![CDATA[
     /**
-     * Sample Application using the OpenSocial AS3 Client Library in Flex 3.
-     * Build the SampleApp.mxml with Flex SDK to swf file and it works with the gadget spec XML 
-     * (//sample/SampleApp.xml).
+     * Orkut Sample App to try out the Orkut extensions.
      * 
-     * <p>
-     * Usage:<br>
-     * 1. Create a JsWrapperClient instance.
-     * <br> 
-     * 2. Add a eventhandler for READY event and call the start() method.
-     * <br>
-     * 3. When the client is ready, use the any of the <code>AsyncRequest</code> objects and 
-     * <code>SyncHelper</code> objects to interact with OpenSocial API. All these are located in
-     * <code>org.opensocial.client.features</code> package.
-     * <br>
-     * </p>
+     * @see SampleApp.mxml for most of the codes.
      * 
-     * @author yiziwu@google.com (Yizi Wu)
+     * @author zakiyy.yan@gmail.com (Zhinan Yan)
      */
     ]]>
   </mx:Metadata>
   <mx:Script>
     <![CDATA[
       import org.opensocial.client.ext.orkut.jswrapper.OrkutJsWrapperClient;
-      import com.adobe.serialization.json.JSON;
       import mx.collections.ArrayCollection;
       import mx.events.ListEvent;
       
@@ -485,13 +472,8 @@
             new PeopleRequestOptions()
                 .setUserId("@me")
                 .setGroupId("@self"));
-
-//        req.addEventListener(ResponseItemEvent.COMPLETE, batchFetchMeEventHandler);
-//        req.addEventListener(ResponseItemEvent.ERROR, batchFetchMeEventErrorHandler);        
-
-                
         batch.add(req, "meProfile");
- 
+
         req = new AsyncDataRequest(
             Feature.PEOPLE_GET,
             new PeopleRequestOptions()
@@ -499,10 +481,6 @@
                 .setGroupId("@friends")
                 .setCount(2)
                 .setStartIndex(0));
-//
-//        req.addEventListener(ResponseItemEvent.COMPLETE, batchFetchFriendsEventHandler);
-//        req.addEventListener(ResponseItemEvent.ERROR, batchFetchFriendsEventErrorHandler);                   
-//                
         batch.add(req, "friendList");
 
         batch.addEventListener(ResponseItemEvent.COMPLETE, batchDataRequestEventHandler);
