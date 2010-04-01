@@ -54,7 +54,7 @@
                * @param {DataRequest} req An exist DataRequest.               
                * @member opensocial.flash.ext.myspace.photos
                */
-              api.photos.getRequest = function(options, mode, req) {
+              api.photos.newRequest = function(options, mode, req) {
                 switch (mode){
                   case 'get':
                     var photoId = options['photoId'];
@@ -87,7 +87,7 @@
                */
               api.photos.get = function(reqID, options) {
                 var req = opensocial.newDataRequest();
-                var request = me.api.appdata.getRequest(options, 'get', req);
+                var request = me.api.photos.newRequest(options, 'get', req);
                 req.add(request, 'p');
                 req.send(function(dataResponse) {
                   try {
