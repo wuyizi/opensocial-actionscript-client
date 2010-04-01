@@ -31,7 +31,7 @@
   // Change nocache to version number when releasing other than random timestamps.
   var nocache = new Date().getTime();
 
-  var baseUrl = 'http://www.unickway.org.cn/asClient/compact/';
+  var baseUrl = 'http://code.google.com/p/opensocial-actionscript-client/source/browse/trunk/bin/';
   var flashObjId = 'flashObj';
 
   gadgets.flash.embedFlash(

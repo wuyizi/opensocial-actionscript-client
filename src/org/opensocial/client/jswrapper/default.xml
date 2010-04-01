@@ -1333,8 +1333,8 @@
                     var userId = idSpec.getField(opensocial.IdSpec.Field.USER_ID);
                     var key;
                     var value;
-                    for (key in options['data']) {
-                      value = options['data'][key];
+                    for (key in options['data']) {                      
+                      value = gadgets.json.stringify(options['data'][key]);
                       break;
                     }
                     return req.newUpdatePersonAppDataRequest(userId, key, value);

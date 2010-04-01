@@ -24,8 +24,8 @@ import org.opensocial.client.jswrapper.JsWrapperClient;
 import org.opensocial.client.jswrapper.JsWrapperParsers;
 
 /**
- * Extenstion of normal JsWrapperClient for orkut container. This container doesn't support
- * rpc and settitle feature. But it supports photos, albums and many other extensions.
+ * Extension of normal JsWrapperClient for orkut container. This container doesn't support
+ * activities.get and requestShareApp feature. But it support albums and many other extensions.
  * 
  * @author zakiyy.yan@gmail.com (Zhinan Yan)
  */
@@ -44,6 +44,7 @@ public class OrkutJsWrapperClient extends JsWrapperClient {
   
     // Orkut does not support ACTIVITIES_GET and REQUEST_SHARE_APP features
     removeFeature(Feature.ACTIVITIES_GET);
+    removeFeature(Feature.REQUEST_SHARE_APP);
 
     
     // Orkut has some more extension.

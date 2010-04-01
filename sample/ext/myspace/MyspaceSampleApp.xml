@@ -20,7 +20,7 @@
   // Change nocache to version number when releasing other than random timestamps.
   var nocache = new Date().getTime();
 
-  var baseUrl = "http://www.unickway.org.cn/asClient/compact/";
+  var baseUrl = "http://code.google.com/p/opensocial-actionscript-client/source/browse/trunk/bin/";
 
   function loadSwf() {
 
@@ -41,6 +41,7 @@
 
 
   // TODO: refine this function
+  // NOTE: Myspace doesn't support "gadgets.flash.embedFlash" function.
   var DEFAULT_FLASH_ID = 'flashObj';
   function embedFlash (swfUrl, swfContainer, opt_playerVersion, opt_params, opt_upgradeMsgHTML) {
     opt_params = opt_params || {};
