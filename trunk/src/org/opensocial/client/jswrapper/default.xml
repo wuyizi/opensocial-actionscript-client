@@ -1150,9 +1150,9 @@
                   var featureName = requests[resKey][0];
                   var splitIndex = featureName.lastIndexOf('.');
                   var operationMode = featureName.slice(splitIndex + 1);
-                  var getRequestFuncitonName = featureName.slice(0, splitIndex) + ".getRequest";
+                  var newRequestFuncitonName = featureName.slice(0, splitIndex) + ".newRequest";
                   var options = requests[resKey][1];
-                  var newRequestFunciton = new Function('return ' + getRequestFuncitonName);
+                  var newRequestFunciton = new Function('return ' + newRequestFuncitonName);
                   var newRequest = newRequestFunciton();
                   var request = newRequest(options, operationMode, req);
                   req.add(request, resKey);
