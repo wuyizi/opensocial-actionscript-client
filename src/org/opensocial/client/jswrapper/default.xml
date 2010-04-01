@@ -1579,7 +1579,7 @@
                * @param {DataRequest} req An exist DataRequest.               
                * @member opensocial.flash.mediaItems
                */
-              api.mediaItems.getRequest = function(options, mode, req) {
+              api.mediaItems.newRequest = function(options, mode, req) {
                 switch (mode){
                   case 'get':
                     var params = me.translatePaginationParams(options);
@@ -1631,7 +1631,7 @@
                */
               api.mediaItems.update = function(reqID, options, req, resKey) {
                 var req = opensocial.newDataRequest();
-                var request = me.api.mediaItem.getRequest(options, 'update', req);
+                var request = me.api.mediaItem.newRequest(options, 'update', req);
                 req.add(request, 'm');
                 req.send(function(dataResponse) {
                   try {
