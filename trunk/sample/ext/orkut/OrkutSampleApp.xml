@@ -13,6 +13,7 @@
   <Require feature="opensocial-0.8"/>
   <Require feature="dynamic-height"/>
   <Require feature="views"/>
+  <Require feature="flash"/>
   <Require feature="rpc"/>
   <Require feature="settitle"/>
 
