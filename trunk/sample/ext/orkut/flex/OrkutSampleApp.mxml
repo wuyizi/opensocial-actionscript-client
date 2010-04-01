@@ -50,7 +50,6 @@
     <![CDATA[
       import org.opensocial.client.ext.orkut.jswrapper.OrkutJsWrapperClient;
       import com.adobe.serialization.json.JSON;
-      import mx.controls.Alert;
       import mx.collections.ArrayCollection;
       import mx.events.ListEvent;
       
@@ -565,11 +564,12 @@
       // ----------------- Update Appdata ------------------
       private function updateAppdata():void {
         var player:Object = {name:"Zakiyy",age:22,gender:"male"};
+        var data:Object = {player:player};
         
         var req:AsyncDataRequest = new AsyncDataRequest(
             Feature.APP_DATA_UPDATE,
             new AppDataRequestOptions()
-                .setDatum("player", JSON.encode(player)));
+                .setData(data));
         req.addEventListener(ResponseItemEvent.COMPLETE, updateAppdataEventHandler);
         req.addEventListener(ResponseItemEvent.ERROR, updateAppdataEventErrorHandler);
         req.send(client);
@@ -595,6 +595,12 @@
       }
        
       private function getAppdataEventHandler(event:ResponseItemEvent):void {
+      	var data:Object = event.response.getData();
+      	for (var key:String in data) {
+      		logger.info("UserID:" + key);
+      		logger.info("Player JSON String:" + data[key].player);
+      	}
+      	
         logger.info("get success!");
       }
       
@@ -695,6 +701,7 @@
           horizontalScrollPolicy="off" verticalScrollPolicy="off">
           <mx:Script>
             <![CDATA[
+              import mx.controls.Alert;
               import org.opensocial.client.base.Album;
               import org.opensocial.client.base.Person;
               import org.opensocial.client.base.MediaItem;

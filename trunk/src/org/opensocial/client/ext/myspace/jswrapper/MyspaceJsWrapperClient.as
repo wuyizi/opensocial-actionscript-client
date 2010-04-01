@@ -26,7 +26,7 @@ import org.opensocial.client.jswrapper.JsWrapperClient;
 import org.opensocial.client.jswrapper.JsWrapperParsers;
 
 /**
- * Extenstion of normal JsWrapperClient for myspace container. This container doesn't support
+ * Extension of normal JsWrapperClient for myspace container. This container doesn't support
  * rpc and settitle feature. But it supports photos, albums, videos and many other extensions.
  * 
  * @author yiziwu@google.com (Yizi Wu)
