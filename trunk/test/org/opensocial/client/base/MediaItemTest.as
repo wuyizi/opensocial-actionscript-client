@@ -52,7 +52,8 @@ public class MediaItemTest extends TestCase {
     if (!ExternalInterface.available) return;
     var real:Object = ExternalInterface.call(
         "function() {return opensocial.MediaItem.Field;}");
-    for (var name:String in MediaItem.Field) {
+       
+    for (var name:String in real) {
       Assert.assertEquals(real[name], MediaItem.Field[name]);
     }
   }
@@ -62,7 +63,7 @@ public class MediaItemTest extends TestCase {
     if (!ExternalInterface.available) return;
     var real:Object = ExternalInterface.call(
         "function() {return opensocial.MediaItem.Type;}");
-    for (var name:String in MediaItem.Type) {
+    for (var name:String in real) {
       Assert.assertEquals(real[name], MediaItem.Type[name]);
     }
   }

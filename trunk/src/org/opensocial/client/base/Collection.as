@@ -75,10 +75,10 @@ public class Collection extends AbstractDataType {
    * @param elementType The type of the items in this collection.
    * @private
    */
-  public function Collection(rawObj:Object) {
+  public function Collection(rawObj:Object, type:Class = null) {
     super(rawObj);
     this.array_ = new ArrayType(rawObj["array"]);
-    this.elementType_ = this.array_.elementType;
+    this.elementType_ = (type) ? type : this.array_.elementType;
     this.offset_ = rawObj["offset"];
     this.totalSize_ = rawObj["totalSize"];
     this.size_ = rawObj["size"];
