@@ -30,8 +30,6 @@ a {font-family: Arial,sans-serif;}
     <a class=bold id="guide" href="guide.html?m4c" target="top_main" onclick="handleClick(this);">Developer's Guide</a></li>
   <li>
     <a class=link id="aside" href="asdoc/index.html?m4c" target="top_main" onclick="handleClick(this);">Actionscript Reference</a></li>
-  <li>
-    <a class=link id="jside" href="jsdoc/index.html?m4c" target="top_main" onclick="handleClick(this);">Javascript Wrapper Reference</a></li>
 </ul>
 </div>
 <script>
@@ -39,10 +37,8 @@ function handleClick(el) {
   el.blur();
   var guide = document.getElementById("guide");
   var aside = document.getElementById("aside");
-  var jside = document.getElementById("jside");
   guide.className = (el == guide ? "bold" : "link");
   aside.className = (el == aside ? "bold" : "link");
-  jside.className = (el == jside ? "bold" : "link");
 };
 </script>
 </body>
