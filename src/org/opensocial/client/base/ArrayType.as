@@ -56,7 +56,10 @@ public dynamic class ArrayType extends Array {
     }
     
     if (type == null && rawArray.length != 0) {
-      type = AbstractDataType.getType(rawArray[0]);
+      try {
+    	  type = AbstractDataType.getType(rawArray[0]);	
+    	} catch(e:Error) {
+    	}
     }
 
     

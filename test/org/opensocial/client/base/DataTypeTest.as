@@ -212,15 +212,6 @@ public class DataTypeTest extends TestCase {
     Assert.assertTrue(ObjectUtil.compare(
         [], dataType.getFieldDataArray("profileUrl", DataTypeForTest)) == 0);
 
-    var a:int = Assert.assetionsMade;
-    try {
-      dataType.getFieldDataArray("randomField", Object);
-      Assert.fail();
-    } catch (e:OpenSocialError) {
-      Assert.oneAssertionHasBeenMade();
-    }
-    Assert.assertEquals(a + 1, Assert.assetionsMade);
-
     // Warning
     var warningArray:ArrayType = dataType.getFieldDataArray("interests", DataTypeForTest);
     Assert.assertEquals("sports", (warningArray[0] as DataTypeForTest).getRawObjForTest());
