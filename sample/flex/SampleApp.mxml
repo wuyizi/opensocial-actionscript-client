@@ -48,6 +48,8 @@
   </mx:Metadata>
   <mx:Script>
     <![CDATA[
+      import com.adobe.serialization.json.JSON;
+      import mx.controls.Alert;
       import mx.collections.ArrayCollection;
       import mx.events.ListEvent;
       
@@ -104,7 +106,7 @@
                 .setUserId("@me")
                 .setGroupId("@self"));
         req.addEventListener(ResponseItemEvent.COMPLETE, fetchMeEventHandler);
-        req.addEventListener(ResponseItemEvent.ERROR, fetchMeEventErrorHandler);
+        req.addEventListener(ResponseItemEvent.ERROR, fetchMeEventErrorHandler);        
         req.send(client);
         people.removeAll();
       }
@@ -202,6 +204,35 @@
         logger.info("activity creation failed: " + event.response.getErrorMessage());
       }
 
+      // ----------------- Fetch Activities ------------------
+      private function fetchActivities():void {
+        var req:AsyncDataRequest = new AsyncDataRequest(
+            Feature.ACTIVITIES_GET,
+            new ActivitiesRequestOptions());
+        req.addEventListener(ResponseItemEvent.COMPLETE, fetchActivitiesEventHandler);
+        req.addEventListener(ResponseItemEvent.ERROR, fetchActivitiesEventErrorHandler);
+        req.send(client);
+      }
+
+      private function fetchActivitiesEventHandler(event:ResponseItemEvent):void {
+        var c:Collection = event.response.getData();
+        logger.info(c.toDebugString());
+        var arr:Array = c.getArray();
+        for (var i:int = 0; i < arr.length; i++) {
+          var a:Activity = arr[i];
+          logger.info(a.toString());
+        }
+        
+        if (c.getRemainingSize() > 0) {
+          var req:AsyncDataRequest = event.target as AsyncDataRequest;
+          (req.getOptions() as ActivitiesRequestOptions).setStartIndex(c.getNextOffset());
+          req.send(client);
+        }
+      }
+
+      private function fetchActivitiesEventErrorHandler(event:ResponseItemEvent):void {
+        logger.info("fetch activities failed: " + event.response.getErrorMessage());
+      }  
 
       // ----------------- Make Request ------------------
       private function makeRequest():void {
@@ -300,8 +331,8 @@
                 .setUserId("@me")
                 .setGroupId("@self"));
 
-        req.addEventListener(ResponseItemEvent.COMPLETE, batchFetchMeEventHandler);
-        req.addEventListener(ResponseItemEvent.ERROR, batchFetchMeEventErrorHandler);
+//        req.addEventListener(ResponseItemEvent.COMPLETE, batchFetchMeEventHandler);
+//        req.addEventListener(ResponseItemEvent.ERROR, batchFetchMeEventErrorHandler);        
 
                 
         batch.add(req, "meProfile");
@@ -313,10 +344,10 @@
                 .setGroupId("@friends")
                 .setCount(2)
                 .setStartIndex(0));
-
-        req.addEventListener(ResponseItemEvent.COMPLETE, batchFetchFriendsEventHandler);
-        req.addEventListener(ResponseItemEvent.ERROR, batchFetchFriendsEventErrorHandler);
-                
+//
+//        req.addEventListener(ResponseItemEvent.COMPLETE, batchFetchFriendsEventHandler);
+//        req.addEventListener(ResponseItemEvent.ERROR, batchFetchFriendsEventErrorHandler);                   
+//                
         batch.add(req, "friendList");
 
         batch.addEventListener(ResponseItemEvent.COMPLETE, batchDataRequestEventHandler);
@@ -335,7 +366,6 @@
           var person:Person = arr[i];
           logger.info("friendList ===============  " + person.getDisplayName());
         }
-
         logger.info("===============  Batch Success   ================");
       }
       
@@ -353,7 +383,7 @@
       
       private function batchFetchMeEventErrorHandler(event:ResponseItemEvent):void {
         logger.info("fetch me failed: " + event.response.getErrorMessage());
-      }
+      }       
 
       private function batchFetchFriendsEventHandler(event:ResponseItemEvent):void {
         var c:Collection = event.response.getData();
@@ -375,16 +405,78 @@
       private function batchFetchFriendsEventErrorHandler(event:ResponseItemEvent):void {
         logger.info("fetch friends failed: " + event.response.getErrorMessage());
       }          
+
+      // ----------------- Update Appdata ------------------
+      private function updateAppdata():void {
+        var player:Object = {name:"Zakiyy",age:22,gender:"male"};
+        
+        var req:AsyncDataRequest = new AsyncDataRequest(
+            Feature.APP_DATA_UPDATE,
+            new AppDataRequestOptions()
+                .setDatum("player", JSON.encode(player)));
+        req.addEventListener(ResponseItemEvent.COMPLETE, updateAppdataEventHandler);
+        req.addEventListener(ResponseItemEvent.ERROR, updateAppdataEventErrorHandler);
+        req.send(client);
+      }
+       
+      private function updateAppdataEventHandler(event:ResponseItemEvent):void {
+        logger.info("update success!");
+      }
+      private function updateAppdataEventErrorHandler(event:ResponseItemEvent):void {
+        logger.info("update failed: " + event.response.getErrorMessage());
+      }
+
+      // ----------------- Get Appdata ------------------
+      private function getAppdata():void {
+        var req:AsyncDataRequest = new AsyncDataRequest(
+            Feature.APP_DATA_GET,
+            new AppDataRequestOptions()
+                .setKeys(["player"]));
+        req.addEventListener(ResponseItemEvent.COMPLETE, getAppdataEventHandler);
+        req.addEventListener(ResponseItemEvent.ERROR, getAppdataEventErrorHandler);
+        req.send(client);
+      }
+       
+      private function getAppdataEventHandler(event:ResponseItemEvent):void {
+        logger.info("get success!");
+      }
+      private function getAppdataEventErrorHandler(event:ResponseItemEvent):void {
+        logger.info("get failed: " + event.response.getErrorMessage());
+      }
+
+
+      // ----------------- Delete Appdata ------------------
+      private function deleteAppdata():void {
+        var req:AsyncDataRequest = new AsyncDataRequest(
+            Feature.APP_DATA_DELETE,
+            new AppDataRequestOptions()
+                .setKeys(["player"]));
+        req.addEventListener(ResponseItemEvent.COMPLETE, deleteAppdataEventHandler);
+        req.addEventListener(ResponseItemEvent.ERROR, deleteAppdataEventErrorHandler);
+        req.send(client);
+      }
+       
+      private function deleteAppdataEventHandler(event:ResponseItemEvent):void {
+        logger.info("delete success!");
+      }
+      private function deleteAppdataEventErrorHandler(event:ResponseItemEvent):void {
+        logger.info("delete failed: " + event.response.getErrorMessage());
+      }
+
     ]]>
   </mx:Script>
   <mx:Button x="468" y="47" label="Fetch Me" id="fetchMeBtn" height="22" width="123" click="fetchMe()"/>
   <mx:Button x="468" y="77" label="Fetch Friends" height="22" width="123" id="fetchFriendsBtn" click="fetchFriends()"/>
   <mx:Button x="468" y="107" label="Send Message" height="22" width="123" id="sendMessageBtn" click="sendMessage()"/>
-  <mx:Button x="468" y="137" label="Create Activity" height="22" id="createActivityBtn" click="createActivity()" width="123"/>
-  <mx:Button x="468" y="167" label="Make Request" height="22" width="123" id="makeRequestBtn" click="makeRequest()"/>
-  <mx:Button x="468" y="197" label="Call Rpc" height="22" width="123" id="rpcCallBtn" click="callRpc()"/>
-  <mx:Button x="468" y="227" label="Register Srv" height="22" width="123" id="rpcRegisterBtn" click="registerService()"/>
-  <mx:Button x="468" y="257" label="Batch Request" height="22" width="123" id="batchRequestBtn" click="batchRequest()"/>
+  <mx:Button x="468" y="137" label="Create Activity" height="22" width="123" id="createActivityBtn" click="createActivity()"/>
+  <mx:Button x="468" y="167" label="Fetch Activities" height="22" width="123" id="fetchActivitiesBtn" click="fetchActivities()"/>
+  <mx:Button x="468" y="197" label="Make Request" height="22" width="123" id="makeRequestBtn" click="makeRequest()"/>
+  <mx:Button x="468" y="227" label="Call Rpc" height="22" width="123" id="rpcCallBtn" click="callRpc()"/>
+  <mx:Button x="468" y="257" label="Register Srv" height="22" width="123" id="rpcRegisterBtn" click="registerService()"/>  
+  <mx:Button x="468" y="287" label="Batch Request" height="22" width="123" id="batchRequestBtn" click="batchRequest()"/>
+  <mx:Button x="468" y="317" label="Update Appdata" height="22" width="123" id="updateAppdataBtn" click="updateAppdata()"/>
+  <mx:Button x="468" y="347" label="Get Appdata" height="22" width="123" id="getAppdataBtn" click="getAppdata()"/>
+  <mx:Button x="468" y="377" label="Delete Appdata" height="22" width="123" id="deleteAppdataBtn" click="deleteAppdata()"/>
   <mx:TileList width="450" height="120" id="titleList" dataProvider="{people}" itemClick="shareApp(event)" x="10" y="26" backgroundColor="#666666">
     <mx:itemRenderer>
       <mx:Component>
