@@ -17,19 +17,19 @@
  * specific language governing permissions and limitations
  * under the License.
 -->
-<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" 
-           width="730" height="500" color="#FFFFFF" 
-           backgroundGradientAlphas="[1.0, 1.0]" 
-           backgroundGradientColors="[#666666, #666666]" 
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute"
+           width="730" height="500" color="#FFFFFF"
+           backgroundGradientAlphas="[1.0, 1.0]"
+           backgroundGradientColors="[#666666, #666666]"
            initialize="init()">
 
   <mx:Metadata>
     <![CDATA[
     /**
      * Orkut Sample App to try out the Orkut extensions.
-     * 
+     *
      * @see SampleApp.mxml for most of the codes.
-     * 
+     *
      * @author zakiyy.yan@gmail.com (Zhinan Yan)
      */
     ]]>
@@ -39,7 +39,7 @@
       import org.opensocial.client.ext.orkut.jswrapper.OrkutJsWrapperClient;
       import mx.collections.ArrayCollection;
       import mx.events.ListEvent;
-      
+
       import org.opensocial.client.base.*;
       import org.opensocial.client.core.*;
       import org.opensocial.client.features.*;
@@ -50,10 +50,10 @@
       private var helper:SyncHelper;
 
       private static var logger:Logger = new Logger(OrkutSampleApp);
-    
+
       [Bindable]
       public var dataProvider:ArrayCollection = new ArrayCollection();
-      
+
       private function init():void {
 
         // Create the output box for information displaying
@@ -63,12 +63,12 @@
         Logger.initialize(printer, 1);
         logger.info("OpenSocial(0.8) AS3 Client Library in Flex 3");
         logger.log(new Date());
-        
+
         // Initialize Client and start
         client = new OrkutJsWrapperClient();
         client.addEventListener(OpenSocialClientEvent.CLIENT_READY, onReady);
         client.start();
-        
+
         helper = new SyncHelper(client);
 
       }
@@ -93,7 +93,7 @@
                 .setUserId("@me")
                 .setGroupId("@self"));
         req.addEventListener(ResponseItemEvent.COMPLETE, fetchMeEventHandler);
-        req.addEventListener(ResponseItemEvent.ERROR, fetchMeEventErrorHandler);        
+        req.addEventListener(ResponseItemEvent.ERROR, fetchMeEventErrorHandler);
         req.send(client);
         dataProvider.removeAll();
       }
@@ -103,7 +103,7 @@
         logger.info(p.getDisplayName());
         dataProvider.addItem(p);
       }
-      
+
       private function fetchMeEventErrorHandler(event:ResponseItemEvent):void {
         logger.info("fetch me failed: " + event.response.getErrorMessage());
       }
@@ -119,7 +119,7 @@
                 .setCount(2)
                 .setStartIndex(0));
         req.addEventListener(ResponseItemEvent.COMPLETE, fetchFriendsEventHandler);
-        req.addEventListener(ResponseItemEvent.ERROR, fetchFriendsEventErrorHandler);   
+        req.addEventListener(ResponseItemEvent.ERROR, fetchFriendsEventErrorHandler);
         req.send(client);
         dataProvider.removeAll();
       }
@@ -133,7 +133,7 @@
           logger.info(p.getDisplayName());
           dataProvider.addItem(p);
         }
-        
+
         if (c.getRemainingSize() > 0) {
           var req:AsyncDataRequest = event.target as AsyncDataRequest;
           (req.getOptions() as PeopleRequestOptions).setStartIndex(c.getNextOffset());
@@ -143,8 +143,8 @@
 
       private function fetchFriendsEventErrorHandler(event:ResponseItemEvent):void {
         logger.info("fetch friends failed: " + event.response.getErrorMessage());
-      }      
-      
+      }
+
       // ----------------- Send Message ------------------
       private function sendMessage():void {
         // the change for myspace. myspace is not support Message object's type equal to null.
@@ -152,7 +152,7 @@
                                                   "My new message.",
                                                   Message.Type.EMAIL);
         logger.log(message.toRawObject());
-        
+
         var req:AsyncDataRequest = new AsyncDataRequest(
             Feature.REQUEST_SEND_MESSAGE,
             new UIRequestOptions()
@@ -162,13 +162,13 @@
         req.addEventListener(ResponseItemEvent.ERROR, sendMessageEventErrorHandler);
         req.send(client);
       }
-      
+
       private function sendMessageEventHandler(event:ResponseItemEvent):void {
         logger.info("msg sent.");
       }
-      
+
       private function sendMessageEventErrorHandler(event:ResponseItemEvent):void {
-        logger.info("msg sending failed: " + event.response.getErrorMessage() 
+        logger.info("msg sending failed: " + event.response.getErrorMessage()
             + " msg error code:" + event.response.getErrorCode());
       }
 
@@ -176,7 +176,7 @@
       // ----------------- Create Activity ------------------
       private function createActivity():void {
         var activity:Activity = Activity.newInstance("My new activity!", "Hello World...");
-        
+
         logger.log(activity.toRawObject());
         var req:AsyncDataRequest = new AsyncDataRequest(
             Feature.REQUEST_CREATE_ACTIVITY,
@@ -190,7 +190,7 @@
       private function createActivityEventHandler(event:ResponseItemEvent):void {
         logger.info("activity created");
       }
-      
+
       private function createActivityEventErrorHandler(event:ResponseItemEvent):void {
         logger.info("activity creation failed: " + event.response.getErrorMessage());
       }
@@ -213,7 +213,7 @@
           var a:Activity = arr[i];
           logger.info(a.toString());
         }
-        
+
         if (c.getRemainingSize() > 0) {
           var req:AsyncDataRequest = event.target as AsyncDataRequest;
           (req.getOptions() as ActivitiesRequestOptions).setStartIndex(c.getNextOffset());
@@ -228,7 +228,7 @@
       // ----------------- Create Album ------------------
       private function createAlbum():void {
         var album:Album = Album.newInstance("yan's album");
-        
+
         var req:AsyncDataRequest = new AsyncDataRequest(
             Feature.ALBUMS_CREATE,
             new AlbumsRequestOptions()
@@ -247,7 +247,7 @@
       }
 
       // ----------------- Fetch Albums ------------------
-      private function fetchAlbums():void {      
+      private function fetchAlbums():void {
         var req:AsyncDataRequest = new AsyncDataRequest(
             Feature.ALBUMS_GET,
             new AlbumsRequestOptions());
@@ -266,7 +266,7 @@
           logger.info(a.getTitle());
           dataProvider.addItem(a);
         }
-        
+
         if (c.getRemainingSize() > 0) {
           var req:AsyncDataRequest = event.target as AsyncDataRequest;
           (req.getOptions() as PeopleRequestOptions).setStartIndex(c.getNextOffset());
@@ -281,7 +281,7 @@
       // ----------------- Update Album ------------------
       private function updateAlbum():void {
         var album:Album = Album.newInstance("my album");
-        
+
         var req:AsyncDataRequest = new AsyncDataRequest(
             Feature.ALBUMS_UPDATE,
             new AlbumsRequestOptions()
@@ -301,7 +301,7 @@
       }
 
       // ----------------- Delete Album ------------------
-      private function deleteAlbum():void {        
+      private function deleteAlbum():void {
         var req:AsyncDataRequest = new AsyncDataRequest(
             Feature.ALBUMS_DELETE,
             new AlbumsRequestOptions()
@@ -320,7 +320,7 @@
       }
 
       // ----------------- Upload Photo ------------------
-      private function uploadPhoto():void {        
+      private function uploadPhoto():void {
         var req:AsyncDataRequest = new AsyncDataRequest(
             Feature.REQUEST_UPLOAD_MEDIAITEM,
             new UIRequestOptions()
@@ -339,7 +339,7 @@
       }
 
       // ----------------- Fetch Photos ------------------
-      private function fetchPhotos():void {      
+      private function fetchPhotos():void {
         var req:AsyncDataRequest = new AsyncDataRequest(
             Feature.MEDIAITEMS_GET,
             new MediaItemsRequestOptions()
@@ -359,7 +359,7 @@
           logger.info(m.getTitle());
           dataProvider.addItem(m);
         }
-        
+
         if (c.getRemainingSize() > 0) {
           var req:AsyncDataRequest = event.target as AsyncDataRequest;
           (req.getOptions() as PeopleRequestOptions).setStartIndex(c.getNextOffset());
@@ -375,7 +375,7 @@
       private function updatePhoto():void {
         var mediaItem:MediaItem = new MediaItem(MutableDataType.createRawObject());
         mediaItem.setField(MediaItem.Field.TITLE, "First Photo");
-        
+
         var req:AsyncDataRequest = new AsyncDataRequest(
             Feature.MEDIAITEMS_UPDATE,
             new MediaItemsRequestOptions()
@@ -394,7 +394,7 @@
       private function updatePhotoEventErrorHandler(event:ResponseItemEvent):void {
         logger.info("photo update failed: " + event.response.getErrorMessage());
       }
-      
+
       // ----------------- Make Request ------------------
       private function makeRequest():void {
         var req:ProxiedRequest = new ProxiedRequest(
@@ -405,24 +405,24 @@
         req.addEventListener(ProxiedRequestEvent.ERROR, makeRequestEventErrorHandler);
         req.send(client);
       }
-      
+
       private function makeRequestEventHandler(event:ProxiedRequestEvent):void {
         logger.info(event.response.getData());
       }
 
       private function makeRequestEventErrorHandler(event:ProxiedRequestEvent):void {
-        logger.info("make request failed: " + event.response.getRC() 
+        logger.info("make request failed: " + event.response.getRC()
                     + "|" + event.response.getText());
       }
 
 
       // ----------------- Call RPC ------------------
       private function callRpc():void {
-        // To use this, you need to first register the rpc service with name "srv-parent" on 
+        // To use this, you need to first register the rpc service with name "srv-parent" on
         // container side. If you are using firefox+firebug and looking on a shindig container,
-        // before clicking the "Call Rpc" button in the flash to call this method, copy+paste the 
+        // before clicking the "Call Rpc" button in the flash to call this method, copy+paste the
         // following codes to the console window:
-        // 
+        //
         // <code>
         // gadgets.rpc.register("srv-parent", function(){
         //   console.log(arguments);
@@ -442,12 +442,12 @@
 
       // ----------------- Register RPC Service ------------------
       private function registerService():void {
-        // To use this, you need to make a rpc call to "srv-app" from container side. If you are 
-        // using firefox+firebug and shindig container, click the "Register Srv" button in the 
+        // To use this, you need to make a rpc call to "srv-app" from container side. If you are
+        // using firefox+firebug and shindig container, click the "Register Srv" button in the
         // flash to call this method, then copy+paste the following codes to the console window
-        // to test the rpc. 
+        // to test the rpc.
         // ("remote_iframe_0" assumes this flash app is the first app on the page)
-        // 
+        //
         // <code>
         // gadgets.rpc.call("remote_iframe_0","srv-app",function(r){
         //   console.log(r);
@@ -457,7 +457,7 @@
         srv.register(client);
         srv.addEventListener(RPCServiceEvent.RPC_SERVICE, serviceEventHandler);
       }
-      
+
       private function serviceEventHandler(event:RPCServiceEvent):void {
         logger.info("--- invoked by 'srv-app' get called ---");
         logger.log(event.params);
@@ -492,7 +492,7 @@
         logger.info("===============  Batch Success   ================");
         var p:Person = event.response.getData("meProfile");
         logger.info("meProfile ===============  " + p.getDisplayName());
-        
+
         var c:Collection = event.response.getData("friendList");
         var arr:Array = c.getArray();
         for (var i:int = 0; i < arr.length; i++) {
@@ -501,22 +501,22 @@
         }
         logger.info("===============  Batch Success   ================");
       }
-      
+
       private function batchDataRequestErrorHandler(event:ResponseItemEvent):void {
         logger.info("===============  Batch Error   ================");
         logger.info(event.response.getErrorMessage());
         logger.info("===============  Batch Error   ================");
       }
-      
+
       private function batchFetchMeEventHandler(event:ResponseItemEvent):void {
         var p:Person = event.response.getData();
         logger.info(p.getDisplayName());
         dataProvider.addItem(p);
-      }      
-      
+      }
+
       private function batchFetchMeEventErrorHandler(event:ResponseItemEvent):void {
         logger.info("fetch me failed: " + event.response.getErrorMessage());
-      }       
+      }
 
       private function batchFetchFriendsEventHandler(event:ResponseItemEvent):void {
         var c:Collection = event.response.getData();
@@ -527,7 +527,7 @@
           logger.info(p.getDisplayName());
           dataProvider.addItem(p);
         }
-        
+
         if (c.getRemainingSize() > 0) {
           var req:AsyncDataRequest = event.target as AsyncDataRequest;
           (req.getOptions() as PeopleRequestOptions).setStartIndex(c.getNextOffset());
@@ -537,26 +537,25 @@
 
       private function batchFetchFriendsEventErrorHandler(event:ResponseItemEvent):void {
         logger.info("fetch friends failed: " + event.response.getErrorMessage());
-      }          
+      }
 
       // ----------------- Update Appdata ------------------
       private function updateAppdata():void {
         var player:Object = {name:"Zakiyy",age:22,gender:"male"};
-        var data:Object = {player:player};
-        
+
         var req:AsyncDataRequest = new AsyncDataRequest(
             Feature.APP_DATA_UPDATE,
             new AppDataRequestOptions()
-                .setData(data));
+                .setData(player));
         req.addEventListener(ResponseItemEvent.COMPLETE, updateAppdataEventHandler);
         req.addEventListener(ResponseItemEvent.ERROR, updateAppdataEventErrorHandler);
         req.send(client);
       }
-       
+
       private function updateAppdataEventHandler(event:ResponseItemEvent):void {
         logger.info("update success!");
       }
-      
+
       private function updateAppdataEventErrorHandler(event:ResponseItemEvent):void {
         logger.info("update failed: " + event.response.getErrorMessage());
       }
@@ -566,22 +565,22 @@
         var req:AsyncDataRequest = new AsyncDataRequest(
             Feature.APP_DATA_GET,
             new AppDataRequestOptions()
-                .setKeys(["player"]));
+                .setKeys(["name"]));
         req.addEventListener(ResponseItemEvent.COMPLETE, getAppdataEventHandler);
         req.addEventListener(ResponseItemEvent.ERROR, getAppdataEventErrorHandler);
         req.send(client);
       }
-       
+
       private function getAppdataEventHandler(event:ResponseItemEvent):void {
-      	var data:Object = event.response.getData();
-      	for (var key:String in data) {
-      		logger.info("UserID:" + key);
-      		logger.info("Player JSON String:" + data[key].player);
-      	}
-      	
+        var data:Object = event.response.getData();
+        for (var key:String in data) {
+          logger.info("UserID:" + key);
+          logger.info("Player JSON String:" + data[key].name);
+        }
+
         logger.info("get success!");
       }
-      
+
       private function getAppdataEventErrorHandler(event:ResponseItemEvent):void {
         logger.info("get failed: " + event.response.getErrorMessage());
       }
@@ -597,11 +596,11 @@
         req.addEventListener(ResponseItemEvent.ERROR, deleteAppdataEventErrorHandler);
         req.send(client);
       }
-       
+
       private function deleteAppdataEventHandler(event:ResponseItemEvent):void {
         logger.info("delete success!");
       }
-      
+
       private function deleteAppdataEventErrorHandler(event:ResponseItemEvent):void {
         logger.info("delete failed: " + event.response.getErrorMessage());
       }
@@ -610,10 +609,10 @@
       private function shareApp(event:ListEvent):void {
         // To use this, you need First run "Fetch Friends" or "Fetch Me" and then click People.
         var p:Person = event.itemRenderer.data as Person;
-        var message:Message = Message.newInstance("Hey [recipient]! [sender] wants you to " + 
+        var message:Message = Message.newInstance("Hey [recipient]! [sender] wants you to " +
             "add [app]. It's way awesome!", "A fun way to view your profile!");
         logger.log(message.toRawObject());
-  
+
         var req:AsyncDataRequest = new AsyncDataRequest(
             Feature.REQUEST_SHARE_APP,
             new UIRequestOptions()
@@ -623,7 +622,7 @@
         req.addEventListener(ResponseItemEvent.ERROR, shareAppEventErrorHandler);
         req.send(client);
       }
-       
+
       private function shareAppEventHandler(event:ResponseItemEvent):void {
         logger.info("msg sent.");
       }
@@ -633,49 +632,49 @@
 
     ]]>
   </mx:Script>
-  <mx:Button x="468" y="45" label="Fetch Me" height="22" width="123" 
+  <mx:Button x="468" y="45" label="Fetch Me" height="22" width="123"
     id="fetchMeBtn" click="fetchMe()"/>
-  <mx:Button x="468" y="75" label="Fetch Friends" height="22" width="123" 
+  <mx:Button x="468" y="75" label="Fetch Friends" height="22" width="123"
     id="fetchFriendsBtn" click="fetchFriends()"/>
-  <mx:Button x="468" y="105" label="Send Message" height="22" width="123" 
+  <mx:Button x="468" y="105" label="Send Message" height="22" width="123"
     id="sendMessageBtn" click="sendMessage()"/>
-  <mx:Button x="468" y="135" label="Create Activity" height="22" width="123" 
+  <mx:Button x="468" y="135" label="Create Activity" height="22" width="123"
     id="createActivityBtn" click="createActivity()"/>
-  <mx:Button x="468" y="165" label="Fetch Activities" height="22" width="123" 
+  <mx:Button x="468" y="165" label="Fetch Activities" height="22" width="123"
     id="fetchActivitiesBtn" click="fetchActivities()"/>
-  <mx:Button x="468" y="195" label="Update Appdata" height="22" width="123" 
+  <mx:Button x="468" y="195" label="Update Appdata" height="22" width="123"
     id="updateAppdataBtn" click="updateAppdata()"/>
-  <mx:Button x="468" y="225" label="Get Appdata" height="22" width="123" 
+  <mx:Button x="468" y="225" label="Get Appdata" height="22" width="123"
     id="getAppdataBtn" click="getAppdata()"/>
-  <mx:Button x="468" y="255" label="Delete Appdata" height="22" width="123" 
-    id="deleteAppdataBtn" click="deleteAppdata()"/>  
-  <mx:Button x="468" y="285" label="Create Album" height="22" width="123" 
+  <mx:Button x="468" y="255" label="Delete Appdata" height="22" width="123"
+    id="deleteAppdataBtn" click="deleteAppdata()"/>
+  <mx:Button x="468" y="285" label="Create Album" height="22" width="123"
     id="createAlbumBtn" click="createAlbum()"/>
-  <mx:Button x="468" y="315" label="Fetch Albums" height="22" width="123" 
+  <mx:Button x="468" y="315" label="Fetch Albums" height="22" width="123"
     id="fetchAlbumsBtn" click="fetchAlbums()"/>
-  <mx:Button x="468" y="345" label="Update Album" height="22" width="123" 
+  <mx:Button x="468" y="345" label="Update Album" height="22" width="123"
     id="updateAlbumBtn" click="updateAlbum()"/>
-  <mx:Button x="468" y="375" label="Delete Album" height="22" width="123" 
-    id="deleteAlbumBtn" click="deleteAlbum()"/>  
-  <mx:Button x="468" y="405" label="Upload Photo" height="22" width="123" 
-    id="uploadPhotosBtn" click="uploadPhoto()"/>  
-  <mx:Button x="468" y="435" label="Fetch Photos" height="22" width="123" 
+  <mx:Button x="468" y="375" label="Delete Album" height="22" width="123"
+    id="deleteAlbumBtn" click="deleteAlbum()"/>
+  <mx:Button x="468" y="405" label="Upload Photo" height="22" width="123"
+    id="uploadPhotosBtn" click="uploadPhoto()"/>
+  <mx:Button x="468" y="435" label="Fetch Photos" height="22" width="123"
     id="fetchPhotosBtn" click="fetchPhotos()"/>
-  <mx:Button x="468" y="465" label="Update Photo" height="22" width="123" 
+  <mx:Button x="468" y="465" label="Update Photo" height="22" width="123"
     id="updatePhotoBtn" click="updatePhoto()"/>
-  <mx:Button x="599" y="45" label="Make Request" height="22" width="123" 
+  <mx:Button x="599" y="45" label="Make Request" height="22" width="123"
     id="makeRequestBtn" click="makeRequest()"/>
-  <mx:Button x="599" y="75" label="Call Rpc" height="22" width="123" 
+  <mx:Button x="599" y="75" label="Call Rpc" height="22" width="123"
     id="rpcCallBtn" click="callRpc()"/>
-  <mx:Button x="599" y="105" label="Register Srv" height="22" width="123" 
-    id="rpcRegisterBtn" click="registerService()"/>  
-  <mx:Button x="599" y="135" label="Batch Request" height="22" width="123" 
+  <mx:Button x="599" y="105" label="Register Srv" height="22" width="123"
+    id="rpcRegisterBtn" click="registerService()"/>
+  <mx:Button x="599" y="135" label="Batch Request" height="22" width="123"
     id="batchRequestBtn" click="batchRequest()"/>
-  <mx:TileList width="450" height="120" id="titleList" dataProvider="{dataProvider}" 
+  <mx:TileList width="450" height="120" id="titleList" dataProvider="{dataProvider}"
     itemClick="shareApp(event)" x="10" y="26" backgroundColor="#666666" mouseFocusEnabled="true">
     <mx:itemRenderer>
       <mx:Component>
-        <mx:Box width="96" height="120" focusEnabled="false" 
+        <mx:Box width="96" height="120" focusEnabled="false"
           horizontalScrollPolicy="off" verticalScrollPolicy="off">
           <mx:Script>
             <![CDATA[
@@ -683,18 +682,18 @@
               import org.opensocial.client.base.Album;
               import org.opensocial.client.base.Person;
               import org.opensocial.client.base.MediaItem;
-              
+
               [Bindable]
               public var text:String;
-              
+
               [Bindable]
               public var image:Object;
-              
+
               override public function set data(value:Object):void {
                 super.data = value;
                 image = data.getThumbnailUrl();
                 if (data is Person) {
-                  text = data.getDisplayName();                  
+                  text = data.getDisplayName();
                 } else if (data is Album){
                   text = data.getTitle();
                 } else if (data is MediaItem) {
@@ -703,13 +702,13 @@
               }
             ]]>
           </mx:Script>
-          <mx:Image source="{image}" width="96" height="96"/>                                 
+          <mx:Image source="{image}" width="96" height="96"/>
           <mx:Label text="{text}"/>
         </mx:Box>
       </mx:Component>
     </mx:itemRenderer>
   </mx:TileList>
-  <mx:Text x="356" y="3" 
-    text="OpenSocial (0.8) AS3 Client Library (JS Wrapper Client)&#xa;SampleApp For Orkut - Flex 3" 
+  <mx:Text x="356" y="3"
+    text="OpenSocial (0.8) AS3 Client Library (JS Wrapper Client)&#xa;SampleApp For Orkut - Flex 3"
     width="366" height="34" textAlign="right"/>
 </mx:Application>

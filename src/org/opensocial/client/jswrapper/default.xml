@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <!--
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,7 +18,7 @@
  * under the License.
 -->
 
-<global name="shindig">
+<global name="shindig" desc="Global root node.">
   <!-- ============================= External Namespace and Flags ============================== -->
 
   <script><![CDATA[
@@ -40,7 +40,7 @@
   var DEBUG = TESTING || DEBUG;
   ]]></script>
 
-  <gadgets>
+  <gadgets desc="Defines the external namespace 'gadgets'.">
     <script><![CDATA[
     /**
      * External namespace for gadgets for internal reference.
@@ -55,7 +55,7 @@
     ]]></script>
   </gadgets>
 
-  <opensocial>
+  <opensocial desc="Defines the external namcespace 'opensocial'.">
     <script><![CDATA[
     /**
      * External namespace for opensocial for internal reference.
@@ -72,27 +72,27 @@
 
 
     <!-- ============================= OpenSocial Flash Namespace ============================== -->
-    <flash>
+    <flash desc="Defines the 'opensocial.flash' namespace.">
       <script><![CDATA[
-        opensocial.flash = {};
-        /**
-         * Namespace for top-level api functions
-         * @static
-         * @namespace Namespace for top-level api functions.
-         * @requires opensocial
-         * @requires gadgets
-         * @name opensocial.flash
-         */
-        opensocial.flash = (function() {
+      opensocial.flash = {};
+      /**
+       * Namespace for top-level api functions
+       * @static
+       * @namespace Namespace for top-level api functions.
+       * @requires opensocial
+       * @requires gadgets
+       * @name opensocial.flash
+       */
+      opensocial.flash = (function() {
 
-          /* The following part of javascript are constructed by configs in flash. */
+        /* The following part of javascript are constructed by configs in flash. */
 
       ]]></script>
 
 
 
       <!-- ============================ Debugging Tools (private) ============================== -->
-      <debug>
+      <debug desc="Debugging tools that flash/javascript bridge may use.">
         <script><![CDATA[
         /**
          * For debugging, return the object's keys and values.
@@ -165,7 +165,7 @@
       </debug>
 
       <!-- ========================== Kernel Object (private) ================================== -->
-      <kernel>
+      <kernel desc="Defines the underlying object that 'opensocial.flash' represents for.">
         <script><![CDATA[
         /**
          * The underlying object holds all variables and functions for the opensocial.flash module.
@@ -178,17 +178,14 @@
 
         ]]></script>
 
-        <self>
+        <self desc="Defines some references for this and flash object in the kernel.">
           <script><![CDATA[
-
           /**
            * Alias for 'this' to avoid misusing the 'this' reference in difference scopes or closures.
            * @type {Object}
            * @private;
            */
           var me = this;
-
-
 
           /**
            * The flash movie object which apply this API.
@@ -203,7 +200,7 @@
 
 
         <!-- ================== Common Utilities Helper Functions (private) ==================== -->
-        <utility>
+        <utility desc="Defines some utility functions for the kernel about DOM and flash object.">
           <script><![CDATA[
           /**
            * Returns the document object.
@@ -313,8 +310,8 @@
 
 
         <!-- ===================== OpenSocial Data Helper Functions (private) ================== -->
-        <helper>
-          <getData>
+        <helper desc="OpenSocial related data helper functions.">
+          <getData desc="Gets data object from resoponse.">
             <script><![CDATA[
             /**
              * Gets data object from resoponse.
@@ -340,7 +337,7 @@
             };
             ]]></script>
           </getData>
-          <getDataItem>
+          <getDataItem desc="Gets data object from resoponse item.">
             <script><![CDATA[
             /**
              * Gets data object from response item.
@@ -351,13 +348,13 @@
              */
             me.getDataItem = function(responseItem) {
               if (!responseItem) return null;
-              
+
               /**
-               * NOTE:  
+               * NOTE:
                *      For orkut. When delete not exist photo, The responseItem.hadError() is false,
                *      But the responseItem.getErrorMessage() has error message.
                */
-              
+
               if (responseItem.hadError() || responseItem.getErrorMessage()) {
                 var e = new Error(responseItem.getErrorMessage());
                 e['name'] = "OpenSocialError";
@@ -368,10 +365,10 @@
             };
             ]]></script>
           </getDataItem>
-          <dataTypes>
+          <dataTypes desc="OpenSocial data types supported in the flash environment.">
             <script><![CDATA[
             /**
-             * OpenSocial Data Types supported in the flash environment.
+             * OpenSocial data types supported in the flash environment.
              * @private
              */
             me.dataTypes = {
@@ -394,10 +391,10 @@
             };
             ]]></script>
           </dataTypes>
-          <checkType>
+          <checkType desc="Gets the constructor function for OpenSocial data object.">
             <script><![CDATA[
             /**
-             * Gets the constructor function for opensocial data object.
+             * Gets the constructor function for OpenSocial data object.
              * @param {Object} dataObj The object to be checked.
              * @return {Object.<string, Function>?} The type of the object.
              * @private
@@ -417,10 +414,10 @@
             };
             ]]></script>
           </checkType>
-          <wrapObject>
+          <wrapObject desc="Wraps the OpenSocial rich object (with functions) to a JSON-like flat serializable object.">
             <script><![CDATA[
             /**
-             * Wraps the opensocial rich object (with functions) to a JSON-like flat serializable object.
+             * Wraps the OpenSocial rich object (with functions) to a JSON-like flat serializable object.
              * So the object can pass through the ExternalInterface to the swf.
              * @param {Object} dataObj The object to be wrapped.
              * @param {Object?} opt_this The flat object as a container to hold the wrapped fields.
@@ -494,10 +491,10 @@
             };
             ]]></script>
           </wrapObject>
-          <unwrapObject>
+          <unwrapObject desc="Unwraps the flattened object to a rich OpenSocial data object.">
             <script><![CDATA[
             /**
-             * Unwraps the flattened object to a rich opensocial data object. The flattened object is come
+             * Unwraps the flattened object to a rich OpenSocial data object. The flattened object is come
              * from the swf via ExternalInterface.
              * @param {Object} obj The object to be unwrapped. Only those 5 types with setField
              *                 method and opensocial.newXXXX creator can be unwrapped.
@@ -547,10 +544,10 @@
             };
             ]]></script>
           </unwrapObject>
-          <handleError>
+          <handleError desc="Logs down the error and callback to swf if any error happens for the request.">
             <script><![CDATA[
             /**
-             * When any data request error happens, log down the error and callback to swf.
+             * Logs down the error and callback to swf if any error happens for the request.
              * @param {string} reqID The request ID.
              * @param {Error} error The error thrown during the response.
              * @private
@@ -561,10 +558,10 @@
             };
             ]]></script>
           </handleError>
-          <handleAsync>
+          <handleAsync desc="Handles successful data responses and callback to swf.">
             <script><![CDATA[
             /**
-             * When any data request error happens, log down the error and callback to swf.
+             * Handles successful data responses and callback to swf.
              * @param {string} reqID The request ID.
              * @param {Object?} opt_data Some data to pass back
              * @private
@@ -578,16 +575,16 @@
             };
             ]]></script>
           </handleAsync>
-          <rpcStore>
+          <rpcStore desc="'gadget.rpc' helper function, stores the running rpc instances.">
             <script><![CDATA[
             /**
-             * Stores the running rpc instances.
+             * Stores the running rpc instances. It is used by asynchronous rpc register service.
              * @private
              */
             me.rpcStore = {};
             ]]></script>
           </rpcStore>
-          <pushRpc>
+          <pushRpc desc="'gadget.rpc' helper function, pushes the running rpc instance to the store and returns an unique callID.">
             <script><![CDATA[
             /**
              * Pushes the running rpc instance to the store and returns an unique callID. It is used by
@@ -603,7 +600,7 @@
             };
             ]]></script>
           </pushRpc>
-          <popRpc>
+          <popRpc desc="'gadget.rpc' helper function, pops the running rpc instance from the store with the callID.">
             <script><![CDATA[
             /**
              * Pops the running rpc instance from the store with the callID. It is used by
@@ -620,7 +617,6 @@
             ]]></script>
           </popRpc>
 
-
         </helper>
 
         <!-- ========================== Legacy Translators ===================================== -->
@@ -633,8 +629,8 @@
                  opensocial.flash.activity.*
                  opensocial.flash.appdata.*
         -->
-        <legacy>
-          <translatePaginationParams>
+        <legacy desc="Defines legacy methods for compatibility to old OpenSocial versions.">
+          <translatePaginationParams desc="Translates the osapi-options to pagination related request params.">
             <script><![CDATA[
             /**
              * Translates the osapi-options to pagination related request params.
@@ -658,7 +654,7 @@
             };
             ]]></script>
           </translatePaginationParams>
-          <translatePeopleRequestParams>
+          <translatePeopleRequestParams desc="Translates the osapi-options to people request params.">
             <script><![CDATA[
             /**
              * Translates the osapi-options to people request params.
@@ -692,7 +688,7 @@
             };
             ]]></script>
           </translatePeopleRequestParams>
-          <translateActivityRequestParams>
+          <translateActivityRequestParams desc="Translates the osapi-options to activities request params.">
             <script><![CDATA[
             /**
              * Translates the osapi-options to activities request params.
@@ -710,7 +706,7 @@
             };
             ]]></script>
           </translateActivityRequestParams>
-          <translateIds>
+          <translateIds desc="Translates the ids from osapi-options style to request params style.">
             <script><![CDATA[
             /**
              * Translates the ids from osapi-options style to request params style.
@@ -741,7 +737,7 @@
             };
             ]]></script>
           </translateIds>
-          <translateIdSpec>
+          <translateIdSpec desc="Translates the user and group information in osapi-options to an IdSpec object.">
             <script><![CDATA[
             /**
              * Translates the user and group information in osapi-options to an IdSpec object.
@@ -765,15 +761,17 @@
         </legacy>
 
         <!-- ========================== Public API functions =================================== -->
-        <api>
+        <api desc="Defines all actual api bridges where are visible to flash.">
           <script><![CDATA[
           var api = /** @scope opensocial.flash */ {};
+          /* Sets the returning api object. */
+          me.api = api;
           ]]></script>
 
 
           <!-- ========================== Flash Embeded Object Functions ======================= -->
 
-          <jsReady>
+          <jsReady desc="Indicates if the opensocial library is loaded and initialize the flash element.">
             <script><![CDATA[
             /**
              * Indicates if the opensocial library is loaded and initialize the flash element.
@@ -803,7 +801,7 @@
             ]]></script>
           </jsReady>
 
-          <extend>
+          <extend desc="Extends the api for special containers. Deprecated.">
             <script><![CDATA[
             /**
              * Extends the api for special containers, e.g. myspace
@@ -831,15 +829,15 @@
 
 
           <!-- ======================== Environment Wrapped Accessors ========================== -->
-          <env>
+          <env desc="Environment wrapped accessors for flash.">
             <script><![CDATA[
-              api.env = {};
+            api.env = {};
             ]]></script>
 
-            <supportsField>
+            <supportsField desc="Checks if the field is supported in the object type.">
               <script><![CDATA[
               /**
-               * Check if the field is supported in the object type.
+               * Checks if the field is supported in the object type.
                * @param {opensocial.Environment.ObjectType | string} objectType The enum name of
                *        the type.
                * @param {string} The enum name of the field, defined in opensocial.XXXX.Field enums.
@@ -851,7 +849,7 @@
               };
               ]]></script>
             </supportsField>
-            <getDomain>
+            <getDomain desc="Returns the domain from environment instance.">
               <script><![CDATA[
               /**
                * Returns the domain from environment instance.
@@ -863,7 +861,7 @@
               };
               ]]></script>
             </getDomain>
-            <getContainerDomain>
+            <getContainerDomain desc="Returns the domain from the referer.">
               <script><![CDATA[
               /**
                * Returns the domain from the referer.
@@ -881,12 +879,12 @@
 
 
           <!-- ========================== Gadgets Views =========================== -->
-          <views>
+          <views desc="'gadgets.views' wrapped accessors for flash.">
             <script><![CDATA[
-              api.views = {};
+            api.views = {};
             ]]></script>
 
-            <getCurrentView>
+            <getCurrentView desc="Returns the name of the in gadgets.views static class.">
               <script><![CDATA[
               /**
                * Returns the name of the in gadgets.views static class.
@@ -903,7 +901,7 @@
               };
               ]]></script>
             </getCurrentView>
-            <getViewParams>
+            <getViewParams desc="Returns the parameters passed into this gadget for this view.">
               <script><![CDATA[
               /**
                * Returns the parameters passed into this gadget for this view.
@@ -920,7 +918,7 @@
               };
               ]]></script>
             </getViewParams>
-            <isOnlyVisible>
+            <isOnlyVisible desc="Indicates if the app is only one gadget on the page or not.">
               <script><![CDATA[
               /**
                * Indicates if the app is only one gadget on the page or not.
@@ -941,12 +939,12 @@
 
 
           <!-- ========================== Gadgets Window =========================== -->
-          <win>
+          <win desc="'gadgets.window' wrapped accessors for flash.">
             <script><![CDATA[
-              api.win = {};
+            api.win = {};
             ]]></script>
 
-            <setStageWidth>
+            <setStageWidth desc="Sets the width for the flash stage.">
               <script><![CDATA[
               /**
                * Sets the width for the flash stage. It is very usefull for dynamic loading and
@@ -961,7 +959,7 @@
               };
               ]]></script>
             </setStageWidth>
-            <setStageHeight>
+            <setStageHeight desc="Sets the height for the flash stage.">
               <script><![CDATA[
               /**
                * Sets the height for the flash stage. It is very usefull for dynamic loading and
@@ -980,7 +978,7 @@
               };
               ]]></script>
             </setStageHeight>
-            <setTitle>
+            <setTitle desc="Sets the title of this app.">
               <script><![CDATA[
               /**
                * Sets the title of this app.
@@ -999,12 +997,12 @@
 
 
           <!-- ========================== Gadgets RPC =========================== -->
-          <rpc>
+          <rpc desc="'gadgets.rpc' wrapped accessors for flash.">
             <script><![CDATA[
-              api.rpc = {};
+            api.rpc = {};
             ]]></script>
 
-            <call>
+            <call desc="Sends the rpc call request to a service on another app or container on the page.">
               <script><![CDATA[
               /**
                * Sends the rpc call request to a service on another app or container on the page.
@@ -1031,7 +1029,7 @@
               };
               ]]></script>
             </call>
-            <serviceReturn>
+            <serviceReturn desc="Sends the return value to to last received rpc service back to the caller app.">
               <script><![CDATA[
               /**
                * Sends the return value to to last received rpc service back to the caller app.
@@ -1048,7 +1046,7 @@
               };
               ]]></script>
             </serviceReturn>
-            <serviceRegister>
+            <serviceRegister desc="Sends the rpc register request to container to register a service on this app.">
               <script><![CDATA[
               /**
                * Sends the rpc register request to container to register a service on this app.
@@ -1079,7 +1077,7 @@
               };
               ]]></script>
             </serviceRegister>
-            <serviceUnregister>
+            <serviceUnregister desc="Sends the rpc unregister request to container.">
               <script><![CDATA[
               /**
                * Sends the rpc unregister request to container.
@@ -1099,12 +1097,12 @@
 
 
           <!-- ========================== Gadgets IO =========================== -->
-          <io>
+          <io desc="'gadgets.io' wrapped accessors for flash.">
             <script><![CDATA[
-              api.io = {};
+            api.io = {};
             ]]></script>
 
-            <makeRequest>
+            <makeRequest desc="Sends request to a remote site to get or post data.">
               <script><![CDATA[
               /**
                * Sends request to a remote site to get or post data.
@@ -1131,12 +1129,12 @@
 
 
           <!-- ========================== Batch Request =========================== -->
-          <batch>
+          <batch desc="Defines batch request bridge methods for flash.">
             <script><![CDATA[
-              api.batch = {}; 
+            api.batch = {};
             ]]></script>
 
-            <send>
+            <send desc="send a batch request.">
               <script><![CDATA[
               /**
                * send a batch request.
@@ -1157,12 +1155,12 @@
                   var request = newRequest(options, operationMode, req);
                   req.add(request, resKey);
                 }
-                    
+
                 req.send(function(dataResponse) {
                   var response = {};
                   for (resKey in requests) {
                     var featureName = requests[resKey][0];
-                    if (featureName.indexOf('.appdata.') > -1) { 
+                    if (featureName.indexOf('.appdata.') > -1) {
                       try {
                         response[resKey] = me.getData(dataResponse, resKey);
                       } catch (e) {
@@ -1192,19 +1190,19 @@
           -->
 
           <!-- ========================== OSAPI.PEOPLE =========================== -->
-          <people>
+          <people desc="Defines people service methods.">
             <script><![CDATA[
-              api.people = {};
+            api.people = {};
             ]]></script>
 
-            <newRequest>
+            <newRequest desc="Creates a request instance of people service.">
               <script><![CDATA[
               /**
                * According to operation mode, get request object.
                * @param {Object.<string, Object>?} options An object unwrapped from
                *        PeopleRequestOptions.
                * @param {string} mode The operation mode.
-               * @param {DataRequest} req An exist DataRequest.               
+               * @param {DataRequest} req An exist DataRequest.
                * @member opensocial.flash.people
                */
               api.people.newRequest = function(options, mode, req) {
@@ -1214,8 +1212,8 @@
                     params = me.translatePaginationParams(options, params);
                     var idSpec = me.translateIdSpec(options);
                     var userId = idSpec.getField(opensocial.IdSpec.Field.USER_ID);
-                    var groupId = idSpec.getField(opensocial.IdSpec.Field.GROUP_ID);                 
-                    
+                    var groupId = idSpec.getField(opensocial.IdSpec.Field.GROUP_ID);
+
                     if (groupId == opensocial.IdSpec.GroupId.SELF) {
                       return req.newFetchPersonRequest(userId, params);
                     } else {
@@ -1225,7 +1223,7 @@
               };
               ]]></script>
             </newRequest>
-            <get>
+            <get desc="Sends request to a remote site to get viewer, owner or friends.">
               <script><![CDATA[
               /**
                * Sends request to a remote site to get viewer, owner or friends.
@@ -1245,7 +1243,7 @@
                   } catch (e) {
                     me.handleError(reqID, e);
                   }
-                });       
+                });
               };
               ]]></script>
             </get>
@@ -1253,19 +1251,19 @@
 
 
           <!-- ========================== OSAPI.ACTIVITIES =========================== -->
-          <activities>
+          <activities desc="Defines activities service methods.">
             <script><![CDATA[
-              api.activities = {};
+            api.activities = {};
             ]]></script>
 
-            <newRequest>
+            <newRequest desc="Creates a request instance of activities service.">
               <script><![CDATA[
               /**
                * According to operation mode, get request object.
                * @param {Object.<string, Object>?} options An object unwrapped from
                *        PeopleRequestOptions.
                * @param {string} mode The operation mode.
-               * @param {DataRequest} req An exist DataRequest.               
+               * @param {DataRequest} req An exist DataRequest.
                * @member opensocial.flash.people
                */
               api.activities.newRequest = function(options, mode, req) {
@@ -1273,13 +1271,13 @@
                   case 'get':
                     var params = me.translateActivityRequestParams(options);
                     params = me.translatePaginationParams(options, params);
-                    var idSpec = me.translateIdSpec(options);                    
-                    return req.newFetchActivitiesRequest(idSpec, params); 
+                    var idSpec = me.translateIdSpec(options);
+                    return req.newFetchActivitiesRequest(idSpec, params);
                 }
               };
               ]]></script>
             </newRequest>
-            <get>
+            <get desc="Sends request to a remote site to get activities.">
               <script><![CDATA[
               /**
                * Sends request to a remote site to get activities.
@@ -1307,33 +1305,33 @@
 
 
           <!-- ========================== OSAPI.APPDATA =========================== -->
-          <appdata>
+          <appdata desc="Defines appdata service methods.">
             <script><![CDATA[
-              api.appdata = {};
+            api.appdata = {};
             ]]></script>
 
-            <newRequest>
+            <newRequest desc="Creates a request instance of appdata service.">
               <script><![CDATA[
               /**
                * According to operation mode, get request object.
                * @param {Object.<string, Object>?} options An object unwrapped from
                *        PeopleRequestOptions.
                * @param {string} mode The operation mode.
-               * @param {DataRequest} req An exist DataRequest.               
+               * @param {DataRequest} req An exist DataRequest.
                * @member opensocial.flash.people
                */
               api.appdata.newRequest = function(options, mode, req) {
                 switch (mode){
                   case 'get':
                     var idSpec = me.translateIdSpec(options);
-                    var keys = options['keys'];     
+                    var keys = options['keys'];
                     return req.newFetchPersonAppDataRequest(idSpec, keys);
                   case 'update':
                     var idSpec = me.translateIdSpec(options);
                     var userId = idSpec.getField(opensocial.IdSpec.Field.USER_ID);
                     var key;
                     var value;
-                    for (key in options['data']) {                      
+                    for (key in options['data']) {
                       value = gadgets.json.stringify(options['data'][key]);
                       break;
                     }
@@ -1347,7 +1345,7 @@
               };
               ]]></script>
             </newRequest>
-            <get>
+            <get desc="Sends request to remote site to get app data.">
               <script><![CDATA[
               /**
                * Sends request to remote site to get app data.
@@ -1374,7 +1372,7 @@
               };
               ]]></script>
             </get>
-            <update>
+            <update desc="Sends request to remote site to update app data.">
               <script><![CDATA[
               /**
                * Sends request to remote site to update app data.
@@ -1398,7 +1396,7 @@
               };
               ]]></script>
             </update>
-            <deleteData>
+            <deleteData desc="Sends request to remote site to delete app data.">
               <script><![CDATA[
               /**
                * Sends request to remote site to delete app data.
@@ -1424,21 +1422,21 @@
             </deleteData>
           </appdata>
 
-          
+
           <!-- ========================== OSAPI.ALBUMS =========================== -->
-          <albums>
+          <albums desc="Defines album service methods.">
             <script><![CDATA[
-              api.albums = {};
+            api.albums = {};
             ]]></script>
 
-            <newRequest>
+            <newRequest desc="Creates a request instance of album service.">
               <script><![CDATA[
               /**
                * According to operation mode, get request object.
                * @param {Object.<string, Object>?} options An object unwrapped from
                *        PeopleRequestOptions.
                * @param {string} mode The operation mode.
-               * @param {DataRequest} req An exist DataRequest.               
+               * @param {DataRequest} req An exist DataRequest.
                * @member opensocial.flash.albums
                */
               api.albums.newRequest = function(options, mode, req) {
@@ -1450,12 +1448,12 @@
                   case 'get':
                     var params = me.translatePaginationParams(options);
                     var idSpec = me.translateIdSpec(options);
-                    return req.newFetchAlbumsRequest(idSpec, params); 
+                    return req.newFetchAlbumsRequest(idSpec, params);
                   case 'update':
                     var album = options['album']['fields'];
                     var idSpec = me.translateIdSpec(options);
                     var albumId = options['albumId'];
-                    return req.newUpdateAlbumRequest(idSpec, albumId, album); 
+                    return req.newUpdateAlbumRequest(idSpec, albumId, album);
                   case 'delete':
                     var idSpec = me.translateIdSpec(options);
                     var albumId = options['albumId'];
@@ -1464,7 +1462,7 @@
               };
               ]]></script>
             </newRequest>
-            <create>
+            <create desc="Sends request to remote site to create album.">
               <script><![CDATA[
               /**
                * Sends request to remote site to create album.
@@ -1488,7 +1486,7 @@
               };
               ]]></script>
             </create>
-            <get>
+            <get desc="Sends request to remote site to get albums.">
               <script><![CDATA[
               /**
                * Sends request to remote site to get albums.
@@ -1512,7 +1510,7 @@
               };
               ]]></script>
             </get>
-            <update>
+            <update desc="Sends request to remote site to update album.">
               <script><![CDATA[
               /**
                * Sends request to remote site to update album.
@@ -1536,7 +1534,7 @@
               };
               ]]></script>
             </update>
-            <deleteData>
+            <deleteData desc="Sends request to remote site to update album.">
               <script><![CDATA[
               /**
                * Sends request to remote site to update album.
@@ -1562,21 +1560,21 @@
             </deleteData>
           </albums>
 
-          
+
           <!-- ========================== OSAPI.MEDIAITEMS =========================== -->
-          <mediaItems>
+          <mediaItems desc="Defines album mediaitems methods.">
             <script><![CDATA[
-              api.mediaItems = {};
+            api.mediaItems = {};
             ]]></script>
 
-            <newRequest>
+            <newRequest desc="Creates a request instance of mediaitems service.">
               <script><![CDATA[
               /**
                * According to operation mode, get request object.
                * @param {Object.<string, Object>?} options An object unwrapped from
                *        PeopleRequestOptions.
                * @param {string} mode The operation mode.
-               * @param {DataRequest} req An exist DataRequest.               
+               * @param {DataRequest} req An exist DataRequest.
                * @member opensocial.flash.mediaItems
                */
               api.mediaItems.newRequest = function(options, mode, req) {
@@ -1596,7 +1594,7 @@
               };
               ]]></script>
             </newRequest>
-            <get>
+            <get desc="Sends request to remote site to get mediaitems.">
               <script><![CDATA[
               /**
                * Sends request to remote site to get mediaitems.
@@ -1620,7 +1618,7 @@
               };
               ]]></script>
             </get>
-            <update>
+            <update desc="Sends request to remote site to update mediaItem.">
               <script><![CDATA[
               /**
                * Sends request to remote site to update mediaItem.
@@ -1647,12 +1645,12 @@
           </mediaItems>
 
           <!-- ========================== OSAPI.UI =========================== -->
-          <ui>
+          <ui desc="Defines ui related methods.">
             <script><![CDATA[
-              api.ui = {};
+            api.ui = {};
             ]]></script>
 
-            <requestCreateActivity>
+            <requestCreateActivity desc="Sends request to remote site to request an activity creation.">
               <script><![CDATA[
               /**
                * Sends request to remote site to request an activity creation.
@@ -1675,7 +1673,7 @@
               };
               ]]></script>
             </requestCreateActivity>
-            <requestSendMessage>
+            <requestSendMessage desc="Sends request to remote site to request messages sending.">
               <script><![CDATA[
               /**
                * Sends request to remote site to request messages sending.
@@ -1698,7 +1696,7 @@
               };
               ]]></script>
             </requestSendMessage>
-            <requestShareApp>
+            <requestShareApp desc="Sends request to remote site to request app sharing.">
               <script><![CDATA[
               /**
                * Sends request to remote site to request app sharing.
@@ -1721,7 +1719,7 @@
               };
               ]]></script>
             </requestShareApp>
-            <requestPermission>
+            <requestPermission desc="Sends request to remote site to request permission.">
               <script><![CDATA[
               /**
                * Sends request to remote site to request permission.
@@ -1744,7 +1742,7 @@
               };
               ]]></script>
             </requestPermission>
-            <requestUploadMediaItem>
+            <requestUploadMediaItem desc="Sends request to remote site to request an mediaitem upload.">
               <script><![CDATA[
               /**
                * Sends request to remote site to request an mediaitem upload.
@@ -1769,10 +1767,8 @@
           </ui>
         </api>
 
-        <script><![CDATA[
-          /* Sets the returning api object. */
-          me.api = api;
-
+        <testing desc="Only visible when testing. It exports the kernel object constructor to public.">
+          <script><![CDATA[
           if (TESTING) {
             /**
              * Only visible when testing. It exports the kernel object constructor to public.
@@ -1780,19 +1776,26 @@
              * @ignore
              */
             me.api.kernel = kernel;
-
           }
-        };
+          ]]></script>
+        </testing>
+
+        
+        <script><![CDATA[
+        }; // ~kernel
         ]]></script>
       </kernel>
 
+      <interface desc="Returns the public interface for flash.">
+        <script><![CDATA[
+        /* The public API functions set */
+        return new kernel().api;
+        ]]></script>
+      </interface>
+      
       <script><![CDATA[
-      /* The public API functions set */
-      return new kernel().api;
-      })();
-
+      })(); // ~opensocial.flash
       ]]></script>
-
     </flash>
   </opensocial>
 </global>

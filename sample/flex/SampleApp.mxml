@@ -17,42 +17,41 @@
  * specific language governing permissions and limitations
  * under the License.
 -->
-<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" 
-           width="600" height="500" color="#FFFFFF" 
-           backgroundGradientAlphas="[1.0, 1.0]" 
-           backgroundGradientColors="[#666666, #666666]" 
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute"
+           width="600" height="500" color="#FFFFFF"
+           backgroundGradientAlphas="[1.0, 1.0]"
+           backgroundGradientColors="[#666666, #666666]"
            initialize="init()">
 
   <mx:Metadata>
     <![CDATA[
     /**
      * Sample Application using the OpenSocial AS3 Client Library in Flex 3.
-     * Build the SampleApp.mxml with Flex SDK to swf file and it works with the gadget spec XML 
+     * Build the SampleApp.mxml with Flex SDK to swf file and it works with the gadget spec XML
      * (//sample/SampleApp.xml).
-     * 
+     *
      * <p>
      * Usage:<br>
      * 1. Create a JsWrapperClient instance.
-     * <br> 
+     * <br>
      * 2. Add a eventhandler for READY event and call the start() method.
      * <br>
-     * 3. When the client is ready, use the any of the <code>AsyncRequest</code> objects and 
+     * 3. When the client is ready, use the any of the <code>AsyncRequest</code> objects and
      * <code>SyncHelper</code> objects to interact with OpenSocial API. All these are located in
      * <code>org.opensocial.client.features</code> package.
      * <br>
      * </p>
-     * 
+     *
      * @author yiziwu@google.com (Yizi Wu)
      */
     ]]>
   </mx:Metadata>
   <mx:Script>
     <![CDATA[
-      import com.adobe.serialization.json.JSON;
       import mx.controls.Alert;
       import mx.collections.ArrayCollection;
       import mx.events.ListEvent;
-      
+
       import org.opensocial.client.base.*;
       import org.opensocial.client.core.*;
       import org.opensocial.client.features.*;
@@ -66,7 +65,7 @@
 
       [Bindable]
       public var people:ArrayCollection = new ArrayCollection();
-      
+
       private function init():void {
 
         // Create the output box for information displaying
@@ -76,12 +75,12 @@
         Logger.initialize(printer, 1);
         logger.info("OpenSocial(0.8) AS3 Client Library in Flex 3");
         logger.log(new Date());
-        
+
         // Initialize Client and start
         client = new JsWrapperClient();
         client.addEventListener(OpenSocialClientEvent.CLIENT_READY, onReady);
         client.start();
-        
+
         helper = new SyncHelper(client);
 
       }
@@ -106,7 +105,7 @@
                 .setUserId("@me")
                 .setGroupId("@self"));
         req.addEventListener(ResponseItemEvent.COMPLETE, fetchMeEventHandler);
-        req.addEventListener(ResponseItemEvent.ERROR, fetchMeEventErrorHandler);        
+        req.addEventListener(ResponseItemEvent.ERROR, fetchMeEventErrorHandler);
         req.send(client);
         people.removeAll();
       }
@@ -116,7 +115,7 @@
         logger.info(p.getDisplayName());
         people.addItem(p);
       }
-      
+
       private function fetchMeEventErrorHandler(event:ResponseItemEvent):void {
         logger.info("fetch me failed: " + event.response.getErrorMessage());
       }
@@ -132,7 +131,7 @@
                 .setCount(2)
                 .setStartIndex(0));
         req.addEventListener(ResponseItemEvent.COMPLETE, fetchFriendsEventHandler);
-        req.addEventListener(ResponseItemEvent.ERROR, fetchFriendsEventErrorHandler);   
+        req.addEventListener(ResponseItemEvent.ERROR, fetchFriendsEventErrorHandler);
         req.send(client);
         people.removeAll();
       }
@@ -146,7 +145,7 @@
           logger.info(p.getDisplayName());
           people.addItem(p);
         }
-        
+
         if (c.getRemainingSize() > 0) {
           var req:AsyncDataRequest = event.target as AsyncDataRequest;
           (req.getOptions() as PeopleRequestOptions).setStartIndex(c.getNextOffset());
@@ -156,14 +155,14 @@
 
       private function fetchFriendsEventErrorHandler(event:ResponseItemEvent):void {
         logger.info("fetch friends failed: " + event.response.getErrorMessage());
-      }      
-      
+      }
+
       // ----------------- Send Message ------------------
       private function sendMessage():void {
         // the change for myspace. myspace is not support Message object's type equal to null.
         var message:Message = Message.newInstance("Hello World...", "My new message.", Message.Type.EMAIL);
         logger.log(message.toRawObject());
-        
+
         var req:AsyncDataRequest = new AsyncDataRequest(
             Feature.REQUEST_SEND_MESSAGE,
             new UIRequestOptions()
@@ -173,12 +172,12 @@
         req.addEventListener(ResponseItemEvent.ERROR, sendMessageEventErrorHandler);
         req.send(client);
       }
-      
+
       private function sendMessageEventHandler(event:ResponseItemEvent):void {
         logger.info("msg sent.");
       }
       private function sendMessageEventErrorHandler(event:ResponseItemEvent):void {
-        logger.info("msg sending failed: " + event.response.getErrorMessage() 
+        logger.info("msg sending failed: " + event.response.getErrorMessage()
             + " msg error code:" + event.response.getErrorCode());
       }
 
@@ -186,7 +185,7 @@
       // ----------------- Create Activity ------------------
       private function createActivity():void {
         var activity:Activity = Activity.newInstance("My new activity!", "Hello World...");
-        
+
         logger.log(activity.toRawObject());
         var req:AsyncDataRequest = new AsyncDataRequest(
             Feature.REQUEST_CREATE_ACTIVITY,
@@ -222,7 +221,7 @@
           var a:Activity = arr[i];
           logger.info(a.toString());
         }
-        
+
         if (c.getRemainingSize() > 0) {
           var req:AsyncDataRequest = event.target as AsyncDataRequest;
           (req.getOptions() as ActivitiesRequestOptions).setStartIndex(c.getNextOffset());
@@ -232,7 +231,7 @@
 
       private function fetchActivitiesEventErrorHandler(event:ResponseItemEvent):void {
         logger.info("fetch activities failed: " + event.response.getErrorMessage());
-      }  
+      }
 
       // ----------------- Make Request ------------------
       private function makeRequest():void {
@@ -244,24 +243,24 @@
         req.addEventListener(ProxiedRequestEvent.ERROR, makeRequestEventErrorHandler);
         req.send(client);
       }
-      
+
       private function makeRequestEventHandler(event:ProxiedRequestEvent):void {
         logger.info(event.response.getData());
       }
 
       private function makeRequestEventErrorHandler(event:ProxiedRequestEvent):void {
-        logger.info("make request failed: " + event.response.getRC() 
+        logger.info("make request failed: " + event.response.getRC()
                     + "|" + event.response.getText());
       }
 
 
       // ----------------- Call RPC ------------------
       private function callRpc():void {
-        // To use this, you need to first register the rpc service with name "srv-parent" on 
+        // To use this, you need to first register the rpc service with name "srv-parent" on
         // container side. If you are using firefox+firebug and looking on a shindig container,
-        // before clicking the "Call Rpc" button in the flash to call this method, copy+paste the 
+        // before clicking the "Call Rpc" button in the flash to call this method, copy+paste the
         // following codes to the console window:
-        // 
+        //
         // <code>
         // gadgets.rpc.register("srv-parent",function(){console.log(arguments);return "'srv-parent' returned."});
         // </code>
@@ -278,12 +277,12 @@
 
       // ----------------- Register RPC Service ------------------
       private function registerService():void {
-        // To use this, you need to make a rpc call to "srv-app" from container side. If you are 
-        // using firefox+firebug and shindig container, click the "Register Srv" button in the 
+        // To use this, you need to make a rpc call to "srv-app" from container side. If you are
+        // using firefox+firebug and shindig container, click the "Register Srv" button in the
         // flash to call this method, then copy+paste the following codes to the console window
-        // to test the rpc. 
+        // to test the rpc.
         // ("remote_iframe_0" assumes this flash app is the first app on the page)
-        // 
+        //
         // <code>
         // gadgets.rpc.call("remote_iframe_0","srv-app",function(r){console.log(r);},"abc", 123, {'xyz':456});
         // </code>
@@ -291,7 +290,7 @@
         srv.register(client);
         srv.addEventListener(RPCServiceEvent.RPC_SERVICE, serviceEventHandler);
       }
-      
+
       private function serviceEventHandler(event:RPCServiceEvent):void {
         logger.info("--- invoked by 'srv-app' get called ---");
         logger.log(event.params);
@@ -304,7 +303,7 @@
         var p:Person = people.getItemAt(titleList.selectedIndex) as Person;
         var message:Message = Message.newInstance("Hey [recipient]! [sender] wants you to add [app]. It's way awesome!", "A fun way to view your profile!");
         logger.log(message.toRawObject());
-  
+
         var req:AsyncDataRequest = new AsyncDataRequest(
             Feature.REQUEST_SHARE_APP,
             new UIRequestOptions()
@@ -314,7 +313,7 @@
         req.addEventListener(ResponseItemEvent.ERROR, shareAppEventErrorHandler);
         req.send(client);
       }
-       
+
       private function shareAppEventHandler(event:ResponseItemEvent):void {
         logger.info("msg sent.");
       }
@@ -332,11 +331,11 @@
                 .setGroupId("@self"));
 
 //        req.addEventListener(ResponseItemEvent.COMPLETE, batchFetchMeEventHandler);
-//        req.addEventListener(ResponseItemEvent.ERROR, batchFetchMeEventErrorHandler);        
+//        req.addEventListener(ResponseItemEvent.ERROR, batchFetchMeEventErrorHandler);
 
-                
+
         batch.add(req, "meProfile");
- 
+
         req = new AsyncDataRequest(
             Feature.PEOPLE_GET,
             new PeopleRequestOptions()
@@ -346,8 +345,8 @@
                 .setStartIndex(0));
 //
 //        req.addEventListener(ResponseItemEvent.COMPLETE, batchFetchFriendsEventHandler);
-//        req.addEventListener(ResponseItemEvent.ERROR, batchFetchFriendsEventErrorHandler);                   
-//                
+//        req.addEventListener(ResponseItemEvent.ERROR, batchFetchFriendsEventErrorHandler);
+//
         batch.add(req, "friendList");
 
         batch.addEventListener(ResponseItemEvent.COMPLETE, batchDataRequestEventHandler);
@@ -359,7 +358,7 @@
         logger.info("===============  Batch Success   ================");
         var p:Person = event.response.getData("meProfile");
         logger.info("meProfile ===============  " + p.getDisplayName());
-        
+
         var c:Collection = event.response.getData("friendList");
         var arr:Array = c.getArray();
         for (var i:int = 0; i < arr.length; i++) {
@@ -368,22 +367,22 @@
         }
         logger.info("===============  Batch Success   ================");
       }
-      
+
       private function batchDataRequestErrorHandler(event:ResponseItemEvent):void {
         logger.info("===============  Batch Error   ================");
         logger.info(event.response.getErrorMessage());
         logger.info("===============  Batch Error   ================");
       }
-      
+
       private function batchFetchMeEventHandler(event:ResponseItemEvent):void {
         var p:Person = event.response.getData();
         logger.info(p.getDisplayName());
         people.addItem(p);
-      }      
-      
+      }
+
       private function batchFetchMeEventErrorHandler(event:ResponseItemEvent):void {
         logger.info("fetch me failed: " + event.response.getErrorMessage());
-      }       
+      }
 
       private function batchFetchFriendsEventHandler(event:ResponseItemEvent):void {
         var c:Collection = event.response.getData();
@@ -394,7 +393,7 @@
           logger.info(p.getDisplayName());
           people.addItem(p);
         }
-        
+
         if (c.getRemainingSize() > 0) {
           var req:AsyncDataRequest = event.target as AsyncDataRequest;
           (req.getOptions() as PeopleRequestOptions).setStartIndex(c.getNextOffset());
@@ -404,21 +403,21 @@
 
       private function batchFetchFriendsEventErrorHandler(event:ResponseItemEvent):void {
         logger.info("fetch friends failed: " + event.response.getErrorMessage());
-      }          
+      }
 
       // ----------------- Update Appdata ------------------
       private function updateAppdata():void {
-        var player:Object = {name:"Zakiyy",age:22,gender:"male"};
-        
+        var value:String = "random value: #12345";
+
         var req:AsyncDataRequest = new AsyncDataRequest(
             Feature.APP_DATA_UPDATE,
             new AppDataRequestOptions()
-                .setDatum("player", JSON.encode(player)));
+                .setDatum("randomKey", value));
         req.addEventListener(ResponseItemEvent.COMPLETE, updateAppdataEventHandler);
         req.addEventListener(ResponseItemEvent.ERROR, updateAppdataEventErrorHandler);
         req.send(client);
       }
-       
+
       private function updateAppdataEventHandler(event:ResponseItemEvent):void {
         logger.info("update success!");
       }
@@ -436,8 +435,13 @@
         req.addEventListener(ResponseItemEvent.ERROR, getAppdataEventErrorHandler);
         req.send(client);
       }
-       
+
       private function getAppdataEventHandler(event:ResponseItemEvent):void {
+        var data:Object = event.response.getData();
+        for (var key:String in data) {
+          logger.info("UserID:" + key);
+          logger.info("Value: " + data[key].randomKey);
+        }
         logger.info("get success!");
       }
       private function getAppdataEventErrorHandler(event:ResponseItemEvent):void {
@@ -455,7 +459,7 @@
         req.addEventListener(ResponseItemEvent.ERROR, deleteAppdataEventErrorHandler);
         req.send(client);
       }
-       
+
       private function deleteAppdataEventHandler(event:ResponseItemEvent):void {
         logger.info("delete success!");
       }
@@ -472,7 +476,7 @@
   <mx:Button x="468" y="167" label="Fetch Activities" height="22" width="123" id="fetchActivitiesBtn" click="fetchActivities()"/>
   <mx:Button x="468" y="197" label="Make Request" height="22" width="123" id="makeRequestBtn" click="makeRequest()"/>
   <mx:Button x="468" y="227" label="Call Rpc" height="22" width="123" id="rpcCallBtn" click="callRpc()"/>
-  <mx:Button x="468" y="257" label="Register Srv" height="22" width="123" id="rpcRegisterBtn" click="registerService()"/>  
+  <mx:Button x="468" y="257" label="Register Srv" height="22" width="123" id="rpcRegisterBtn" click="registerService()"/>
   <mx:Button x="468" y="287" label="Batch Request" height="22" width="123" id="batchRequestBtn" click="batchRequest()"/>
   <mx:Button x="468" y="317" label="Update Appdata" height="22" width="123" id="updateAppdataBtn" click="updateAppdata()"/>
   <mx:Button x="468" y="347" label="Get Appdata" height="22" width="123" id="getAppdataBtn" click="getAppdata()"/>

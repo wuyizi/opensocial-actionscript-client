@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <!--
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,10 +20,13 @@
 
 <global name="myspace">
 
-  <gadgets action="replace">
+  <gadgets action="insert" desc="Defines the external namespace 'MyOpenSpace'.">
     <script><![CDATA[
-    var gadgets = window['gadgets'];
     var MyOpenSpace = window['MyOpenSpace'];
+    if (!MyOpenSpace) {
+      alert('MyOpenSpace.* not found.');
+    }
+    if (window.console) {console.log(MyOpenSpace);}
     ]]></script>
   </gadgets>
 
@@ -31,20 +34,20 @@
     <flash>
       <kernel>
         <helper>
-          <dataTypes action="insert">
+          <dataTypes action="insert" desc="Myspace special data types.">
             <script><![CDATA[
-              me.dataTypes['org.opensocial.client.ext.myspace.base.MyspacePhoto'] =
-                  MyOpenSpace.Photo;
+            me.dataTypes['org.opensocial.client.ext.myspace.base.MyspacePhoto'] =
+                MyOpenSpace.Photo;
             ]]></script>
           </dataTypes>
         </helper>
         <api>
 
-          <photos action="insert">
+          <photos action="insert" desc="Defines myspace photos service methods.">
             <script><![CDATA[
-              api.photos = {};
+            api.photos = {};
             ]]></script>
-            <newRequest>
+            <newRequest desc="Creates a request instance of photos service.">
               <script><![CDATA[
               /**
                * According to operation mode, get request object.
@@ -76,7 +79,7 @@
               };
               ]]></script>
             </newRequest>
-            <get>
+            <get desc="Sends request to a remote site to get photos.">
               <script><![CDATA[
               /**
                * Sends request to a remote site to get photos.

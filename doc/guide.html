@@ -4,35 +4,71 @@
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <title>Developer's Guide</title>
-<link href="http://code.google.com/css/semantic_headers.css" type="text/css" rel="stylesheet">
-</link>
-<link href="http://code.google.com/css/codesite.pack.01312008.css" type="text/css" rel="stylesheet">
-</link>
+<link href="http://code.google.com/css/semantic_headers.css" type="text/css" rel="stylesheet" />
+<link href="http://code.google.com/css/codesite.pack.01312008.css" type="text/css" rel="stylesheet" />
+<style>
+code a:link {color: #007F00;}
+code a:visited {color: #007F00;}
+</style>
 </head>
 <body style="font-family: Verdana;">
 <div style="font-size:2.7em; font-weight:bold; font-family: Verdana;"> OpenSocial Actionscript Client Library</div>
 <div id="gc-pagecontent" class="g-unit" style="position: relative; border-left:0px;"> <a name="updates"></a>
-  <h2>Last Update: 10/20/2009</h2>
+  <h2>Last Update: 4/19/2010</h2>
   <dl style="padding-left:1em;">
+    <dt>4/19/2010</dt>
+    <dd>Cut the previous stable trunk base to <a href="/svn/tags/release-1.1/" target=_parent>release-1.1</a> tag. Please use the release version for your app development. The <a href="/svn/trunk/" target=_parent>current trunk</a> is moving to extension driven model, which is not stable and may have many bugs.
+      <ol>
+        <li>The extension model is getting mature and we will add more containers support in the future. Please see the updated <a href="/svn/trunk/doc/jsdoc/index.html" target=_parent>jsdoc</a> for extension.</li>
+        <li>Added extension for <a href="http://sandbox.orkut.com" target=_blank>Orkut.com</a> container. This container has more datatypes, while on javascript wrapper side there is no difference. See class <code><a href="/svn/trunk/doc/asdoc/org/opensocial/client/ext/orkut/jswrapper/OrkutJsWrapperClient.html" target=_parent>OrkutJsWrapperClient</a></code>.</li>
+        <li>Added batch request feature. So in your flash app, you can batch your requests. On response, you can either add event handler for each single <code>AsyncDataRequest</code> object, or add event handler for the <code>BatchRequest</code> object. Note that the handler on <code>BatchRequest</code> object will be invoked first. See this example as follow:
+          <pre style="width:700px">
+var batch:BatchRequest = new BatchRequest();
+batch.add(new AsyncDataRequest(Feature.PEOPLE_GET,
+                               new PeopleRequestOptions()
+                                   .setUserId("&#64;me")
+                                   .setGroupId("&#64;self")), "me");
+
+batch.add(new AsyncDataRequest(Feature.PEOPLE_GET,
+                               new PeopleRequestOptions()
+                                   .setUserId("&#64;me")
+                                   .setGroupId("&#64;friends")
+                                   .setCount(2)
+                                   .setStartIndex(0)), "friends");
+
+// Just an event handler for the batch.
+batch.addEventListener(ResponseItemEvent.COMPLETE, function(event:ResponseItemEvent):void {
+  var p:Person = event.response.getData("me");
+  //do something with person...
+
+  var c:Collection = event.response.getData("friends");
+  // do something with people collection...
+});
+
+batch.send(client);
+          </pre>
+        </li>
+        <li>This update also fixed some documents, testcases and sample app bugs.
+        <li>(TODO) Myspace extension is still not done yet. Only MyOpenSpace.Photo and the photo service in Myspace as experiment. We will add more special data and services after the codes are stable.</li>
+      </ol>
+    </dd>
     <dt>10/20/2009</dt>
-    <dd>Cut the previous stable trunk base to <a href="/svn/tags/release-1.0/" target=_blank>release-1.0</a> tag. Please use the release version for your app development. The <a href="/svn/trunk/" target=_blank>current trunk</a> is moving to extension driven model, which is not stable and may have many bugs.
+    <dd>Cut the previous stable trunk base to <a href="/svn/tags/release-1.0/" target=_parent>release-1.0</a> tag.
       <ol>
-	    <li>In this update, we decided to deprecated the external javascript file since it's not convinient for deploying and not easy to have extension for different special containers. Instead, we generated the javascript codes dynamically from the default XML file and container specific extended XML file and inject the javascript codes to DOM tree at runtime. <p>Basically, we are using XML node manipulation, which is easy, instead of using complex javascript inheritance and overriding to archieve the customization work for specific containers. </p></li>
-		<ul>
-		  <li>We introduced a plugin-able XML file to hold the javascript bridge codes (the codes are mostly from the old "opensocial-flashsdk.js" file). See <a href="/svn/trunk/src/org/opensocial/client/jswrapper/default.xml">default.xml</a> and the corelated class <a href="/svn/trunk/src/org/opensocial/client/jswrapper/JsWrapperBridge.as">JsWrapperBridge</a> .</li>
-		  <li>The extended client holds another XML file which contains the javascript codes to extend. See <a href="/svn/trunk/src/org/opensocial/client/ext/myspace/jswrapper/myspace.xml">myspace.xml</a> and the corelated class <a href="/svn/trunk/src/org/opensocial/client/ext/myspace/jswrapper/MyspaceJsWrapperBridge.as">MyspaceJsWrapperBridge</a> .</li>
-		  <li>When initializing the extended client object, e.g. calling <code>new MyspaceJsWrapperClient()</code> in the <a href="/svn/trunk/sample/ext/myspace/flex/MyspaceSampleApp.mxml">MyspaceSample.mxml</a> sample app, it first loads <a href="/svn/trunk/src/org/opensocial/client/jswrapper/default.xml">default.xml</a>, and then extends it with <a href="/svn/trunk/src/org/opensocial/client/ext/myspace/jswrapper/myspace.xml">myspace.xml</a>. After that <code>JsWrapperBridge.render()</code> function extracts all javascript codes from the extended XML object and injects the javascript codes to create the <code>opensocial.flash</code> namespace in global DOM tree. </li>
-		  <li>After the javascript codes rendering finished, all other data req/resp flows are the same as before.</li>
-		</ul>
-		<li>(TODO) In this update, we only use MyOpenSpace.Photo and the photo service in Myspace as experiment. We will add more special data and services after the codes are stable.</li>
-		<li>(TODO) Part of the documents and tests of this project is out of date. We will update them when the codes are stable.</li>
-		<li>This update also fixed some <code>ArrayType</code>/<code>Collection</code> related bugs. 
-	  </ol>
-    </dd>  
+        <li>In this update, we decided to deprecated the external javascript file since it's not convinient for deploying and not easy to have extension for different special containers. Instead, we generated the javascript codes dynamically from the default XML file and container specific extended XML file and inject the javascript codes to DOM tree at runtime. <p>Basically, we are using XML node manipulation, which is easy, instead of using complex javascript inheritance and overriding to archieve the customization work for specific containers. </p></li>
+        <ul>
+          <li>We introduced a plugin-able XML file to hold the javascript bridge codes (the codes are mostly from the old "opensocial-flashsdk.js" file). See <a href="/svn/trunk/src/org/opensocial/client/jswrapper/default.xml" target=_parent>default.xml</a> and the corelated class <code><a href="/svn/trunk/doc/asdoc/org/opensocial/client/jswrapper/JsWrapperBridge.html" target=_parent>JsWrapperBridge</a></code>.</li>
+          <li>The extended client holds another XML file which contains the javascript codes to extend. See <a href="/svn/trunk/src/org/opensocial/client/ext/myspace/jswrapper/myspace.xml" target=_parent>myspace.xml</a> and the corelated class <code><a href="/svn/trunk/doc/asdoc/org/opensocial/client/ext/myspace/jswrapper/MyspaceJsWrapperBridge.html" target=_parent>MyspaceJsWrapperBridge</a></code>.</li>
+          <li>When initializing the extended client object, e.g. calling <code>new MyspaceJsWrapperClient()</code> in the <a href="/svn/trunk/sample/ext/myspace/flex/MyspaceSampleApp.mxml" target=_parent>MyspaceSample.mxml</a> sample app, it first loads <a href="/svn/trunk/src/org/opensocial/client/jswrapper/default.xml" target=_parent>default.xml</a>, and then extends it with <a href="/svn/trunk/src/org/opensocial/client/ext/myspace/jswrapper/myspace.xml" target=_parent>myspace.xml</a>. After that <code>JsWrapperBridge.render()</code> function extracts all javascript codes from the extended XML object and injects the javascript codes to create the <code>opensocial.flash</code> namespace in global DOM tree. </li>
+          <li>After the javascript codes rendering finished, all other data req/resp flows are the same as before.</li>
+        </ul>
+        <li>This update also fixed some <code>ArrayType</code>/<code>Collection</code> related bugs.
+      </ol>
+    </dd>
     <dt>09/30/2009</dt>
-    <dd>Finished the consolidation and finally moved to <a href="http://code.google.com/p/opensocial-actionscript-client/">opensocial-actionscript-client</a> (M4):
+    <dd>Finished the consolidation and finally moved to <a href="http://code.google.com/p/opensocial-actionscript-client/" target=_blank>opensocial-actionscript-client</a> (M4):
       <ol>
-        <li>We had done the consolidation of this project with <a href="http://code.google.com/p/opensocial-actionscript-client/">opensocial-actionscript-client</a> project's developers. The main branch and all codes are relocated to there and we will continue developing in the new place. Thus we are deprecating the old <a href="http://code.google.com/p/opensocial-as3-client/" target="_blank">opensocial-as3-client</a> project.</li>
+        <li>We had done the consolidation of this project with <a href="http://code.google.com/p/opensocial-actionscript-client/" target=_blank>opensocial-actionscript-client</a> project's developers. The main branch and all codes are relocated to there and we will continue developing in the new place. Thus we are deprecating the old <a href="http://code.google.com/p/opensocial-as3-client/" target=_blank>opensocial-as3-client</a> project.</li>
         <li>Fixed some bugs for myspace environment.</li>
       </ol>
       <br>
@@ -40,17 +76,17 @@
     <dt>05/31/2009</dt>
     <dd>Summitted new CLs for the os-Lite style re-organization (M4):
       <ol>
-        <li>Followed the <a href="http://www.opensocial.org/Technical-Resources/opensocial-spec-v09/OpenSocial-Specification.html#LightweightJSAPI" target="_blank">0.9 Lightweight Javascript</a> style for the data requests and re-organized part of this client library.</li>
+        <li>Followed the <a href="http://www.opensocial.org/Technical-Resources/opensocial-spec-v09/OpenSocial-Specification.html#LightweightJSAPI" target=_blank>0.9 Lightweight Javascript</a> style for the data requests and re-organized part of this client library.</li>
         <li>Deprecates the asynchronous callback helper functions. So the API is fully moved to event-driven model for asynchronous call. All the feature-wise interfaces are defined in the <code>org.opensocial.client.features</code> package.</li>
         <li>Fixed some bugs.</li>
-        <li>Cut the previous code base to the M4 milestone branch <a href="/svn/tags/2009-05-31-0.8-M4/">2009-05-31-0.8-M4</a>. The <a href="/svn/trunk/">trunk branch</a> will continue to M4 version with more testings and new features. For M3 version, the <a href="/svn/tags/2009-04-18-0.8-M3/doc/index.html">doc</a> and <a href="/svn/tags/2009-04-18-0.8-M3/src/">codes</a>  are still available.</li>
+        <li>Cut the previous code base to the M4 milestone branch <a href="/svn/tags/2009-05-31-0.8-M4/" target=_parent>2009-05-31-0.8-M4</a>. The <a href="/svn/trunk/" target=_parent>trunk branch</a> will continue to M4 version with more testings and new features. For M3 version, the <a href="/svn/tags/2009-04-18-0.8-M3/doc/index.html" target=_parent>doc</a> and <a href="/svn/tags/2009-04-18-0.8-M3/src/" target=_parent>codes</a>  are still available.</li>
       </ol>
       <br>
     </dd>
     <dt>05/26/2009</dt>
     <dd>
       <ol>
-        <li>Met the developers from <a href="http://code.google.com/p/opensocial-actionscript-client/" target="_blank">opensocial-actionscript-client</a> project and we decided to consolidate each other then finally merge into one library.</li>
+        <li>Met the developers from <a href="http://code.google.com/p/opensocial-actionscript-client/" target=_blank>opensocial-actionscript-client</a> project and we decided to consolidate each other then finally merge into one library.</li>
       </ol>
       <br>
     </dd>
@@ -58,9 +94,9 @@
     <dd>Summitted new CLs for the some fixes and testing (M3):
       <ol>
         <li> Move the whole project to &quot;<a href="http://code.google.com/p/opensocial-as3-client">opensocial-as3-client</a>&quot; and rename the 'Client SDK' to 'Client Library' to aline with other client libraries.</li>
-        <li>Finished the testings under org.opensocial.client.base.* package. See the <a href="http://opensocial-as3-client.googlecode.com/svn/trunk/test/AllTests.html">AllTests</a> page and play around in Firefox.</li>
+        <li>Finished the testings under org.opensocial.client.base.* package. See the <a href="/svn/trunk/test/AllTests.html" target=_parent>AllTests</a> page and play around in Firefox.</li>
         <li>Fixed some bugs.</li>
-        <li>Cut the previous code base to the M3 milestone branch <a href="/svn/tags/2009-04-18-0.8-M3/">2009-04-18-0.8-M3</a>. The <a href="/svn/trunk/">trunk branch</a> will continue to M4 version with more testings and new features.</li>
+        <li>Cut the previous code base to the M3 milestone branch <a href="/svn/tags/2009-04-18-0.8-M3/" target=_parent>2009-04-18-0.8-M3</a>. The <a href="/svn/trunk/" target=_parent>trunk branch</a> will continue to M4 version with more testings and new features.</li>
       </ol>
       <br>
     </dd>
@@ -69,57 +105,61 @@
       <ol>
         <li> Added an architecture graph to illustrate the SDK more clearly.</li>
         <li> Added event dispatchers to allow event-driven model for the client.</li>
-        <li> Added testing framework. See the <a href="/svn/trunk/test/AllTests.html">AllTests</a> page.</li>
+        <li> Added testing framework. See the <a href="/svn/trunk/test/AllTests.html" target=_parent>AllTests</a> page.</li>
         <li> Finished the JsUnit test cases and started the FlexUnit part.</li>
-        <li> SampleApp is moved from a zip file to '<a href="/svn/trunk/sample/">/sample</a>' directory, with Flex style and Adobe Flash CS style.</li>
+        <li> SampleApp is moved from a zip file to '<a href="/svn/trunk/sample/" target=_parent>/sample</a>' directory, with Flex style and Adobe Flash CS style.</li>
       </ol>
       <br>
     </dd>
     <dt>03/21/2009</dt>
-    <dd>Cut the previous code base to the M2 milestone branch <a href="/svn/tags/2009-03-21-0.8-M2/">2009-03-21-0.8-M2</a>. The <a href="/svn/trunk/">trunk branch</a> will continue to M3 version.</dd>
+    <dd>Cut the previous code base to the M2 milestone branch <a href="/svn/tags/2009-03-21-0.8-M2/" target=_parent>2009-03-21-0.8-M2</a>. The <a href="/svn/trunk/" target=_parent>trunk branch</a> will continue to M3 version.</dd>
     <dt>02/17/2009</dt>
     <dd>Summitted a refactoring CL  to:
       <ol>
         <li> Broke down the huge <code>OpensocialClient</code> class to a light weight client called <code>JsWrapperClient</code> and several features defined as <code>JsFeature</code> objects. With this structure, the client is more extensible and testable.</li>
         <li> Add the gadgets.rpc wrapped feature. </li>
-        <li> Update the <a href="/svn/tags/2009-03-21-0.8-M2/oacs_0_8.zip">demo zip</a> to current code structure.</li>
+        <li> Update the <a href="/svn/tags/2009-03-21-0.8-M2/oacs_0_8.zip" target=_parent>demo zip</a> to current code structure.</li>
       </ol>
       <br>
-      See <a href="http://sandbox.orkut.com/Main#AppInfo.aspx?appId=644056445741" target="_blank">sample app on orkut</a> as the demo.<br>
-      If you sync to this revision, your exsiting codes will break. But just some renaming will work. Please diff the sample app in the demo zip. Old branch (M1) is still available in this tag: <a href="/svn/tags/2009-02-16-0.8-M1/">2009-02-16-0.8-M1</a>.</dd>
+      See <a href="http://sandbox.orkut.com/Main#AppInfo.aspx?appId=644056445741" target=_blank>sample app on orkut</a> as the demo.<br>
+      If you sync to this revision, your exsiting codes will break. But just some renaming will work. Please diff the sample app in the demo zip. Old branch (M1) is still available in this tag: <a href="/svn/tags/2009-02-16-0.8-M1/" target=_parent>2009-02-16-0.8-M1</a>.</dd>
     <dt>02/16/2009</dt>
-    <dd>Cut the existing codes to the first milestone branch <a href="/svn/tags/2009-02-16-0.8-M1/">2009-02-16-0.8-M1</a>.<br>
-      The <a href="/svn/trunk/">trunk branch</a> will continue on developing. Codes are not very stable at this stage and some refactoring in <code>jswrapper</code> package is ongoing.</dd>
+    <dd>Cut the existing codes to the first milestone branch <a href="/svn/tags/2009-02-16-0.8-M1/" target=_parent>2009-02-16-0.8-M1</a>.<br>
+      The <a href="/svn/trunk/" target=_parent>trunk branch</a> will continue on developing. Codes are not very stable at this stage and some refactoring in <code>jswrapper</code> package is ongoing.</dd>
   </dl>
   <a name="overview"></a>
   <h2>Overview</h2>
-  <p>We all believe that Flash is a good thing. This is a client SDK to make <a href="http://code.google.com/apis/opensocial/" target="_parent">OpenSocial API</a> used in <strong>ActionScript 3.0</strong> for Flash or Flex Apps.</p>
-  <p>The SDK is planned to have two parts: The Javascript Wrapper Client and the RESTful Client. See the graph blow for the whole SDK structure.</p>
-  <blockquote><img src="architechture-M4.png"></blockquote>
-  <p>Currently only the Javascript Wrapper Client is included in the current version, which is based on the <a href="http://code.google.com/apis/opensocial/docs/0.8/reference/" target="_blank">0.8 API reference</a> and part of the interfaces follow os-lite from <a href="http://www.opensocial.org/Technical-Resources/opensocial-spec-v09/OpenSocial-Specification.html#LightweightJSAPI" target="_blank">0.9 specs</a>.</p>
-  <p>The RESTful client is still in the designing stage. It will be based on <a href="http://www.opensocial.org/Technical-Resources/opensocial-spec-v081/restful-protocol" target="_blank">RESTful Protocol</a> or <a href="http://www.opensocial.org/Technical-Resources/opensocial-spec-v081/rpc-protocol" target="_blank">RPC Protocol</a> without javascripts. There are some auth issues.  Hope we could work it out soon.</p>
-  <p>If you are interested, please join <a href="http://groups.google.com/group/opensocial-client-libraries" target="_parent">this group</a> and discuss.</p>
+  <p>We all believe that Flash is a good thing. This is a client SDK to make <a href="http://code.google.com/apis/opensocial/" target=_blank>OpenSocial API</a> available in <strong>ActionScript 3.0</strong> for Flash or Flex Apps.</p>
+  <p>The SDK is planned to have two parts: The Javascript Wrapper Client and the RESTful Client (under construction). See the graph blow for the whole SDK structure.</p>
+  <blockquote><br><img src="architechture-1.1.png"><br></blockquote>
+  <p>Currently only the Javascript Wrapper Client is included in the current version, which is based on the <a href="http://wiki.opensocial.org/index.php?title=JavaScript_API_Reference" target=_blank>0.8 API reference</a> and part of the interfaces follow os-lite from <a href="http://www.opensocial.org/Technical-Resources/opensocial-spec-v09/OpenSocial-Specification.html#LightweightJSAPI" target=_blank>0.9 specs</a>.</p>
+  <p>The RESTful client is still in the designing stage. It will be based on <a href="http://www.opensocial.org/Technical-Resources/opensocial-spec-v09/REST-API.html" target=_blank>RESTful Protocol</a> or <a href="http://www.opensocial.org/Technical-Resources/opensocial-spec-v09/RPC-Protocol.html" target=_blank>RPC Protocol</a> without javascripts. There are some auth issues.  Hope we could work it out soon.</p>
+  <p>If you are interested, please join <a href="https://groups.google.com/group/opensocial-actionscript-client" target=_blank>opensocial-actionscript-client</a> group and discuss.</p>
+  <p>If you have any issues, please raise <a href="http://code.google.com/p/opensocial-actionscript-client/issues/list" target=_blank>here</a>.</p>
   <a name="gettingstart"></a>
   <h2>Getting start</h2>
   <p>We are preparing some sample apps for tutorial. But right now you can simply follow these steps and consult the api reference if you are building a gadget.</p>
   <ol>
     <li>
-      <p>Checkout the <a href="/svn/trunk/src/org/opensocial/client/">source codes</a> and include those packages in your flash project. </p>
+      <p>Checkout the <a href="/svn/trunk/src/org/opensocial/client/" target=_parent>source codes</a> and include those packages in your flash project. </p>
     </li>
     <li>
-      <p>First please read the <a href="/svn/trunk/sample/"><code>SampleApp</code></a> codes. The SampleApp is a simple app that just illustrates several OpenSocial features. It is written in both <a href="/svn/trunk/sample/flex/SampleApp.mxml">Flex 3 style</a> and <a href="/svn/trunk/sample/flash/SampleApp.as">Adobe Flash CS3 style</a> for your flavors. Note that the former one is illustrating how to use helpers and the latter is illustrating how to use event dispatchers.</p>
+      <p>First please read the <code><a href="/svn/trunk/sample/" target=_parent>SampleApp</a></code> codes. The SampleApp is a simple app that just illustrates several OpenSocial features. It is written in both <a href="/svn/trunk/sample/flex/SampleApp.mxml" target=_parent>Flex 3 style</a> and <a href="/svn/trunk/sample/flash/SampleApp.as" target=_parent>Adobe Flash CS3 style</a> for your flavors. Note that the former one is illustrating how to use helpers and the latter is illustrating how to use event dispatchers.</p>
     </li>
     <li>
       <p>Start your project by copying some code snippet from SampleApp.</p>
     </li>
     <li>
-      <p>Use the <a href="/svn/trunk/doc/asdoc/org/opensocial/client/jswrapper/JsWrapperClient.html"><code>JsWrapperClient</code></a> object and async event dispatchers (e.g. <a href="/svn/trunk/doc/asdoc/org/opensocial/client/features/AsyncDataRequest.html"><code>AsyncDataRequest</code></a>, <a href="/svn/trunk/doc/asdoc/org/opensocial/client/features/ProxiedRequest.html"><code>ProxiedRequest</code></a>, <a href="/svn/trunk/doc/asdoc/org/opensocial/client/features/RPCRequest.html"><code>RPCRequest</code></a> or <a href="/svn/trunk/doc/asdoc/org/opensocial/client/features/RPCService.html"><code>RPCService</code></a>) and the sync helper  (e.g. <a href="/svn/trunk/doc/asdoc/org/opensocial/client/features/SyncHelper.html"><code>SyncHelper</code></a>) to due with OpenSocial data or Rpc operations and fill your app with social functionalities. See SampleApp to learn how it works, and the <a href="/svn/trunk/doc/asdoc/index.html">reference</a> for this SDK is also your friend.</p>
+      <p>Use the <code><a href="/svn/trunk/doc/asdoc/org/opensocial/client/jswrapper/JsWrapperClient.html" target=_parent>JsWrapperClient</a></code> object and async event dispatchers (e.g. <code><a href="/svn/trunk/doc/asdoc/org/opensocial/client/features/BatchRequest.html" target=_parent>BatchRequest</a></code>, <code><a href="/svn/trunk/doc/asdoc/org/opensocial/client/features/AsyncDataRequest.html" target=_parent>AsyncDataRequest</a></code>, <code><a href="/svn/trunk/doc/asdoc/org/opensocial/client/features/ProxiedRequest.html" target=_parent>ProxiedRequest</a></code>, <code><a href="/svn/trunk/doc/asdoc/org/opensocial/client/features/RPCRequest.html" target=_parent>RPCRequest</a></code> or <code><a href="/svn/trunk/doc/asdoc/org/opensocial/client/features/RPCService.html" target=_parent>RPCService</a></code>) and the sync helper  (e.g. <code><a href="/svn/trunk/doc/asdoc/org/opensocial/client/features/SyncHelper.html" target=_parent>SyncHelper</a></code>) to due with OpenSocial data or Rpc operations and fill your app with social functionalities. See SampleApp to learn how it works, and the <a href="/svn/trunk/doc/asdoc/index.html" target=_parent>reference</a> for this SDK is also your friend.</p>
     </li>
     <li>
-      <p>Build your project to a SWF file. You can either use Flex 3 SDK or Adobe Flash CS3 IDE.</p>
+      <p>Some containers is acting slightly difference from the reference container model - <a href="http://shindig.apache.org/" target=_blank>Shinig</a>, so you may also need to use clients with container-specific extension (e.g. <code><a href="/svn/trunk/doc/asdoc/org/opensocial/client/ext/myspace/jswrapper/MyspaceJsWrapperClient.html" target=_parent>MyspaceJsWrapperClient</a></code>, <code><a href="/svn/trunk/doc/asdoc/org/opensocial/client/ext/orkut/jswrapper/OrkutJsWrapperClient.html" target=_parent>OrkutJsWrapperClient</a></code>).  See all extensions in <code><a href="/svn/trunk/doc/asdoc/org/opensocial/client/ext/" target=_parent>org.opensocial.client.ext</a></code> package.</p>
     </li>
     <li>
-      <p>Take the spec XML listed below and edit it in your case (you can use proxy url to let the container cache your swf files), or use the <a href="/svn/trunk/sample/SampleApp.xml" target="_blank">SampleApp.xml</a> codes if you want to bypass the container cache when you are debugging. Then upload the spec, swf file together with the <a href="/svn/trunk/doc/jsdoc/symbols/src/opensocial-flashsdk.js.html">opensocial-flashsdk.js</a> file to somewhere publicly accessible. And you app is done.
+      <p>Build your project to a SWF file. You can either use Flex 3 SDK or Adobe Flash CS3/CS4 IDE.</p>
+    </li>
+    <li>
+      <p>Take the spec XML listed below and edit it in your case (you can use proxy url to let the container cache your swf files), or use the <a href="/svn/trunk/sample/SampleApp.xml" target=_parent>SampleApp.xml</a> codes if you want to bypass the container cache when you are debugging. Then upload the spec, swf file to somewhere publicly accessible. And you app is done.
       <pre>
 &lt;?xml version="1.0" encoding="UTF-8" ?&gt;
 &lt;Module&gt;
@@ -131,17 +171,17 @@
 &lt;/ModulePrefs&gt;
 &lt;Content type="html"&gt;
 &lt;![CDATA[
-  &lt;!-- The JS-Side javascript code lib used in the Flash API. --&gt;
-  &lt;script src="http://some-where/opensocial-flashsdk.js" type="text/javascript"&gt;&lt;/script&gt;
-
   &lt;!-- The flash element --&gt;
   &lt;div id="flashcontainer" style="text-align: center;"&gt;&lt;/div&gt;
 
   &lt;!-- Embed the swf file --&gt;
   &lt;script type="text/javascript"&gt;
-    opensocial.flash.embedFlash(
+    var flashObjId = "flashObj";
+    gadgets.flash.embedFlash(
       "http://some-where/yourfile.swf",
       "flashcontainer", "9", {
+        name: flashObjId,
+        id: flashObjId,
         quality: "high",
         wmode: "window",
         allowScriptAccess: "always"
@@ -155,7 +195,7 @@
       </p>
     </li>
     <li>
-      <p>Try your app on some containers like <a href="http://sandbox.orkut.com" target="_blank">orkut.com</a>, <a href="http://www.hi5.com/" target="_blank">hi5.com</a>, <a href="http://www.xiaonei.com" target="_blank">xiaonei.com</a>, <a href="http://apps.51.com" target="_blank">51.com</a>, <a href="http://www.google.com/ig/sandbox" target="_blank">igoogle</a> or <a href="http://www.opensocial.org" target="_blank">opensocial.org</a>, and many many others ...</p>
+      <p>Try your app on some containers like <a href="http://sandbox.orkut.com" target=_blank>orkut.com</a>, <a href="http://www.hi5.com/" target=_blank>hi5.com</a>, <a href="http://www.renren.com" target=_blank>renren.com</a>, <a href="http://apps.51.com" target=_blank>51.com</a>, <a href="http://www.google.com/ig/sandbox" target=_blank>igoogle</a> or <a href="http://www.opensocial.org" target=_blank>opensocial.org</a>, and many many others ...</p>
     </li>
   </ol>
   <a name="todo"></a>
@@ -165,9 +205,6 @@
   <ul>
     <li>
       Unittests. Half done.
-    </li>
-    <li>
-      Batch mode.
     </li>
     <li>
       Tutorial and Reference Game.
@@ -182,12 +219,14 @@
     <li style="display:inline;"><a href="mailto:yiziwu@google.com">Yizi Wu</a></li>
     <li style="display:inline;"><a href="mailto:chaowang@google.com">Chao Wang</a></li>
     <li style="display:inline;"><a href="mailto:shamayn@google.com">Sha-mayn Teh</a></li>
+    <li style="display:inline;"><a href="mailto:zakiyy.yan@gmail.com">Zhinan Yan</a></li>
     <li style="display:inline;"><a href="mailto:opensocial-china-eng@google.com">Team</a></li>
+    <li style="display:inline;"><a href="mailto:opensocial-actionscript-client@googlegroups.com">Group</a></li>
   </ul>
 </div>
 <hr>
 <center style="color:#808080; padding:10px;">
-  2009 OpenSocial
+  2010 OpenSocial
 </center>
 </body>
 </html>
