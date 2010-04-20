@@ -248,7 +248,11 @@ var insert = function(xmlParent, xmlNode) {
     targetNode.attr('action', 'merge');
     targetNode.attr('extDesc', xmlNode.attr('desc'));
   } else {
-    xmlParent.get(0).appendChild(xmlNode.get(0));
+    
+    try {
+    var nodeToImport = xmlParent.get(0).ownerDocument.importNode(xmlNode.get(0), true);
+    xmlParent.get(0).appendChild(nodeToImport);
+    } catch (e) {log(e);}
   }
 };
 
