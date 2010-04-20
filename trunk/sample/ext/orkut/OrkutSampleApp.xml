@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Module>
 <ModulePrefs
-    title="SampleApp For Orkut"
-    description="Just a sample to demo OpenSocial AS3 Client Library."
+    title="OpenSocial Actionscript Client Library - Orkut Extension Sample"
+    description="Just a sample to demo OpenSocial Actionscript Client Library."
     height="500"
-    directory_title="Sample App for OpenSocial AS3 Client Library"
+    directory_title="SampleApp - Orkut Extension"
     author_email="zakiyy.yan@gmail.com"
     author_affiliation="Google Inc."
     author_location="Beijing, China"
@@ -34,7 +34,7 @@
 
   var baseUrl = "http://opensocial-actionscript-client.googlecode.com/svn/trunk/bin/";
   var flashObjId = 'flashObj';
-  
+
   gadgets.flash.embedFlash(
      baseUrl + 'OrkutSampleApp.swf?bpc=' + nocache,
      'flashcontainer',

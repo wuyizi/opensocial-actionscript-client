@@ -27,19 +27,30 @@ a {font-family: Arial,sans-serif;}
   <li>
     <a class=link id="home" href="/" target="_parent">Project Home</a></li>
   <li>
-    <a class=bold id="guide" href="guide.html?m4c" target="top_main" onclick="handleClick(this);">Developer's Guide</a></li>
+    <a class=bold id="guide" href="guide.html" target="top_main">Developer's Guide</a></li>
   <li>
-    <a class=link id="aside" href="asdoc/index.html?m4c" target="top_main" onclick="handleClick(this);">Actionscript Reference</a></li>
+    <a class=link id="aside" href="asdoc/index.html" target="top_main">Actionscript Reference</a></li>
+  <li>
+    <a class=link id="jside" href="jsdoc/index.html" target="top_main">Javascript Wrapper Reference</a></li>
 </ul>
 </div>
 <script>
-function handleClick(el) {
-  el.blur();
-  var guide = document.getElementById("guide");
-  var aside = document.getElementById("aside");
-  guide.className = (el == guide ? "bold" : "link");
-  aside.className = (el == aside ? "bold" : "link");
+var lastPath = "";
+function checkLocation() {
+  var path = parent.frames[1].location.pathname;
+  if (path != lastPath) {
+    var guide = document.getElementById("guide");
+    var aside = document.getElementById("aside");
+    var jside = document.getElementById("jside");
+    guide.className = (path.indexOf("guide.html") != -1 ? "bold" : "link");
+    aside.className = (path.indexOf("asdoc/index.html") != -1 ? "bold" : "link");
+    jside.className = (path.indexOf("jsdoc/index.html") != -1 ? "bold" : "link");
+  }
+  lastPath = path;
 };
+setInterval(function() {
+  checkLocation();
+}, 500);
 </script>
 </body>
 </html>

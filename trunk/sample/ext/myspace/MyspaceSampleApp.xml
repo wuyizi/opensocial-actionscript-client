@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Module>
 <ModulePrefs
-    title="SampleApp - Myspace Extension"
-    description="Just a sample to demo OpenSocial AS3 Client Library - Myspace Extension."
+    title="OpenSocial Actionscript Client Library - Myspace Extension Sample"
+    description="Just a sample to demo OpenSocial Actionscript Client Library."
     height="500">
   <Require feature="opensocial-0.8"/>
   <Require feature="dynamic-height"/>

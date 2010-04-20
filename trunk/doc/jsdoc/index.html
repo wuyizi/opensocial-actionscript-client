@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>OpenSocial Actionscript Client Library - Javascript Wrapper Documentation</title>
+
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<link href="../../external/jquery/css/cupertino/jquery-ui-1.8.custom.css" rel="stylesheet"  />
+<script src="../../external/jquery/js/jquery-1.4.2.min.js" type="text/javascript"></script>
+<script src="../../external/jquery/js/jquery-ui-1.8.custom.min.js" type="text/javascript"></script>
+ 
+<style>
+<!--
+body {
+  font-family: arial,sans-serif;
+  position:relative;
+}
+.link {
+  text-decoration:underline;
+  cursor:pointer;
+}
+.c {
+  clear:both;
+}
+.footer-panel{
+  font-size:80%;
+  text-align:center;
+  color:#808080;
+  margin:10px 0 40px 0;
+}
+.head-panel {
+  margin:20px 0 20px 0;
+  width:1000px;
+  font-size:70%;
+  text-align:left;
+}
+.extension-radio {
+  float:left;
+}
+.view-radio {
+  float:right;
+  margin-right:2px;
+}
+.root-panel {
+  margin:20px 0 20px 0;
+  width:960px;
+  text-align:left;
+  padding:20px;
+  border-left:1px solid #EEE;
+  border-top:1px solid #EEE;
+  border-right:1px solid #AAA;
+  border-bottom:1px solid #888;
+  position:relative;
+  background-color:#FAFAFA;
+}
+.node-border {
+  padding-left:20px;
+  padding-top:5px;
+  position:relative;
+}
+.expand-all-btn  {
+  position:absolute;
+  top:10px;
+  right:10px;
+  font-size:70%;
+}
+.node-children {
+  position:relative;
+  margin-left:5px;
+  margin-top:3px;
+}
+.node-name {
+  color:#000000;
+  float:left;
+  font-weight:bold;
+  font-size:100%;
+}
+.node-desc {
+  color:#808080;
+  font-size:70%;
+  vertical-align:bottom;
+}
+.node-icon {
+  position:absolute;
+  width:10px;
+  height:100%;
+  border-left:1px dotted #CCCCCC;
+  top:0;
+  left:0;
+}
+.script-content {
+  margin-left:15px;
+  padding:10px;
+  -moz-border-radius:15px;
+  background-color:#F0F0F0;
+  border:2px solid #E0E0E0;
+}
+.script-link {
+  color:#C0C0C0;
+  margin-left:8px;
+  font-size:70%;
+}
+.node-action {
+  color:#808080;
+  float:left;
+  margin-top:0.7ex;
+  font-size:70%;
+  font-style:italic;
+  margin-left:5px;
+}
+.node-merge .node-desc-ext {
+  color:#60B060;
+}
+.node-insert .node-name {
+  color:#007F00;
+}
+.node-insert .node-action {
+  color:#60B060;
+}
+.node-insert .node-desc {
+  color:#60B060;
+}
+.node-insert .script-link {
+  color:#60B060;
+}
+.node-replace .node-name {
+  color:#4040C0;
+}
+.node-replace .node-action {
+  color:#8080F0;
+}
+.node-replace .node-desc {
+  color:#8080F0;
+}
+.node-replace .script-link {
+  color:#8080F0;
+}
+-->
+</style>
+
+<script>
+<!--
+var log = function(obj) {
+  if (window.console) window.console.log(obj);
+};
+
+var info = function(str) {
+  if (window.console) window.console.info(str);
+};
+
+var getNodeName = function(node) {
+  return node.get(0).nodeName;
+};
+
+var fetchXml = function(url, callback) {
+  $.ajax({
+    'url': document.baseURI + '/' + url,
+    'success': function(xml) {
+      callback($(xml).children('global'));
+    },
+    'error' : function() {
+      callback(null);
+    },
+    'dataType' : 'xml'
+  });
+
+};
+
+var fetchXmlArray = function(urls, callback) {
+  var xmls = new Array(urls.length);
+  var num = 0;
+  var back = function() {
+    if (num == urls.length) {
+      callback.apply(null, xmls);
+    }
+  };
+  var call = function(index) {
+    fetchXml(urls[index], function(xml) {
+      xmls[index] = xml;
+      num++;
+      back();
+    });
+  };
+  for (var i = 0; i < urls.length; i++) {
+    call(i);
+  }
+};
+
+var genXmlUrl = function(ext) {
+  var relUrl = '../../../src/org/opensocial/client/';
+  if (!ext || ext == 'default') {
+    return relUrl + 'jswrapper/default.xml';
+  } else {
+    return relUrl + 'ext/' + ext + '/jswrapper/' + ext + '.xml';
+  }
+};
+
+var renderDefaultXml = function(view) {
+  var path = genXmlUrl();
+  fetchXml(path, function(xml) {
+    view.render(xml);
+  });
+};
+
+var renderXml = function(ext, view) {
+  if (!ext || ext == 'default') {
+    renderDefaultXml(view);
+  } else {
+    var defaultPath = genXmlUrl();
+    var extensionPath = genXmlUrl(ext);
+    fetchXmlArray([defaultPath, extensionPath], function(defaultXML, extensionXML) {
+
+      var mergedXML = defaultXML;
+      
+      if (extensionXML == null) {
+        mergedXML.attr('name', ext + ', same as default');
+      }  else {
+        mergedXML.attr('name', ext);
+        var extNodes = extensionXML.find('[action]');
+        extNodes.each(function() {
+          var action = $(this).attr('action');
+          var paths = gotoRoot($(this));
+          var pos = gotoChild(mergedXML, paths);
+          if (action == 'replace') {
+            replace(pos, $(this));
+          } else if (action == 'insert') {
+            insert(pos, $(this));
+          }
+        });
+      }
+
+      view.render(mergedXML);
+    });
+  }
+};
+
+var replace = function(xmlParent, xmlNode) {
+  var name = getNodeName(xmlNode);
+  var oldNode = xmlParent.children(name).get(0);
+  xmlParent.get(0).replaceChild(xmlNode.get(0), oldNode);
+};
+
+var insert = function(xmlParent, xmlNode) {
+  var name = getNodeName(xmlNode);
+  var targetNode = xmlParent.children(name + ':last');
+  if (targetNode.length) {
+    var scriptNode = targetNode.children('script');
+    scriptNode.text(scriptNode.text() + xmlNode.children('script').text());
+    targetNode.attr('action', 'merge');
+    targetNode.attr('extDesc', xmlNode.attr('desc'));
+  } else {
+    xmlParent.get(0).appendChild(xmlNode.get(0));
+  }
+};
+
+var gotoRoot = function(xmlNode) {
+  var paths = [];
+  while (getNodeName(xmlNode) != 'global') {
+    xmlNode = xmlNode.parent();
+    paths.push(getNodeName(xmlNode));
+  }
+  return paths.reverse();
+};
+
+var gotoChild = function(xmlRoot, paths) {
+  var node = xmlRoot;
+  for (var i in paths) {
+    var child = node.children(paths[i] + ':first');
+    if (!child.length) {
+      continue;
+    }
+    node = child;
+  }
+  return node;
+};
+
+var views = {};
+
+views.tree = (function() {
+
+  var createNode = function(name, xmlNode) {
+    var action = xmlNode.attr('action');
+    var className = action ? 'node-' + action : '';
+    var node = $('<div class="node-border ' + className + '" />');
+
+    if (name == 'global') {
+      name = name + ' (' + xmlNode.attr('name') + ')';
+    }
+    node.append('<div class="node-name">' + name + '</div>');
+
+    if (action) {
+      node.append('<div class="node-action">(' + action + ')</div>');
+    }
+
+    node.append('<div class="c" />');
+
+    if (xmlNode.attr('desc')) {
+      node.append('<div class="node-desc">' + xmlNode.attr('desc') + '</div>');
+    }
+    if (xmlNode.attr('extDesc')) {
+      node.append('<div class="node-desc node-desc-ext">' + xmlNode.attr('extDesc') + '</div>');
+    }
+
+    node.append('<div class="node-children"><div class="node-icon" /></div>');
+    return node;
+  };
+
+  var createScript = function(xmlNode) {
+    var codeText = parseScriptText(xmlNode.text());
+    var node = $('<div><span class="script-link link" expanded="0">view script</span>' +
+                 '<pre class="script-content" style="display:none;">' + codeText + '</pre></div>');
+    node.find('pre').click(function() {
+      toggleScriptExpand($(this).prev(), '0');
+    });
+    return node;
+  };
+
+  var parseScriptText = function(text) {
+    var headings = text.match(/( +)/)[1];
+    var regex = new RegExp('\n' + headings, 'g');
+    var out = text.replace(regex, '\n');
+    return out;
+  };
+
+  var toggleScriptExpand = function(scriptLink, expand) {
+    if (expand) {
+      expand = (expand == '1');
+    } else {
+      expand = !(scriptLink.attr('expanded') == '1');
+    }
+    if (expand) {
+      scriptLink.text('hide');
+      scriptLink.next().slideDown();
+      scriptLink.attr('expanded', '1');
+    } else {
+      scriptLink.text('view script');
+      scriptLink.next().slideUp();
+      scriptLink.attr('expanded', '0');
+    }
+  };
+
+  var traverse = function(xmlNode, htmlParent) {
+    var name = getNodeName(xmlNode);
+    var htmlNode;
+    if (name == 'script') {
+      htmlNode = createScript(xmlNode);
+      htmlParent.append(htmlNode);
+      htmlNode.children(':first').click(function() {
+        toggleScriptExpand($(this));
+        return false;
+      });
+    } else {
+      htmlNode = createNode(name, xmlNode);
+      htmlParent.append(htmlNode);
+      if (xmlNode.children().length) {
+        xmlNode.children().each(function() {
+         traverse($(this), htmlNode.children(':last'));
+        });
+      }
+    };
+  };
+
+  var toggleScriptExpandAll = function(input) {
+    var expand = input.is('[checked]');
+    if (expand) {
+      input.button('option', 'label', 'collapse all');
+    } else {
+      input.button('option', 'label', 'expand all');
+    }
+    $('#root').find('.script-link').each(function() {
+      toggleScriptExpand($(this), expand ? '1' : '0');
+    });
+  };
+
+  var render = function(xmlRoot) {
+    $('#root').empty();
+    traverse(xmlRoot, $('#root'));
+
+    $('#root').append($('<div class="expand-all-btn"><input type="checkbox" id="expandAll" /><label for="expandAll">expand all</label></div>'));
+    $("#expandAll").button().change(function() {
+      toggleScriptExpandAll($(this));
+    });
+  };
+
+  
+  return {
+    'render' : render
+  };
+})();
+
+
+views.code = (function() {
+  var render = function(xmlRoot) {
+    $('#root').empty();
+    var nodes = xmlRoot.find('script');
+    var text = '';
+    nodes.each(function() {
+      text += $(this).text()
+    });
+    $('#root').append('<pre class="script-content">' + text + '</pre>');
+  };
+
+  return {
+    'render' : render
+  };
+})();
+
+
+var getCurrentView = function() {
+  return $('#viewRadio').find('input[checked]').val();
+};
+
+var getCurrentExt = function() {
+  return  $('#extensionRadio').find('input[checked]').val();
+};
+
+var init = function(extArray) {
+  for (var i in extArray) {
+    var ext = extArray[i];
+    var html = '<input type="radio" id="%ext%Ext" name="extensionRadio" value="%ext%"/><label for="%ext%Ext">%ext%</label>'.replace(/%ext%/g, ext);
+    $('#extensionRadio').append(html);
+  }
+
+  $('#extensionRadio').buttonset().change(function() {
+   renderXml(getCurrentExt(), views[getCurrentView()]);
+  });
+  $('#viewRadio').buttonset().change(function() {
+    renderXml(getCurrentExt(), views[getCurrentView()]);
+  });
+
+  renderXml(getCurrentExt(), views[getCurrentView()]);
+};
+-->
+</script>
+
+</head>
+
+<body>
+<script>
+$(function() {
+  init(['myspace', 'orkut']);
+});
+</script>
+<center id="wrapper">
+
+  <div class="head-panel">
+    <h3>OpenSocial Actionscript Client Library</h3>
+    <h1>Javascript Wrapper Documentation</h1>
+    <div class="c"></div>
+    <div id="extensionRadio" class="extension-radio">
+      <input type="radio" id="defaultExt" name="extensionRadio" value="default" checked="checked"/><label for="defaultExt">default</label>
+    </div>
+
+    <div id="viewRadio" class="view-radio">
+      <input type="radio" id="treeView" name="viewRadio" value="tree" checked="checked" /><label for="treeView">tree</label>
+      <input type="radio" id="codeView" name="viewRadio" value="code" /><label for="codeView">code</label>
+    </div>
+    <div class="c"></div>
+  </div>
+
+  <div id="root" class="root-panel"></div>
+  <div class="footer-panel">2010 OpenSocial</div>
+</center>
+
+</body>
+</html>

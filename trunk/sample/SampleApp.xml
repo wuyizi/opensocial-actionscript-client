@@ -2,14 +2,13 @@
 <Module>
 <ModulePrefs
     title="SampleApp"
-    description="Just a sample to demo OpenSocial AS3 Client Library."
+    description="Just a sample to demo OpenSocial Actionscript Client Library."
     height="500"
-    directory_title="Sample App for OpenSocial AS3 Client Library"
+    directory_title="SampleApp - Default"
     author_email="yiziwu@google.com"
     author_affiliation="Google Inc."
     author_location="Beijing, China"
     scaling="true"
-    scrolling="false"
     singleton="false">
   <Require feature="opensocial-0.8"/>
   <Require feature="dynamic-height"/>
