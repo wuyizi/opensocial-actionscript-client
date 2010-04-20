@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+<ModulePrefs
+    title="OpenSocial Actionscript Client Library - Orkut Extension Sample"
+    description="Just a sample to demo OpenSocial Actionscript Client Library."
+    height="500"
+    directory_title="SampleApp - Orkut Extension"
+    author_email="zakiyy.yan@gmail.com"
+    author_affiliation="Google Inc."
+    author_location="Beijing, China"
+    scaling="true"
+    singleton="false">
+  <Require feature="opensocial-0.8"/>
+  <Require feature="dynamic-height"/>
+  <Require feature="views"/>
+  <Require feature="flash"/>
+  <Require feature="rpc"/>
+  <Require feature="settitle"/>
+
+</ModulePrefs>
+<Content type="html">
+<![CDATA[
+
+<h1 style="font-size:32px; font-weight:bold; font-family:verdana; text-align: center;">
+  SampleApp For Orkut
+</h1>
+<div id="flashcontainer" style="text-align: center;"></div>
+
+
+<script type="text/javascript">
+
+  // Change nocache to version number when releasing other than random timestamps.
+  var nocache = new Date().getTime();
+
+  var baseUrl = "http://opensocial-actionscript-client.googlecode.com/svn/tags/release-1.1/bin/";
+  var flashObjId = 'flashObj';
+
+  gadgets.flash.embedFlash(
+     baseUrl + 'OrkutSampleApp.swf?bpc=' + nocache,
+     'flashcontainer',
+     9,
+     {
+        name: flashObjId,
+        id: flashObjId,
+        width: '730',
+        height: '500',
+        quality: 'high',
+        wmode: 'transparent',
+        allowScriptAccess: 'always'
+     });
+  gadgets.window.adjustHeight();
+</script>
+]]>
+</Content>
+</Module>

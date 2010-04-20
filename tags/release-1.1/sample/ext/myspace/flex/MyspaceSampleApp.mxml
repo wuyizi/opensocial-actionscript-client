@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+-->
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" 
+           width="600" height="500" color="#FFFFFF" 
+           backgroundGradientAlphas="[1.0, 1.0]" 
+           backgroundGradientColors="[#666666, #666666]" 
+           initialize="init()">
+
+  <mx:Metadata>
+    <![CDATA[
+    /**
+     * Myspace Sample App to try out the Myspace extensions.
+     * 
+     * @see SampleApp.mxml for most of the codes.
+     * 
+     * @author yiziwu@google.com (Yizi Wu)
+     */
+    ]]>
+  </mx:Metadata>
+  <mx:Script>
+    <![CDATA[
+      import org.opensocial.client.ext.myspace.base.MyspacePhoto;
+      import org.opensocial.client.ext.myspace.core.MyspaceFeature;
+      import org.opensocial.client.ext.myspace.features.MyspacePhotosRequestOptions;
+      import org.opensocial.client.ext.myspace.jswrapper.MyspaceJsWrapperClient;
+      import mx.events.ListEvent;
+      import mx.collections.ArrayCollection;
+
+      import org.opensocial.client.base.*;
+      import org.opensocial.client.features.*;
+      import org.opensocial.client.jswrapper.*;
+      import org.opensocial.client.core.*;
+      import org.opensocial.client.util.*;
+
+      private var client:MyspaceJsWrapperClient;
+      private var helper:SyncHelper;
+
+      private static var logger:Logger = new Logger(MyspaceSampleApp);
+
+      [Bindable]
+      public var people:ArrayCollection = new ArrayCollection();
+      
+      [Bindable]
+      public var photos:ArrayCollection = new ArrayCollection();
+      
+      private function init():void {
+
+        // Create the output box for information displaying
+        var printer:TextFieldPrinter = new TextFieldPrinter(2, 260, 450, 230);
+        this.rawChildren.addChild(printer);
+        //var printer:FirebugPrinter = new FirebugPrinter();
+        Logger.initialize(printer, 1);
+        logger.info("OpenSocial(0.8) AS3 Client Library in Flex 3");
+        logger.log(new Date());
+
+        // Initialize Client and start, using the extended Myspace client.
+
+        // Create the extended Myspace client.
+        client = new MyspaceJsWrapperClient("opensocial.flash");
+        client.addEventListener(OpenSocialClientEvent.CLIENT_READY, onReady);
+        client.start();
+
+        helper = new SyncHelper(client);
+      }
+
+      private function onReady(event:OpenSocialClientEvent):void {
+        logger.info("Domain: " + helper.getDomain());
+        logger.info("ContainerDomain: " + helper.getContainerDomain());
+        logger.info("CurrentView: " + helper.getCurrentView());
+        logger.info("Client Ready.");
+      }
+
+
+      // -------------------------------------------------------------
+      //  Demo Actions
+      // -------------------------------------------------------------
+
+      // ----------------- Fetch Me ------------------
+      private function fetchMe():void {
+        var req:AsyncDataRequest = new AsyncDataRequest(
+            Feature.PEOPLE_GET,
+            new PeopleRequestOptions()
+                .setUserId("@me")
+                .setGroupId("@self"));
+        req.addEventListener(ResponseItemEvent.COMPLETE, fetchMeEventHandler);
+        req.send(client);
+        people.removeAll();
+      }
+
+      private function fetchMeEventHandler(event:ResponseItemEvent):void {
+        var p:Person = event.response.getData();
+        logger.info(p.getDisplayName());
+        people.addItem(p);
+      }
+
+
+      // ----------------- Fetch Friends ------------------
+      private function fetchFriends():void {
+        var req:AsyncDataRequest = new AsyncDataRequest(
+            Feature.PEOPLE_GET,
+            new PeopleRequestOptions()
+                .setUserId("@me")
+                .setGroupId("@friends")
+                .setCount(5)
+                .setStartIndex(0));
+        req.addEventListener(ResponseItemEvent.COMPLETE, fetchFriendsEventHandler);
+        req.send(client);
+        people.removeAll();
+      }
+
+      private function fetchFriendsEventHandler(event:ResponseItemEvent):void {
+        var c:Collection = event.response.getData();
+        logger.info(c.toDebugString());
+        var arr:Array = c.getArray();
+        for (var i:int = 0; i < arr.length; i++) {
+          var p:Person = arr[i];
+          logger.info(p.getDisplayName());
+          people.addItem(p);
+        }
+        
+        if (c.getRemainingSize() > 0) {
+          var req:AsyncDataRequest = event.target as AsyncDataRequest;
+          (req.getOptions() as PeopleRequestOptions).setStartIndex(c.getNextOffset());
+          req.send(client);
+        }
+      }
+      
+      
+      // ----------------- Send Message ------------------
+      private function sendMessage():void {
+        // the change for myspace. myspace is not support Message object's type equal to null.
+        var message:Message = Message.newInstance("Hello World...", "My new message.", Message.Type.NOTIFICATION);
+        logger.log(message.toRawObject());
+        
+        var req:AsyncDataRequest = new AsyncDataRequest(
+            Feature.REQUEST_SEND_MESSAGE,
+            new UIRequestOptions()
+                .setRecipientIds(["@viewer"])
+                .setMessage(message));
+        req.addEventListener(ResponseItemEvent.COMPLETE, sendMessageEventHandler);
+        req.addEventListener(ResponseItemEvent.ERROR, sendMessageEventErrorHandler);
+        req.send(client);
+      }
+      
+      private function sendMessageEventHandler(event:ResponseItemEvent):void {
+        logger.info("msg sent.");
+      }
+      private function sendMessageEventErrorHandler(event:ResponseItemEvent):void {
+        logger.info("msg sending failed: " + event.response.getErrorMessage());
+      }
+
+
+      // ----------------- Create Activity ------------------
+      private function createActivity():void {
+        var activity:Activity = Activity.newInstance("My new activity!", "Hello World...", "Msg");
+        
+        // the change for myspace. myspace's Activity object need set 'TITLE_ID'.
+        activity.setField(Activity.Field.TEMPLATE_PARAMS, {"body":"Hello World..."});
+        logger.log(activity.toRawObject());
+        var req:AsyncDataRequest = new AsyncDataRequest(
+            Feature.REQUEST_CREATE_ACTIVITY,
+            new UIRequestOptions()
+                .setActivity(activity));
+        req.addEventListener(ResponseItemEvent.COMPLETE, createActivityEventHandler);
+        req.addEventListener(ResponseItemEvent.ERROR, createActivityEventErrorHandler);
+        req.send(client);
+      }
+
+      private function createActivityEventHandler(event:ResponseItemEvent):void {
+        logger.info("activity created");
+      }
+      private function createActivityEventErrorHandler(event:ResponseItemEvent):void {
+        logger.info("activity creation failed: " + event.response.getErrorMessage());
+      }
+
+
+      // ----------------- Make Request ------------------
+      private function makeRequest():void {
+        var req:ProxiedRequest = new ProxiedRequest(
+            "http://www.google.com/crossdomain.xml",
+            new ProxiedRequestOptions()
+                .setContentType(GadgetsIo.ContentType.TEXT));
+        req.addEventListener(ProxiedRequestEvent.COMPLETE, makeRequestEventHandler);
+        req.addEventListener(ProxiedRequestEvent.ERROR, makeRequestEventErrorHandler);
+        req.send(client);
+      }
+      
+      private function makeRequestEventHandler(event:ProxiedRequestEvent):void {
+        logger.info(event.response.getData());
+      }
+
+      private function makeRequestEventErrorHandler(event:ProxiedRequestEvent):void {
+        logger.info("make request failed: " + event.response.getRC() 
+                    + "|" + event.response.getText());
+      }
+
+
+      // ----------------- Fetch Photos --------------------------
+      private function fetchPhotos():void {
+        var req:AsyncDataRequest = new AsyncDataRequest(
+            MyspaceFeature.PHOTOS_GET,
+            new MyspacePhotosRequestOptions()
+                .setUserId("@me"));
+        req.addEventListener(ResponseItemEvent.COMPLETE, fetchPhotosEventHandler);
+        req.send(client);
+        photos.removeAll();
+      }
+      
+      private function fetchPhotosEventHandler(event:ResponseItemEvent):void {
+        var c:Collection = event.response.getData();
+        logger.info(c.toDebugString());
+        var arr:Array = c.getArray();
+        for (var i:int = 0; i < arr.length; i++) {
+          var p:MyspacePhoto = arr[i];
+          photos.addItem(p);
+        }
+        if (c.getRemainingSize() > 0) {
+          var req:AsyncDataRequest = event.target as AsyncDataRequest;
+          (req.getOptions() as MyspacePhotosRequestOptions).setStartIndex(c.getNextOffset());
+          req.send(client);
+        }
+      }
+      
+
+      // ----------------- Share App ------------------
+      private function shareApp(event:ListEvent):void {
+        // To use this, you need First run "Fetch Friends" or "Fetch Me" and then click People.
+        var p:Person = people.getItemAt(titleList.selectedIndex) as Person;
+        var message:Message = Message.newInstance("Hey [recipient]! [sender] wants you to add [app]. It's way awesome!", "A fun way to view your profile!");
+        logger.log(message.toRawObject());
+  
+        var req:AsyncDataRequest = new AsyncDataRequest(
+            Feature.REQUEST_SHARE_APP,
+            new UIRequestOptions()
+                .setRecipientIds([p.getId()])
+                .setReason(message));
+        req.addEventListener(ResponseItemEvent.COMPLETE, shareAppEventHandler);
+        req.addEventListener(ResponseItemEvent.ERROR, shareAppEventErrorHandler);
+        req.send(client);
+      }
+       
+      private function shareAppEventHandler(event:ResponseItemEvent):void {
+        logger.info("msg sent.");
+      }
+      private function shareAppEventErrorHandler(event:ResponseItemEvent):void {
+        logger.info("msg sending failed: " + event.response.getErrorMessage());
+      }
+
+    ]]>
+  </mx:Script>
+  <mx:Button x="468" y="47" label="Fetch Me" id="fetchMeBtn" height="22" width="123" click="fetchMe()"/>
+  <mx:Button x="468" y="77" label="Fetch Friends" height="22" width="123" id="fetchFriendsBtn" click="fetchFriends()"/>
+  <mx:Button x="468" y="107" label="Send Message" height="22" width="123" id="sendMessageBtn" click="sendMessage()"/>
+  <mx:Button x="468" y="137" label="Create Activity" height="22" id="createActivityBtn" click="createActivity()" width="123"/>
+  <mx:Button x="468" y="167" label="Make Request" height="22" width="123" id="makeRequestBtn" click="makeRequest()"/>
+  <mx:Button x="468" y="197" label="Call Rpc" height="22" width="123" id="rpcCallBtn" enabled="false"/>
+  <mx:Button x="468" y="227" label="Register Srv" height="22" width="123" id="rpcRegisterBtn" enabled="false"/>
+  <mx:Button x="468" y="257" label="Fetch Photos" height="22" width="123" id="fetchPhotosBtn" click="fetchPhotos()"/>
+  <mx:TileList width="450" height="160" id="titleList" dataProvider="{people}" itemClick="shareApp(event)" x="10" y="26" backgroundColor="#666666" mouseFocusEnabled="true">
+    <mx:itemRenderer>
+      <mx:Component>
+        <mx:Box width="96" height="140" focusEnabled="false" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+          <mx:Script>
+            <![CDATA[
+              import org.opensocial.client.base.Person;
+            ]]>
+          </mx:Script>
+          <mx:Image source="{Person(data).getThumbnailUrl()}" width="96" height="96" />
+          <mx:Label text="{Person(data).getDisplayName()}" />
+        </mx:Box>
+      </mx:Component>
+    </mx:itemRenderer>
+  </mx:TileList>
+  <mx:TileList width="450" height="100" id="titleList2" dataProvider="{photos}" x="10" y="160" backgroundColor="#666666" mouseFocusEnabled="true">
+    <mx:itemRenderer>
+      <mx:Component>
+        <mx:Box width="96" height="96" focusEnabled="false" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+          <mx:Script>
+            <![CDATA[
+              import org.opensocial.client.ext.myspace.base.MyspacePhoto;
+            ]]>
+          </mx:Script>
+          <mx:Image source="{MyspacePhoto(data).getImageUri()}" width="96" height="96" />
+          <mx:Label text="{MyspacePhoto(data).getCaption()}" />
+        </mx:Box>
+      </mx:Component>
+    </mx:itemRenderer>
+  </mx:TileList>
+  <mx:Text x="348" y="5" text="OpenSocial (0.8) AS3 Client Library (M4)&#xa;Sample App - Flex 3" width="247" height="34" textAlign="right"/>
+</mx:Application>

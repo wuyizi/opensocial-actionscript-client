@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+<ModulePrefs
+    title="OpenSocial Actionscript Client Library - Myspace Extension Sample"
+    description="Just a sample to demo OpenSocial Actionscript Client Library."
+    height="500">
+  <Require feature="opensocial-0.8"/>
+  <Require feature="dynamic-height"/>
+  <Require feature="views"/>
+</ModulePrefs>
+<Content type="html" view="canvas">
+<![CDATA[
+
+<h1 style="font-size:32px; font-weight:bold; font-family:verdana; text-align: center;">Sample App for Myspace</h1>
+<div id="flashcontainer" style="text-align: center;"></div>
+
+<script type="text/javascript">
+  var DEBUG = true;
+
+  // Change nocache to version number when releasing other than random timestamps.
+  var nocache = new Date().getTime();
+
+  var baseUrl = "http://opensocial-actionscript-client.googlecode.com/svn/tags/release-1.1/bin/";
+
+  function loadSwf() {
+
+    embedFlash(
+       baseUrl + "MyspaceSampleApp.swf?bpc=" + nocache,
+       "flashcontainer",
+       "9.0.115.0",
+       {
+          width: "600",
+          height: "500",
+          quality: "high",
+          wmode: "window",
+          allowScriptAccess: "always"
+       });
+    gadgets.window.adjustHeight();
+  };
+
+
+
+  // TODO: refine this function
+  // NOTE: Myspace doesn't support "gadgets.flash.embedFlash" function.
+  var DEFAULT_FLASH_ID = 'flashObj';
+  function embedFlash (swfUrl, swfContainer, opt_playerVersion, opt_params, opt_upgradeMsgHTML) {
+    opt_params = opt_params || {};
+    // Check container element
+    var container = document.getElementById(swfContainer);
+    if (!container) return false;
+
+    // Check version
+    var version = opt_playerVersion.match(/(\d+)(?=[\.,]?)/g);
+    var expectMajorVer = (version != null ? Number(version[0]) : 9);
+
+    // Generate the flash object element
+    var html = "";
+    if (navigator.plugins &&
+        navigator.mimeTypes &&
+        navigator.mimeTypes.length) {
+      // netscape plugin architecture
+      html = '<embed src="'+ swfUrl +
+             '" id="' + DEFAULT_FLASH_ID +
+             '" name="' + DEFAULT_FLASH_ID +
+             '" type="application/x-shockwave-flash"';
+      for(var key in opt_params){
+        html += key +'="'+ opt_params[key] +'" ';
+      }
+      html += '/>';
+    } else {
+      // PC IE
+      html = '<object id="' + DEFAULT_FLASH_ID +
+             '" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"';
+      var params = '<param name="movie" value="'+ swfUrl +'" />';
+      for(var key in opt_params) {
+        if (key == 'width' || key == 'height') {
+          html += ' ' + key + '="' + opt_params[key] + '"';
+        } else {
+          params += '<param name="'+ key +'" value="'+ opt_params[key] +'" />';
+        }
+      }
+      html += '>' + params + "</object>";
+    }
+    container.innerHTML = html;
+    return true;
+  };
+
+
+  loadSwf();
+
+</script>
+
+]]>
+</Content>
+</Module>

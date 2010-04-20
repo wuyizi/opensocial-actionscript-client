@@ -1,0 +1,1801 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+-->
+
+<global name="shindig" desc="Global root node.">
+  <!-- ============================= External Namespace and Flags ============================== -->
+
+  <script><![CDATA[
+  /**
+   * Flag for release version or testing version. Set to true before loading this script to get the
+   * testbed object to run the jsunit tests.
+   * @static
+   * @type {boolean}
+   * @ignore
+   */
+  var TESTING = false;
+
+  /**
+   * Flag for release version or debug version. Set to true to get debug info on firebug console.
+   * @static
+   * @type {boolean}
+   * @ignore
+   */
+  var DEBUG = TESTING || DEBUG;
+  ]]></script>
+
+  <gadgets desc="Defines the external namespace 'gadgets'.">
+    <script><![CDATA[
+    /**
+     * External namespace for gadgets for internal reference.
+     * @static
+     * @name gadgets
+     */
+    var gadgets = window['gadgets'];
+    if (!gadgets) {
+      alert('gadgets.* not found.');
+    }
+    if (window.console) {console.log(gadgets);}
+    ]]></script>
+  </gadgets>
+
+  <opensocial desc="Defines the external namcespace 'opensocial'.">
+    <script><![CDATA[
+    /**
+     * External namespace for opensocial for internal reference.
+     * @static
+     * @name opensocial
+     */
+    var opensocial = window['opensocial'];
+    if (!opensocial) {
+      alert('opensocial.* not found.');
+      opensocial = {};
+    }
+    if (window.console) {console.log(opensocial);}
+    ]]></script>
+
+
+    <!-- ============================= OpenSocial Flash Namespace ============================== -->
+    <flash desc="Defines the 'opensocial.flash' namespace.">
+      <script><![CDATA[
+      opensocial.flash = {};
+      /**
+       * Namespace for top-level api functions
+       * @static
+       * @namespace Namespace for top-level api functions.
+       * @requires opensocial
+       * @requires gadgets
+       * @name opensocial.flash
+       */
+      opensocial.flash = (function() {
+
+        /* The following part of javascript are constructed by configs in flash. */
+
+      ]]></script>
+
+
+
+      <!-- ============================ Debugging Tools (private) ============================== -->
+      <debug desc="Debugging tools that flash/javascript bridge may use.">
+        <script><![CDATA[
+        /**
+         * For debugging, return the object's keys and values.
+         * @param {Object?} obj Any object to be looked into.
+         * @param {string?} opt_prefix The prefix string of each output line.
+         * @param {string?} opt_rendered The rendered string passing between recursions.
+         * @return {string?} A tree-style string to represent the object.
+         * @private
+         */
+        var INSPECT = function(obj, opt_prefix, opt_rendered) {
+          if (!opt_rendered) opt_rendered = '\n';
+          if (!opt_prefix) opt_prefix = '';
+          if (obj == null) return opt_rendered || "";
+          for (var k in obj) {
+            opt_rendered +=
+                (opt_prefix + k + '[' + (typeof obj[k]) + '] : ' + obj[k] + '\n');
+            if ((typeof obj[k]) == 'object') {
+              opt_rendered = INSPECT(obj[k], opt_prefix + '\t', opt_rendered);
+            }
+          }
+          return opt_rendered || "";
+        };
+
+        /**
+         * For debugging, export the local variables to global.
+         * Only available when DEBUG = true.
+         * @param {string} name The nathis.
+         * @param {Object?} value The value.
+         * @private
+         */
+        var EXPORT = function(name, value) {
+          if (DEBUG && opensocial.flash) {
+            opensocial.flash['export'] = opensocial.flash['export'] || {};
+            opensocial.flash['export'][name] = value;
+          }
+        };
+
+        /**
+         * For debugging, output text information to firebug console.
+         * Only available when DEBUG = true.
+         * @param {Object?} content The content to be logged.
+         * @private
+         */
+        var INFO = function(content) {
+          if (DEBUG && window.console) {
+            window.console.info(content);
+          }
+        };
+
+        /**
+         * For debugging, log the object to firebug console.
+         * Only available when DEBUG = true.
+         * @param {Object?} content The content to be logged.
+         * @private
+         */
+        var LOG = function(content) {
+          if (DEBUG && window.console) {
+            window.console.log(content);
+          }
+        };
+
+        /* Export these debugging functions for shortcuts. */
+        if (DEBUG) {
+          window["INFO"] = INFO;
+          window["LOG"] = LOG;
+          window["INSPECT"] = INSPECT;
+          window["EXPORT"] = EXPORT;
+        }
+        ]]></script>
+      </debug>
+
+      <!-- ========================== Kernel Object (private) ================================== -->
+      <kernel desc="Defines the underlying object that 'opensocial.flash' represents for.">
+        <script><![CDATA[
+        /**
+         * The underlying object holds all variables and functions for the opensocial.flash module.
+         * @type {Object}
+         * @private
+         */
+        var kernel = function() {
+
+          /* The following part of javascript are constructed by configs in flash. */
+
+        ]]></script>
+
+        <self desc="Defines some references for this and flash object in the kernel.">
+          <script><![CDATA[
+          /**
+           * Alias for 'this' to avoid misusing the 'this' reference in difference scopes or closures.
+           * @type {Object}
+           * @private;
+           */
+          var me = this;
+
+          /**
+           * The flash movie object which apply this API.
+           * This object is initialized in opensocial.flash.jsReady function.
+           * @type {HTMLElement}
+           * @private
+           */
+          me.swfObj;
+
+          ]]></script>
+        </self>
+
+
+        <!-- ================== Common Utilities Helper Functions (private) ==================== -->
+        <utility desc="Defines some utility functions for the kernel about DOM and flash object.">
+          <script><![CDATA[
+          /**
+           * Returns the document object.
+           * @return {HTMLDocument} the document object of current context.
+           * @private
+           */
+          me.thisDoc = function() {
+            return document;
+          };
+
+          /**
+           * Returns the window object.
+           * @return {Window} the window object of current context.
+           * @private
+           */
+          me.thisWin = function() {
+            return window;
+          };
+
+          /**
+           * Returns the navigator object.
+           * @return {Navigator} the navigator object of current context.
+           * @private
+           */
+          me.thisBrowser = function() {
+            return navigator;
+          };
+
+          /**
+           * Gets the swf object.
+           * @param {string} objectId The object/embed tag's id or name
+           * @return {HTMLElement} the swf object.
+           * @private
+           */
+          me.thisMovie = function(objectId) {
+            if (objectId == null) return null;
+            if ((me.thisBrowser()).appName.indexOf('Microsoft') != -1) {
+              return me.thisDoc()[objectId];
+            } else {
+              return me.thisDoc().getElementById(objectId);
+            }
+          };
+
+          /**
+           * Checks if the object is an array.
+           * @param {Object} obj object to be check.
+           * @return {boolean} True if the object is an array.
+           * @private
+           */
+          me.isArray = function(obj) {
+            if (!obj) return false;
+            if (Array) {
+              return obj instanceof Array;
+            } else {
+              if ((typeof obj == 'object') &&
+                  (typeof obj.length == 'number') &&
+                  (typeof obj.splice != 'undefined')) {
+                return true;
+              } else {
+                return false;
+              }
+            }
+          };
+
+          /**
+           * Iterates an array, calls the function for each item.
+           * @param {Array} array The array to be iterated.
+           * @param {Function} f The function to be applied.
+           * @param {Object} opt_thisObj The this object for the function.
+           * @private
+           */
+          me.forEach = function(array, f, opt_thisObj) {
+            if (typeof array.length != 'number') {
+              return;
+            }
+            var l = array.length;
+            for (var i = 0; i < l; i++) {
+              if (i in array) {
+                if (false == f.call(opt_thisObj, array[i], i, array)) {
+                  break;
+                };
+              }
+            }
+          };
+
+          /**
+           * Deeply clones an non-native object.
+           * @param {Object?} obj The original object.
+           * @return {Object?} The cloned object.
+           * @private
+           */
+          me.clone = function(obj) {
+            if(obj == null) return null;
+            switch (typeof obj){
+              case 'function':
+                return obj;
+              case 'object':
+                var newObj = new obj.constructor();
+                for(var key in obj) newObj[key] = me.clone(obj[key]);
+                return newObj;
+              default:
+                return obj.valueOf();
+            }
+          };
+          ]]></script>
+        </utility>
+
+
+        <!-- ===================== OpenSocial Data Helper Functions (private) ================== -->
+        <helper desc="OpenSocial related data helper functions.">
+          <getData desc="Gets data object from resoponse.">
+            <script><![CDATA[
+            /**
+             * Gets data object from resoponse.
+             * @param {opensocial.DataResponse} dataResponse The response object.
+             * @param {string} key The data key in the response object.
+             * @throws {Error} When the RPC meets error.
+             * @return {Object?} The data, can be any instance of the opensocial.* data type.
+             * @private
+             */
+            me.getData = function(dataResponse, key) {
+              /* for debug */
+              EXPORT('DATA_RESPONSE', {'key': key, 'data': dataResponse});
+
+              if (!dataResponse) return null;
+              if (dataResponse.hadError() && dataResponse.getErrorMessage()) {
+                var e = new Error(dataResponse.getErrorMessage());
+                e['name'] = "OpensocialError";
+                throw e;
+              }
+              if (!key) return null;
+
+              return me.getDataItem(dataResponse.get(key));
+            };
+            ]]></script>
+          </getData>
+          <getDataItem desc="Gets data object from resoponse item.">
+            <script><![CDATA[
+            /**
+             * Gets data object from response item.
+             * @param {opensocial.ResponseItem} responseItem The response item object.
+             * @throws {Error} When the items have errors.
+             * @return {Object?} The data, can be any instance of the opensocial.* data type.
+             * @private
+             */
+            me.getDataItem = function(responseItem) {
+              if (!responseItem) return null;
+
+              /**
+               * NOTE:
+               *      For orkut. When delete not exist photo, The responseItem.hadError() is false,
+               *      But the responseItem.getErrorMessage() has error message.
+               */
+
+              if (responseItem.hadError() || responseItem.getErrorMessage()) {
+                var e = new Error(responseItem.getErrorMessage());
+                e['name'] = "OpenSocialError";
+                e['code'] = responseItem.getErrorCode();
+                throw e;
+              }
+              return responseItem.getData();
+            };
+            ]]></script>
+          </getDataItem>
+          <dataTypes desc="OpenSocial data types supported in the flash environment.">
+            <script><![CDATA[
+            /**
+             * OpenSocial data types supported in the flash environment.
+             * @private
+             */
+            me.dataTypes = {
+                'org.opensocial.client.base.Address'              : opensocial.Address,
+                'org.opensocial.client.base.BodyType'             : opensocial.BodyType,
+                'org.opensocial.client.base.Email'                : opensocial.Email,
+                'org.opensocial.client.base.Name'                 : opensocial.Name,
+                'org.opensocial.client.base.Organization'         : opensocial.Organization,
+                'org.opensocial.client.base.Phone'                : opensocial.Phone,
+                'org.opensocial.client.base.Url'                  : opensocial.Url,
+                'org.opensocial.client.base.Enum'                 : opensocial.Enum,
+                'org.opensocial.client.base.Person'               : opensocial.Person,
+                'org.opensocial.client.base.Activity'             : opensocial.Activity,
+                'org.opensocial.client.base.IdSpec'               : opensocial.IdSpec,
+                'org.opensocial.client.base.MediaItem'            : opensocial.MediaItem,
+                'org.opensocial.client.base.Message'              : opensocial.Message,
+                'org.opensocial.client.base.NavigationParameters' : opensocial.NavigationParameters,
+                'org.opensocial.client.base.Collection'           : opensocial.Collection,
+                'org.opensocial.client.base.Album'                : opensocial.Album
+            };
+            ]]></script>
+          </dataTypes>
+          <checkType desc="Gets the constructor function for OpenSocial data object.">
+            <script><![CDATA[
+            /**
+             * Gets the constructor function for OpenSocial data object.
+             * @param {Object} dataObj The object to be checked.
+             * @return {Object.<string, Function>?} The type of the object.
+             * @private
+             */
+            me.checkType = function(dataObj) {
+              if (!dataObj) return null;
+              var type = null;
+
+              for (var typeName in me.dataTypes) {
+                typeClass = me.dataTypes[typeName];
+                if (typeClass instanceof Function && dataObj instanceof typeClass) {
+                  type = {'typeName' : typeName, 'typeClass' : typeClass};
+                  break;
+                }
+              }
+              return type;
+            };
+            ]]></script>
+          </checkType>
+          <wrapObject desc="Wraps the OpenSocial rich object (with functions) to a JSON-like flat serializable object.">
+            <script><![CDATA[
+            /**
+             * Wraps the OpenSocial rich object (with functions) to a JSON-like flat serializable object.
+             * So the object can pass through the ExternalInterface to the swf.
+             * @param {Object} dataObj The object to be wrapped.
+             * @param {Object?} opt_this The flat object as a container to hold the wrapped fields.
+             * @return {Object?} A wrapped flat object, ready to pass to swf.
+             * @private
+             */
+            me.wrapObject = function(dataObj, opt_this) {
+              if (dataObj == null) return null;
+
+              var type = me.checkType(dataObj);
+              if (type == null) {
+                /* treat it as string */
+                return dataObj;
+              }
+
+              var typeClass = type['typeClass'];
+
+              /* fix fields */
+              opt_this = opt_this || {};
+
+              if ('Field' in typeClass) {
+                opt_this['fields'] = opt_this['fields'] || {};
+
+                /* Grabs the fields data from each structures recursively. */
+                for (var k in typeClass.Field) {
+                  var key = typeClass.Field[k];
+                  var value = dataObj.getField(key);
+                  if (value != null) {
+                    if (me.isArray(value)) {
+                      opt_this['fields'][key] = [];
+                      me.forEach(value, function(item) {
+                        opt_this['fields'][key].push(me.wrapObject(item));
+                      });
+                    } else {
+                      opt_this['fields'][key] = me.wrapObject(value);
+                    }
+                  }
+                }
+              }
+
+              /* assign type name */
+              opt_this['type'] = type['typeName'];
+
+              /* fix properties. */
+              if (typeClass == opensocial.Person) {
+                opt_this['displayName'] = dataObj.getDisplayName();
+                opt_this['isOwner'] = dataObj.isOwner();
+                opt_this['isViewer'] = dataObj.isViewer();
+                opt_this['id'] = dataObj.getId();
+
+              } else if (typeClass == opensocial.Activity) {
+                opt_this['id'] = dataObj.getId();
+
+              } else if (typeClass == opensocial.Enum) {
+                opt_this['key'] = dataObj.getKey();
+                opt_this['displayValue'] = dataObj.getDisplayValue();
+
+              } else if (typeClass == opensocial.Collection) {
+                opt_this['size'] = dataObj.size();
+                opt_this['offset'] = dataObj.getOffset();
+                opt_this['totalSize'] = dataObj.getTotalSize();
+
+                var array = dataObj.asArray();
+                opt_this['array'] = [];
+                me.forEach(array, function(item) {
+                  opt_this['array'].push(me.wrapObject(item));
+                });
+
+              }
+              return opt_this || {};
+            };
+            ]]></script>
+          </wrapObject>
+          <unwrapObject desc="Unwraps the flattened object to a rich OpenSocial data object.">
+            <script><![CDATA[
+            /**
+             * Unwraps the flattened object to a rich OpenSocial data object. The flattened object is come
+             * from the swf via ExternalInterface.
+             * @param {Object} obj The object to be unwrapped. Only those 5 types with setField
+             *                 method and opensocial.newXXXX creator can be unwrapped.
+             * @param {Function} type The object's target type to be unwrapped.
+             * @throws {Error} When the type is not correct.
+             * @return {Object} Unwrapped rich opensocial data object, ready to use in javascript.
+             * @private
+             */
+            me.unwrapObject = function(obj, type) {
+              if (obj && 'fields' in obj) {
+                var fields = obj['fields'];
+
+                if (type == opensocial.IdSpec) {
+                  return opensocial.newIdSpec(fields);
+
+                } else if (type == opensocial.NavigationParameters) {
+                  return opensocial.newNavigationParameters(fields);
+
+                } else if (type == opensocial.MediaItem) {
+                  return opensocial.newMediaItem(fields[opensocial.MediaItem.Field.MIME_TYPE],
+                                                 fields[opensocial.MediaItem.Field.URL],
+                                                 fields);
+
+                } else if (type == opensocial.Message) {
+                  return opensocial.newMessage(fields[opensocial.Message.Field.BODY],
+                                               fields);
+
+                } else if (type == opensocial.Activity) {
+                  var flatItems = fields[opensocial.Activity.Field.MEDIA_ITEMS];
+                  if (me.isArray(flatItems)) {
+                    var richItems = [];
+                    me.forEach(flatItems, function(item) {
+                      richItems.push(me.unwrapObject(item, opensocial.MediaItem));
+                    });
+                    fields[opensocial.Activity.Field.MEDIA_ITEMS] = richItems;
+                  }
+                  return opensocial.newActivity(fields);
+                } else if (type == opensocial.Album) {
+                  return new opensocial.Album(fields);
+                }
+
+              }
+              /* If reaches here, codes are wrong. */
+              var e = new Error('The object does not has fields values or type mismatched.');
+              e['name'] = "OpenSocialError";
+              throw e;
+            };
+            ]]></script>
+          </unwrapObject>
+          <handleError desc="Logs down the error and callback to swf if any error happens for the request.">
+            <script><![CDATA[
+            /**
+             * Logs down the error and callback to swf if any error happens for the request.
+             * @param {string} reqID The request ID.
+             * @param {Error} error The error thrown during the response.
+             * @private
+             */
+            me.handleError = function(reqID, error) {
+              INFO(error);
+              me.swfObj.handleError(reqID, error);
+            };
+            ]]></script>
+          </handleError>
+          <handleAsync desc="Handles successful data responses and callback to swf.">
+            <script><![CDATA[
+            /**
+             * Handles successful data responses and callback to swf.
+             * @param {string} reqID The request ID.
+             * @param {Object?} opt_data Some data to pass back
+             * @private
+             */
+            me.handleAsync = function(reqID, opt_data) {
+              var args = [];
+              me.forEach(arguments, function(arg) {
+                args.push(arg);
+              });
+              me.swfObj.handleAsync.apply(me.swfObj, args);
+            };
+            ]]></script>
+          </handleAsync>
+          <rpcStore desc="'gadget.rpc' helper function, stores the running rpc instances.">
+            <script><![CDATA[
+            /**
+             * Stores the running rpc instances. It is used by asynchronous rpc register service.
+             * @private
+             */
+            me.rpcStore = {};
+            ]]></script>
+          </rpcStore>
+          <pushRpc desc="'gadget.rpc' helper function, pushes the running rpc instance to the store and returns an unique callID.">
+            <script><![CDATA[
+            /**
+             * Pushes the running rpc instance to the store and returns an unique callID. It is used by
+             * asynchronous rpc register service.
+             * @param {Object} rpc The rpc instance defined in gadgets.rpc.
+             * @return {string} The callID.
+             * @private
+             */
+            me.pushRpc = function(rpc) {
+              var callID = String(rpc.s) + '_' + String(rpc.c);  /* 'your-service-name_#' */
+              me.rpcStore[callID] = rpc;
+              return callID;
+            };
+            ]]></script>
+          </pushRpc>
+          <popRpc desc="'gadget.rpc' helper function, pops the running rpc instance from the store with the callID.">
+            <script><![CDATA[
+            /**
+             * Pops the running rpc instance from the store with the callID. It is used by
+             * asynchronous rpc register service.
+             * @param {string} callID The callID of the rpc instance to be popped and removed.
+             * @return {Object} The rpc instance defined in gadgets.rpc.
+             * @private
+             */
+            me.popRpc = function(callID) {
+              var rpc = me.rpcStore[callID];
+              delete me.rpcStore[callID];
+              return rpc;
+            };
+            ]]></script>
+          </popRpc>
+
+        </helper>
+
+        <!-- ========================== Legacy Translators ===================================== -->
+        <!--
+           These translators is translating the osapi-options to DataRequest params. They will be
+           deprecated when the osapi part is really using osapi. Currently it is still a wrapper of
+           DataRequest.
+           See also in this file:
+                 opensocial.flash.people.*
+                 opensocial.flash.activity.*
+                 opensocial.flash.appdata.*
+        -->
+        <legacy desc="Defines legacy methods for compatibility to old OpenSocial versions.">
+          <translatePaginationParams desc="Translates the osapi-options to pagination related request params.">
+            <script><![CDATA[
+            /**
+             * Translates the osapi-options to pagination related request params.
+             * @param {Object} options The unwrapped options object of type any options object from flash.
+             * @param {Object?} opt_params The DataRequest preferred parameters map to be filled.
+             * @return {Object} The DataRequest preferred parameters map.
+             * @private
+             */
+            me.translatePaginationParams = function(options, opt_params) {
+              if (!opt_params) {
+                opt_params = {};
+              }
+              if (options['count']) {
+                opt_params['max'] = options['count']
+              }
+
+              if (options['startIndex']) {
+                opt_params['first'] = options['startIndex'];
+              }
+              return opt_params;
+            };
+            ]]></script>
+          </translatePaginationParams>
+          <translatePeopleRequestParams desc="Translates the osapi-options to people request params.">
+            <script><![CDATA[
+            /**
+             * Translates the osapi-options to people request params.
+             * NOTE: Myspace does not allow these case:
+             *     params[PROFILE_DETAILS] = null;
+             *     params[FILTER] = null;
+             *     params[SORT_ORDER] = null;
+             *
+             * @param {Object} options The unwrapped options object of type PeopleRequestOptions.
+             * @param {Object?} opt_params The DataRequest preferred parameters map to be filled.
+             * @return {Object} The DataRequest preferred parameters map.
+             * @private
+             */
+            me.translatePeopleRequestParams = function(options, opt_params) {
+              if (!opt_params) {
+                opt_params = {};
+              }
+              var fieldNames = opensocial.DataRequest.PeopleRequestFields;
+              if (options['sortBy']){
+                opt_params[fieldNames.SORT_ORDER] = options['sortBy'];
+              }
+
+              if (options['filterBy']) {
+                opt_params[fieldNames.FILTER] = options['filterBy'];
+              }
+
+              if (options['fields'] && options['fields'].length > 0) {
+                opt_params[fieldNames.PROFILE_DETAILS] = options['fields'];
+              }
+              return opt_params;
+            };
+            ]]></script>
+          </translatePeopleRequestParams>
+          <translateActivityRequestParams desc="Translates the osapi-options to activities request params.">
+            <script><![CDATA[
+            /**
+             * Translates the osapi-options to activities request params.
+             * @param {Object} options The unwrapped options object of type ActivitiesRequestOptions.
+             * @param {Object?} opt_params The DataRequest preferred parameters map to be filled.
+             * @return {Object} The DataRequest preferred parameters map.
+             * @private
+             */
+            me.translateActivityRequestParams = function(options, opt_params) {
+              if (!opt_params) {
+                opt_params = {};
+              }
+              opt_params['appId'] = options['appId'] || '@app';
+              return opt_params;
+            };
+            ]]></script>
+          </translateActivityRequestParams>
+          <translateIds desc="Translates the ids from osapi-options style to request params style.">
+            <script><![CDATA[
+            /**
+             * Translates the ids from osapi-options style to request params style.
+             * @param {string | Array.<string>} ids The ids.
+             * @return {string | Array.<string>} The translated ids.
+             * @private
+             */
+            me.translateIds = function(ids) {
+              if (!me.isArray(ids)) {
+                ids = [ids];
+              }
+              var translated = [];
+              var len = ids.length;
+              for (var i = 0; i < len; ++i) {
+                if (ids[i] == '@viewer' || ids[i] == '@me') {
+                  translated[i] = opensocial.IdSpec.PersonId.VIEWER;
+                } else if (ids[i] == '@owner') {
+                  translated[i] = opensocial.IdSpec.PersonId.OWNER;
+                } else if (ids[i] == '@friends') {
+                  translated[i] = opensocial.IdSpec.GroupId.FRIENDS;
+                } else if (ids[i] == '@self') {
+                  translated[i] = opensocial.IdSpec.GroupId.SELF;
+                } else {
+                  translated[i] = ids[i];
+                }
+              }
+              return len == 1 ? translated[0] : translated;
+            };
+            ]]></script>
+          </translateIds>
+          <translateIdSpec desc="Translates the user and group information in osapi-options to an IdSpec object.">
+            <script><![CDATA[
+            /**
+             * Translates the user and group information in osapi-options to an IdSpec object.
+             * @param {Object} options The unwrapped options object of any subtypes of RequestOptions.
+             * @return {Object} The IdSpec object.
+             * @private
+             */
+            me.translateIdSpec = function(options) {
+              var userId = options['userId'];
+              userId = me.translateIds(userId);
+
+              var groupId = options['groupId'];
+              groupId = me.translateIds(groupId);
+
+              return opensocial.newIdSpec({'userId' : userId,
+                                           'groupId' : groupId,
+                                           'networkDistance' : options['networkDistance']});
+            };
+            ]]></script>
+          </translateIdSpec>
+        </legacy>
+
+        <!-- ========================== Public API functions =================================== -->
+        <api desc="Defines all actual api bridges where are visible to flash.">
+          <script><![CDATA[
+          var api = /** @scope opensocial.flash */ {};
+          /* Sets the returning api object. */
+          me.api = api;
+          ]]></script>
+
+
+          <!-- ========================== Flash Embeded Object Functions ======================= -->
+
+          <jsReady desc="Indicates if the opensocial library is loaded and initialize the flash element.">
+            <script><![CDATA[
+            /**
+             * Indicates if the opensocial library is loaded and initialize the flash element.
+             *
+             * The objectId of the swf is defined in gagdet spec. If the swf is embeded by calling
+             * opensocial.flash.embedFlash function, the detault objectId will be 'flashObj'.
+             *
+             * This function is called by the swf's ExternalInterface continuingly until it
+             * returns true.
+             *
+             * @param {string?} objectId The object Id passed from the swf.
+             * @return {boolean} true if all javascripts are loaded.
+             *
+             * @member opensocial.flash
+             */
+            api.jsReady = function(objectId) {
+              try {
+                if (!me.swfObj) {
+                  me.swfObj = me.thisMovie(objectId);
+                }
+                return !!me.swfObj;
+              } catch (e) {
+                INFO(e);
+                return false;
+              }
+            };
+            ]]></script>
+          </jsReady>
+
+          <extend desc="Extends the api for special containers. Deprecated.">
+            <script><![CDATA[
+            /**
+             * Extends the api for special containers, e.g. myspace
+             * @param {Object} extension The extension of special features and configs.
+             */
+            api.extend = function(extension) {
+              if (!extension) {
+                throw new Error('Extension can not be null.');
+              }
+              var ext = extension(me);
+              if (!ext) {
+                throw new Error('Extension is not correct.');
+              }
+              if (ext.dataTypes) {
+                Array.prototype.push.apply(me.dataTypes, ext.dataTypes);
+              }
+              if (ext.features) {
+                for (var featureName in ext.features) {
+                  me.api[featureName] = ext.features[featureName];
+                }
+              }
+            };
+            ]]></script>
+          </extend>
+
+
+          <!-- ======================== Environment Wrapped Accessors ========================== -->
+          <env desc="Environment wrapped accessors for flash.">
+            <script><![CDATA[
+            api.env = {};
+            ]]></script>
+
+            <supportsField desc="Checks if the field is supported in the object type.">
+              <script><![CDATA[
+              /**
+               * Checks if the field is supported in the object type.
+               * @param {opensocial.Environment.ObjectType | string} objectType The enum name of
+               *        the type.
+               * @param {string} The enum name of the field, defined in opensocial.XXXX.Field enums.
+               * @return {boolean} True if supported.
+               * @member opensocial.flash.env
+               */
+              api.env.supportsField = function(objectType, field) {
+                return opensocial.getEnvironment().supportsField(objectType, field);
+              };
+              ]]></script>
+            </supportsField>
+            <getDomain desc="Returns the domain from environment instance.">
+              <script><![CDATA[
+              /**
+               * Returns the domain from environment instance.
+               * @return {string} The domain.
+               * @member opensocial.flash.env
+               */
+              api.env.getDomain = function() {
+                return opensocial.getEnvironment().getDomain();
+              };
+              ]]></script>
+            </getDomain>
+            <getContainerDomain desc="Returns the domain from the referer.">
+              <script><![CDATA[
+              /**
+               * Returns the domain from the referer.
+               * @return {string} The domain.
+               * @member opensocial.flash.env
+               */
+              api.env.getContainerDomain = function() {
+                var pattern = /(\w+):\/\/([\w.]+)(:\d+)?\/(\S*)/;
+                var result = me.thisDoc().referrer.match(pattern);
+                return result == null ? '' : result[2];
+              };
+              ]]></script>
+            </getContainerDomain>
+          </env>
+
+
+          <!-- ========================== Gadgets Views =========================== -->
+          <views desc="'gadgets.views' wrapped accessors for flash.">
+            <script><![CDATA[
+            api.views = {};
+            ]]></script>
+
+            <getCurrentView desc="Returns the name of the in gadgets.views static class.">
+              <script><![CDATA[
+              /**
+               * Returns the name of the in gadgets.views static class.
+               * @requires gadgets.views
+               * @return {gadgets.views.ViewType | string} The view name.
+               * @member opensocial.flash.views
+               */
+              api.views.getCurrentView = function() {
+                if (gadgets && gadgets.views) {
+                  return gadgets.views.getCurrentView().getName();
+                } else {
+                  return null;
+                }
+              };
+              ]]></script>
+            </getCurrentView>
+            <getViewParams desc="Returns the parameters passed into this gadget for this view.">
+              <script><![CDATA[
+              /**
+               * Returns the parameters passed into this gadget for this view.
+               * @requires gadgets.views
+               * @return {Object.<string, string>} The param object.
+               * @member opensocial.flash.views
+               */
+              api.views.getViewParams = function() {
+                if (gadgets && gadgets.views) {
+                  return gadgets.views.getParams();
+                } else {
+                  return null;
+                }
+              };
+              ]]></script>
+            </getViewParams>
+            <isOnlyVisible desc="Indicates if the app is only one gadget on the page or not.">
+              <script><![CDATA[
+              /**
+               * Indicates if the app is only one gadget on the page or not.
+               * @requires gadget.views
+               * @return {Boolean} True if it's the only one gadget.
+               * @member opensocial.flash.views
+               */
+              api.views.isOnlyVisible = function() {
+                if (gadgets && gadgets.views) {
+                  return gadgets.views.getCurrentView().isOnlyVisibleGadget();
+                } else {
+                  return true;
+                }
+              };
+              ]]></script>
+            </isOnlyVisible>
+          </views>
+
+
+          <!-- ========================== Gadgets Window =========================== -->
+          <win desc="'gadgets.window' wrapped accessors for flash.">
+            <script><![CDATA[
+            api.win = {};
+            ]]></script>
+
+            <setStageWidth desc="Sets the width for the flash stage.">
+              <script><![CDATA[
+              /**
+               * Sets the width for the flash stage. It is very usefull for dynamic loading and
+               * view switching.
+               * @param {number} newWidth New width (in pixel) to be applied.
+               * @member opensocial.flash.win
+               */
+              api.win.setStageWidth = function(newWidth) {
+                if (me.swfObj.width != newWidth) {
+                  me.swfObj.width = newWidth;
+                }
+              };
+              ]]></script>
+            </setStageWidth>
+            <setStageHeight desc="Sets the height for the flash stage.">
+              <script><![CDATA[
+              /**
+               * Sets the height for the flash stage. It is very usefull for dynamic loading and
+               * view switching.
+               * @requires gadgets.window
+               * @param {number} newHeight New height (in pixel) to be applied.
+               * @member opensocial.flash.win
+               */
+              api.win.setStageHeight = function(newHeight) {
+                if (me.swfObj.height != newHeight) {
+                  me.swfObj.height = newHeight;
+                  if (gadgets && gadgets.window && gadgets.window.adjustHeight) {
+                    gadgets.window.adjustHeight(newHeight);
+                  }
+                }
+              };
+              ]]></script>
+            </setStageHeight>
+            <setTitle desc="Sets the title of this app.">
+              <script><![CDATA[
+              /**
+               * Sets the title of this app.
+               * @requires gadgets.window
+               * @param {string} newTitle New title to be applied.
+               * @member opensocial.flash.win
+               */
+              api.win.setTitle = function(newTitle) {
+                if (gadgets && gadgets.window && gadgets.window.setTitle) {
+                  gadgets.window.setTitle(newTitle);
+                }
+              };
+              ]]></script>
+            </setTitle>
+          </win>
+
+
+          <!-- ========================== Gadgets RPC =========================== -->
+          <rpc desc="'gadgets.rpc' wrapped accessors for flash.">
+            <script><![CDATA[
+            api.rpc = {};
+            ]]></script>
+
+            <call desc="Sends the rpc call request to a service on another app or container on the page.">
+              <script><![CDATA[
+              /**
+               * Sends the rpc call request to a service on another app or container on the page.
+               * @param {string} reqID The request id.
+               * @param {string?} targetId The target app id, null to call the parent.
+               * @param {string} serviceName The service name registered on the target.
+               * @param {Array.<Object>?} argsArray The array of args to be passed to the service.
+               * @member opensocial.flash.rpc
+               */
+              api.rpc.call = function(reqID, targetId, serviceName, argsArray) {
+                var reqArgs = [targetId, serviceName, function() {
+                  if (arguments.length > 0) {
+                    me.handleAsync(reqID, arguments[0]);
+                  } else {
+                    me.handleAsync(reqID);
+                  }
+                }];
+                if (argsArray) {
+                  me.forEach(argsArray, function(arg) {
+                    reqArgs.push(arg);
+                  });
+                }
+                gadgets.rpc.call.apply(null, reqArgs);
+              };
+              ]]></script>
+            </call>
+            <serviceReturn desc="Sends the return value to to last received rpc service back to the caller app.">
+              <script><![CDATA[
+              /**
+               * Sends the return value to to last received rpc service back to the caller app.
+               * Only callback if the returnValue is available.
+               * @param {string} callID The call id for the rpc called by the caller app.
+               * @param {Object?} opt_returnValue The return value of the rpc service.
+               * @member opensocial.flash.rpc
+               */
+              api.rpc.serviceReturn = function(callID, opt_returnValue) {
+                var rpc = me.popRpc(callID);
+                if (opt_returnValue != null) {
+                  rpc.callback(opt_returnValue);
+                }
+              };
+              ]]></script>
+            </serviceReturn>
+            <serviceRegister desc="Sends the rpc register request to container to register a service on this app.">
+              <script><![CDATA[
+              /**
+               * Sends the rpc register request to container to register a service on this app.
+               * @param {string} serviceName The service to be register.
+               * @param {string} handlerName The handler function name on the flash object.
+               * @member opensocial.flash.rpc
+               */
+              api.rpc.serviceRegister = function(serviceName, handlerName) {
+                var handler = function() {
+                  try {
+                    var callID = me.pushRpc(this);
+                    var args = [callID];
+                    me.forEach(arguments, function(arg) {
+                      args.push(arg);
+                    });
+                    me.swfObj[handlerName].apply(me.swfObj, args);
+                    /* no return here, call rpcReturn in flash to return the result. */
+                  } catch(e) {
+                    me.handleError(null, e);
+                    return null;
+                  }
+                };
+                if (serviceName == null) {
+                  gadgets.rpc.registerDefault(handler);
+                } else {
+                  gadgets.rpc.register(serviceName, handler);
+                }
+              };
+              ]]></script>
+            </serviceRegister>
+            <serviceUnregister desc="Sends the rpc unregister request to container.">
+              <script><![CDATA[
+              /**
+               * Sends the rpc unregister request to container.
+               * @param {string} serviceName The service to be unregister.
+               * @member opensocial.flash.rpc
+               */
+              api.rpc.serviceUnregister = function(serviceName) {
+                if (serviceName == null) {
+                  gadgets.rpc.unregisterDefault();
+                } else {
+                  gadgets.rpc.unregister(serviceName);
+                }
+              };
+              ]]></script>
+            </serviceUnregister>
+          </rpc>
+
+
+          <!-- ========================== Gadgets IO =========================== -->
+          <io desc="'gadgets.io' wrapped accessors for flash.">
+            <script><![CDATA[
+            api.io = {};
+            ]]></script>
+
+            <makeRequest desc="Sends request to a remote site to get or post data.">
+              <script><![CDATA[
+              /**
+               * Sends request to a remote site to get or post data.
+               * @param {string} reqID The request id.
+               * @param {string} url The remote site
+               * @param {Object.<gadgets.io.RequestParameters, Object>?} opt_params
+               *            Parameters for the request
+               * @member opensocial.flash.io
+               */
+              api.io.makeRequest = function(reqID, url, opt_params) {
+                opt_params = opt_params || {}
+                var postData = opt_params[gadgets.io.RequestParameters.POST_DATA];
+                if (postData) {
+                  opt_params[gadgets.io.RequestParameters.POST_DATA] =
+                      gadgets.io.encodeValues(postData);
+                }
+                gadgets.io.makeRequest(url, function(obj) {
+                  me.handleAsync(reqID, obj);
+                }, opt_params);
+              };
+              ]]></script>
+            </makeRequest>
+          </io>
+
+
+          <!-- ========================== Batch Request =========================== -->
+          <batch desc="Defines batch request bridge methods for flash.">
+            <script><![CDATA[
+            api.batch = {};
+            ]]></script>
+
+            <send desc="send a batch request.">
+              <script><![CDATA[
+              /**
+               * send a batch request.
+               * @param {string} reqID The request id.
+               * @param {Object.<string, Object>?} The request collection.
+               * @member opensocial.flash.batch
+               */
+              api.batch.send = function(reqID, requests) {
+                var req = opensocial.newDataRequest();
+                for (resKey in requests) {
+                  var featureName = requests[resKey][0];
+                  var splitIndex = featureName.lastIndexOf('.');
+                  var operationMode = featureName.slice(splitIndex + 1);
+                  var newRequestFuncitonName = featureName.slice(0, splitIndex) + ".newRequest";
+                  var options = requests[resKey][1];
+                  var newRequestFunciton = new Function('return ' + newRequestFuncitonName);
+                  var newRequest = newRequestFunciton();
+                  var request = newRequest(options, operationMode, req);
+                  req.add(request, resKey);
+                }
+
+                req.send(function(dataResponse) {
+                  var response = {};
+                  for (resKey in requests) {
+                    var featureName = requests[resKey][0];
+                    if (featureName.indexOf('.appdata.') > -1) {
+                      try {
+                        response[resKey] = me.getData(dataResponse, resKey);
+                      } catch (e) {
+                        response[resKey] = e;
+                      }
+                    } else {
+                      try {
+                        response[resKey] = me.wrapObject(me.getData(dataResponse, resKey));
+                      } catch (e) {
+                        response[resKey] = e;
+                      }
+                    }
+                  }
+                  me.handleAsync(reqID, response);
+                });
+              };
+              ]]></script>
+            </send>
+          </batch>
+
+
+          <!-- ========================== OSAPI Services =========================== -->
+          <!--
+            NOTE: Currently not all container support osapi.
+            So here all osapi will still go throw legacy 0.8 standard interfaces.
+            Once the osapi is fully supported, remove deprecated codes.
+          -->
+
+          <!-- ========================== OSAPI.PEOPLE =========================== -->
+          <people desc="Defines people service methods.">
+            <script><![CDATA[
+            api.people = {};
+            ]]></script>
+
+            <newRequest desc="Creates a request instance of people service.">
+              <script><![CDATA[
+              /**
+               * According to operation mode, get request object.
+               * @param {Object.<string, Object>?} options An object unwrapped from
+               *        PeopleRequestOptions.
+               * @param {string} mode The operation mode.
+               * @param {DataRequest} req An exist DataRequest.
+               * @member opensocial.flash.people
+               */
+              api.people.newRequest = function(options, mode, req) {
+                switch (mode){
+                  case 'get':
+                    var params = me.translatePeopleRequestParams(options);
+                    params = me.translatePaginationParams(options, params);
+                    var idSpec = me.translateIdSpec(options);
+                    var userId = idSpec.getField(opensocial.IdSpec.Field.USER_ID);
+                    var groupId = idSpec.getField(opensocial.IdSpec.Field.GROUP_ID);
+
+                    if (groupId == opensocial.IdSpec.GroupId.SELF) {
+                      return req.newFetchPersonRequest(userId, params);
+                    } else {
+                      return req.newFetchPeopleRequest(idSpec, params);
+                    }
+                }
+              };
+              ]]></script>
+            </newRequest>
+            <get desc="Sends request to a remote site to get viewer, owner or friends.">
+              <script><![CDATA[
+              /**
+               * Sends request to a remote site to get viewer, owner or friends.
+               * @param {string} reqID The request id.
+               * @param {Object.<string, Object>?} options An object unwrapped from
+               *        PeopleRequestOptions.
+               * @member opensocial.flash.people
+               */
+              api.people.get = function(reqID, options) {
+                var req = opensocial.newDataRequest();
+                var request = me.api.people.newRequest(options, 'get', req);
+                req.add(request, 'p');
+                req.send(function(dataResponse) {
+                  try {
+                    var response = me.wrapObject(me.getData(dataResponse, 'p'));
+                    me.handleAsync(reqID, response);
+                  } catch (e) {
+                    me.handleError(reqID, e);
+                  }
+                });
+              };
+              ]]></script>
+            </get>
+          </people>
+
+
+          <!-- ========================== OSAPI.ACTIVITIES =========================== -->
+          <activities desc="Defines activities service methods.">
+            <script><![CDATA[
+            api.activities = {};
+            ]]></script>
+
+            <newRequest desc="Creates a request instance of activities service.">
+              <script><![CDATA[
+              /**
+               * According to operation mode, get request object.
+               * @param {Object.<string, Object>?} options An object unwrapped from
+               *        PeopleRequestOptions.
+               * @param {string} mode The operation mode.
+               * @param {DataRequest} req An exist DataRequest.
+               * @member opensocial.flash.people
+               */
+              api.activities.newRequest = function(options, mode, req) {
+                switch (mode){
+                  case 'get':
+                    var params = me.translateActivityRequestParams(options);
+                    params = me.translatePaginationParams(options, params);
+                    var idSpec = me.translateIdSpec(options);
+                    return req.newFetchActivitiesRequest(idSpec, params);
+                }
+              };
+              ]]></script>
+            </newRequest>
+            <get desc="Sends request to a remote site to get activities.">
+              <script><![CDATA[
+              /**
+               * Sends request to a remote site to get activities.
+               * @param {string} reqID The request id.
+               * @param {Object.<string, Object>?} options An object unwrapped from
+               *        ActivitiesRequestOptions.
+               * @member opensocial.flash.activities
+               */
+              api.activities.get = function(reqID, options) {
+                var req = opensocial.newDataRequest();
+                var request = me.api.activities.newRequest(options, 'get', req);
+                req.add(request, 'a');
+                req.send(function(dataResponse) {
+                  try {
+                    var respActivities = me.wrapObject(me.getData(dataResponse, 'a'));
+                    me.handleAsync(reqID, respActivities);
+                  } catch (e) {
+                    me.handleError(reqID, e);
+                  }
+                });
+              };
+              ]]></script>
+            </get>
+          </activities>
+
+
+          <!-- ========================== OSAPI.APPDATA =========================== -->
+          <appdata desc="Defines appdata service methods.">
+            <script><![CDATA[
+            api.appdata = {};
+            ]]></script>
+
+            <newRequest desc="Creates a request instance of appdata service.">
+              <script><![CDATA[
+              /**
+               * According to operation mode, get request object.
+               * @param {Object.<string, Object>?} options An object unwrapped from
+               *        PeopleRequestOptions.
+               * @param {string} mode The operation mode.
+               * @param {DataRequest} req An exist DataRequest.
+               * @member opensocial.flash.people
+               */
+              api.appdata.newRequest = function(options, mode, req) {
+                switch (mode){
+                  case 'get':
+                    var idSpec = me.translateIdSpec(options);
+                    var keys = options['keys'];
+                    return req.newFetchPersonAppDataRequest(idSpec, keys);
+                  case 'update':
+                    var idSpec = me.translateIdSpec(options);
+                    var userId = idSpec.getField(opensocial.IdSpec.Field.USER_ID);
+                    var key;
+                    var value;
+                    for (key in options['data']) {
+                      value = gadgets.json.stringify(options['data'][key]);
+                      break;
+                    }
+                    return req.newUpdatePersonAppDataRequest(userId, key, value);
+                  case 'deleteData':
+                    var idSpec = me.translateIdSpec(options);
+                    var userId = idSpec.getField(opensocial.IdSpec.Field.USER_ID);
+                    var keys = options['keys'];
+                    return req.newRemovePersonAppDataRequest(userId, keys);
+                }
+              };
+              ]]></script>
+            </newRequest>
+            <get desc="Sends request to remote site to get app data.">
+              <script><![CDATA[
+              /**
+               * Sends request to remote site to get app data.
+               * @param {string} reqID The request id.
+               * @param {Object.<string, Object>?} options An object unwrapped from
+               *        AppDataRequestOptions.
+               * @member opensocial.flash.appdata
+               */
+              api.appdata.get = function(reqID, options, req, resKey) {
+                var req = opensocial.newDataRequest();
+                var request = me.api.appdata.newRequest(options, 'get', req);
+                req.add(request, 'd');
+                req.send(function(dataResponse) {
+                  try {
+                    var dataSet = me.getData(dataResponse, 'd');
+                    /* dataSet's type:
+                     *     Object.<opensocial.IdSpec.PersonId, Object.<string, Object>>
+                     */
+                    me.handleAsync(reqID, dataSet);
+                  } catch (e) {
+                    me.handleError(reqID, e);
+                  }
+                });
+              };
+              ]]></script>
+            </get>
+            <update desc="Sends request to remote site to update app data.">
+              <script><![CDATA[
+              /**
+               * Sends request to remote site to update app data.
+               * @param {string} reqID The request id.
+               * @param {Object.<string, Object>?} options An object unwrapped from
+               *        AppDataRequestOptions.
+               * @member opensocial.flash.appdata
+               */
+              api.appdata.update = function(reqID, options) {
+                var req = opensocial.newDataRequest();
+                var request = me.api.appdata.newRequest(options, 'update', req);
+                req.add(request, 'u');
+                req.send(function(dataResponse) {
+                  try {
+                    me.getData(dataResponse, 'u');
+                    me.handleAsync(reqID);
+                  } catch (e) {
+                    me.handleError(reqID, e);
+                  }
+                });
+              };
+              ]]></script>
+            </update>
+            <deleteData desc="Sends request to remote site to delete app data.">
+              <script><![CDATA[
+              /**
+               * Sends request to remote site to delete app data.
+               * @param {string} reqID The request id.
+               * @param {Object.<string, Object>?} options An object unwrapped from
+               *        AppDataRequestOptions.
+               * @member opensocial.flash.appdata
+               */
+              api.appdata.deleteData = function(reqID, options) {
+                var req = opensocial.newDataRequest();
+                var request = me.api.appdata.newRequest(options, 'deleteData', req);
+                req.add(request, 'r');
+                req.send(function(dataResponse) {
+                  try {
+                    me.getData(dataResponse, 'r');
+                    me.handleAsync(reqID);
+                  } catch (e) {
+                    me.handleError(reqID, e);
+                  }
+                });
+              };
+              ]]></script>
+            </deleteData>
+          </appdata>
+
+
+          <!-- ========================== OSAPI.ALBUMS =========================== -->
+          <albums desc="Defines album service methods.">
+            <script><![CDATA[
+            api.albums = {};
+            ]]></script>
+
+            <newRequest desc="Creates a request instance of album service.">
+              <script><![CDATA[
+              /**
+               * According to operation mode, get request object.
+               * @param {Object.<string, Object>?} options An object unwrapped from
+               *        PeopleRequestOptions.
+               * @param {string} mode The operation mode.
+               * @param {DataRequest} req An exist DataRequest.
+               * @member opensocial.flash.albums
+               */
+              api.albums.newRequest = function(options, mode, req) {
+                switch (mode){
+                  case 'create':
+                    var idSpec = me.translateIdSpec(options);
+                    var album = me.unwrapObject(options['album'], opensocial.Album);
+                    return req.newCreateAlbumRequest(idSpec, album);
+                  case 'get':
+                    var params = me.translatePaginationParams(options);
+                    var idSpec = me.translateIdSpec(options);
+                    return req.newFetchAlbumsRequest(idSpec, params);
+                  case 'update':
+                    var album = options['album']['fields'];
+                    var idSpec = me.translateIdSpec(options);
+                    var albumId = options['albumId'];
+                    return req.newUpdateAlbumRequest(idSpec, albumId, album);
+                  case 'delete':
+                    var idSpec = me.translateIdSpec(options);
+                    var albumId = options['albumId'];
+                    return req.newDeleteAlbumRequest(idSpec, albumId);
+                }
+              };
+              ]]></script>
+            </newRequest>
+            <create desc="Sends request to remote site to create album.">
+              <script><![CDATA[
+              /**
+               * Sends request to remote site to create album.
+               * @param {string} reqID The request id.
+               * @param {Object.<string, Object>?} options An object unwrapped from
+               *        AlbumsRequestOptions.
+               * @member opensocial.flash.albums
+               */
+              api.albums.create = function(reqID, options, req, resKey) {
+                var req = opensocial.newDataRequest();
+                var request = me.api.albums.newRequest(options, 'create', req);
+                req.add(request, 'a');
+                req.send(function(dataResponse) {
+                  try {
+                    me.getData(dataResponse, 'a');
+                    me.handleAsync(reqID);
+                  } catch (e) {
+                    me.handleError(reqID, e);
+                  }
+                });
+              };
+              ]]></script>
+            </create>
+            <get desc="Sends request to remote site to get albums.">
+              <script><![CDATA[
+              /**
+               * Sends request to remote site to get albums.
+               * @param {string} reqID The request id.
+               * @param {Object.<string, Object>?} options An object unwrapped from
+               *        AlbumsRequestOptions.
+               * @member opensocial.flash.albums
+               */
+              api.albums.get = function(reqID, options, req, resKey) {
+                var req = opensocial.newDataRequest();
+                var request = me.api.albums.newRequest(options, 'get', req);
+                req.add(request, 'a');
+                req.send(function(dataResponse) {
+                  try {
+                    var response = me.wrapObject(me.getData(dataResponse, 'a'));
+                    me.handleAsync(reqID, response);
+                  } catch (e) {
+                    me.handleError(reqID, e);
+                  }
+                });
+              };
+              ]]></script>
+            </get>
+            <update desc="Sends request to remote site to update album.">
+              <script><![CDATA[
+              /**
+               * Sends request to remote site to update album.
+               * @param {string} reqID The request id.
+               * @param {Object.<string, Object>?} options An object unwrapped from
+               *        AlbumsRequestOptions.
+               * @member opensocial.flash.albums
+               */
+              api.albums.update = function(reqID, options, req, resKey) {
+                var req = opensocial.newDataRequest();
+                var request = me.api.albums.newRequest(options, 'update', req);
+                req.add(request, 'a');
+                req.send(function(dataResponse) {
+                  try {
+                    me.getData(dataResponse, 'a');
+                    me.handleAsync(reqID);
+                  } catch (e) {
+                    me.handleError(reqID, e);
+                  }
+                });
+              };
+              ]]></script>
+            </update>
+            <deleteData desc="Sends request to remote site to update album.">
+              <script><![CDATA[
+              /**
+               * Sends request to remote site to update album.
+               * @param {string} reqID The request id.
+               * @param {Object.<string, Object>?} options An object unwrapped from
+               *        AlbumsRequestOptions.
+               * @member opensocial.flash.albums
+               */
+              api.albums.deleteData = function(reqID, options, req, resKey) {
+                var req = opensocial.newDataRequest();
+                var request = me.api.albums.newRequest(options, 'delete', req);
+                req.add(request, 'a');
+                req.send(function(dataResponse) {
+                  try {
+                    me.getData(dataResponse, 'a');
+                    me.handleAsync(reqID);
+                  } catch (e) {
+                    me.handleError(reqID, e);
+                  }
+                });
+              };
+              ]]></script>
+            </deleteData>
+          </albums>
+
+
+          <!-- ========================== OSAPI.MEDIAITEMS =========================== -->
+          <mediaItems desc="Defines album mediaitems methods.">
+            <script><![CDATA[
+            api.mediaItems = {};
+            ]]></script>
+
+            <newRequest desc="Creates a request instance of mediaitems service.">
+              <script><![CDATA[
+              /**
+               * According to operation mode, get request object.
+               * @param {Object.<string, Object>?} options An object unwrapped from
+               *        PeopleRequestOptions.
+               * @param {string} mode The operation mode.
+               * @param {DataRequest} req An exist DataRequest.
+               * @member opensocial.flash.mediaItems
+               */
+              api.mediaItems.newRequest = function(options, mode, req) {
+                switch (mode){
+                  case 'get':
+                    var params = me.translatePaginationParams(options);
+                    var idSpec = me.translateIdSpec(options);
+                    var albumId = options['albumId'];
+                    return req.newFetchMediaItemsRequest(idSpec, albumId, params);
+                  case 'update':
+                    var mediaItem = options['mediaItem']['fields'];
+                    var idSpec = me.translateIdSpec(options);
+                    var albumId = options['albumId'];
+                    var mediaItemId = options['mediaItemId'];
+                    return req.newUpdateMediaItemRequest (idSpec, albumId, mediaItemId, mediaItem);
+                }
+              };
+              ]]></script>
+            </newRequest>
+            <get desc="Sends request to remote site to get mediaitems.">
+              <script><![CDATA[
+              /**
+               * Sends request to remote site to get mediaitems.
+               * @param {string} reqID The request id.
+               * @param {Object.<string, Object>?} options An object unwrapped from
+               *        AlbumsRequestOptions.
+               * @member opensocial.flash.mediaItems
+               */
+              api.mediaItems.get = function(reqID, options, req, resKey) {
+                var req = opensocial.newDataRequest();
+                var request = me.api.mediaItem.newRequest(options, 'get', req);
+                req.add(request, 'm');
+                req.send(function(dataResponse) {
+                  try {
+                    var response = me.wrapObject(me.getData(dataResponse, 'm'));
+                    me.handleAsync(reqID, response);
+                  } catch (e) {
+                    me.handleError(reqID, e);
+                  }
+                });
+              };
+              ]]></script>
+            </get>
+            <update desc="Sends request to remote site to update mediaItem.">
+              <script><![CDATA[
+              /**
+               * Sends request to remote site to update mediaItem.
+               * @param {string} reqID The request id.
+               * @param {Object.<string, Object>?} options An object unwrapped from
+               *        AlbumsRequestOptions.
+               * @member opensocial.flash.mediaItems
+               */
+              api.mediaItems.update = function(reqID, options, req, resKey) {
+                var req = opensocial.newDataRequest();
+                var request = me.api.mediaItem.newRequest(options, 'update', req);
+                req.add(request, 'm');
+                req.send(function(dataResponse) {
+                  try {
+                    me.getData(dataResponse, 'm');
+                    me.handleAsync(reqID);
+                  } catch (e) {
+                    me.handleError(reqID, e);
+                  }
+                });
+              };
+              ]]></script>
+            </update>
+          </mediaItems>
+
+          <!-- ========================== OSAPI.UI =========================== -->
+          <ui desc="Defines ui related methods.">
+            <script><![CDATA[
+            api.ui = {};
+            ]]></script>
+
+            <requestCreateActivity desc="Sends request to remote site to request an activity creation.">
+              <script><![CDATA[
+              /**
+               * Sends request to remote site to request an activity creation.
+               * @param {string} reqID The request id.
+               * @param {Object.<string, Object>?} options An object unwrapped from
+               *        UIRequestOptions.
+               * @member opensocial.flash.ui
+               */
+              api.ui.requestCreateActivity = function(reqID, options) {
+                var priority = options['priority'];
+                var activity = me.unwrapObject(options['activity'], opensocial.Activity);
+                opensocial.requestCreateActivity(activity, priority, function(responseItem) {
+                  try {
+                    me.getDataItem(responseItem);
+                    me.handleAsync(reqID);
+                  } catch (e) {
+                    me.handleError(reqID, e);
+                  }
+                });
+              };
+              ]]></script>
+            </requestCreateActivity>
+            <requestSendMessage desc="Sends request to remote site to request messages sending.">
+              <script><![CDATA[
+              /**
+               * Sends request to remote site to request messages sending.
+               * @param {string} reqID The request id.
+               * @param {Object.<string, Object>?} options An object unwrapped from
+               *        UIRequestOptions.
+               * @member opensocial.flash.ui
+               */
+              api.ui.requestSendMessage = function(reqID, options) {
+                var recipientIds = me.translateIds(options['recipientIds']);
+                var message = me.unwrapObject(options['message'], opensocial.Message);
+                opensocial.requestSendMessage(recipientIds, message, function(responseItem) {
+                  try {
+                    me.getDataItem(responseItem);
+                    me.handleAsync(reqID);
+                  } catch (e) {
+                    me.handleError(reqID, e);
+                  }
+                });
+              };
+              ]]></script>
+            </requestSendMessage>
+            <requestShareApp desc="Sends request to remote site to request app sharing.">
+              <script><![CDATA[
+              /**
+               * Sends request to remote site to request app sharing.
+               * @param {string} reqID The request id.
+               * @param {Object.<string, Object>?} options An object unwrapped from
+               *        UIRequestOptions.
+               * @member opensocial.flash.ui
+               */
+              api.ui.requestShareApp = function(reqID, options) {
+                var recipientIds = me.translateIds(options['recipientIds']);
+                var reason = me.unwrapObject(options['reason'], opensocial.Message);
+                opensocial.requestShareApp(recipientIds, reason, function(responseItem) {
+                  try {
+                    me.getDataItem(responseItem);
+                    me.handleAsync(reqID);
+                  } catch (e) {
+                    me.handleError(reqID, e);
+                  }
+                });
+              };
+              ]]></script>
+            </requestShareApp>
+            <requestPermission desc="Sends request to remote site to request permission.">
+              <script><![CDATA[
+              /**
+               * Sends request to remote site to request permission.
+               * @param {string} reqID The request id.
+               * @param {Object.<string, Object>?} options An object unwrapped from
+               *        UIRequestOptions.
+               * @member opensocial.flash.ui
+               */
+              api.ui.requestPermission = function(reqID, options) {
+                var permission = options['permission'];
+                var reason = me.unwrapObject(options['reason'], opensocial.Message);
+                opensocial.requestPermission([permission], reason, function(responseItem) {
+                  try {
+                    me.getDataItem(responseItem);
+                    me.handleAsync(reqID);
+                  } catch (e) {
+                    me.handleError(reqID, e);
+                  }
+                });
+              };
+              ]]></script>
+            </requestPermission>
+            <requestUploadMediaItem desc="Sends request to remote site to request an mediaitem upload.">
+              <script><![CDATA[
+              /**
+               * Sends request to remote site to request an mediaitem upload.
+               * @param {string} reqID The request id.
+               * @param {Object.<string, Object>?} options An object unwrapped from
+               *        UIRequestOptions.
+               * @member opensocial.flash.ui
+               */
+              api.ui.requestUploadMediaItem = function(reqID, options) {
+                var albumId = options['albumId'];
+                opensocial.requestUploadMediaItem(albumId, function(responseItem) {
+                  try {
+                    me.getDataItem(responseItem);
+                    me.handleAsync(reqID);
+                  } catch (e) {
+                    me.handleError(reqID, e);
+                  }
+                });
+              };
+              ]]></script>
+            </requestUploadMediaItem>
+          </ui>
+        </api>
+
+        <testing desc="Only visible when testing. It exports the kernel object constructor to public.">
+          <script><![CDATA[
+          if (TESTING) {
+            /**
+             * Only visible when testing. It exports the kernel object constructor to public.
+             * @type {Function} the kernel constructor.
+             * @ignore
+             */
+            me.api.kernel = kernel;
+          }
+          ]]></script>
+        </testing>
+
+        
+        <script><![CDATA[
+        }; // ~kernel
+        ]]></script>
+      </kernel>
+
+      <interface desc="Returns the public interface for flash.">
+        <script><![CDATA[
+        /* The public API functions set */
+        return new kernel().api;
+        ]]></script>
+      </interface>
+      
+      <script><![CDATA[
+      })(); // ~opensocial.flash
+      ]]></script>
+    </flash>
+  </opensocial>
+</global>
