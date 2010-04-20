@@ -32,7 +32,7 @@
   // Change nocache to version number when releasing other than random timestamps.
   var nocache = new Date().getTime();
 
-  var baseUrl = "http://opensocial-actionscript-client.googlecode.com/svn/trunk/bin/";
+  var baseUrl = "http://opensocial-actionscript-client.googlecode.com/svn/tags/release-1.1/bin/";
   var flashObjId = 'flashObj';
 
   gadgets.flash.embedFlash(

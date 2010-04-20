@@ -19,8 +19,8 @@ code a:visited {color: #007F00;}
     <dt>4/19/2010</dt>
     <dd>Cut the previous stable trunk base to <a href="/svn/tags/release-1.1/" target=_parent>release-1.1</a> tag. Please use the release version for your app development. The <a href="/svn/trunk/" target=_parent>current trunk</a> is moving to extension driven model, which is not stable and may have many bugs.
       <ol>
-        <li>The extension model is getting mature and we will add more containers support in the future. Please see the updated <a href="/svn/trunk/doc/jsdoc/index.html" target=_parent>jsdoc</a> for extension.</li>
-        <li>Added extension for <a href="http://sandbox.orkut.com" target=_blank>Orkut.com</a> container. This container has more datatypes, while on javascript wrapper side there is no difference. See class <code><a href="/svn/trunk/doc/asdoc/org/opensocial/client/ext/orkut/jswrapper/OrkutJsWrapperClient.html" target=_parent>OrkutJsWrapperClient</a></code>.</li>
+        <li>The extension model is getting mature and we will add more containers support in the future. Please see the updated <a href="jsdoc/index.html" target=_parent>jsdoc</a> for extension.</li>
+        <li>Added extension for <a href="http://sandbox.orkut.com" target=_blank>Orkut.com</a> container. This container has more datatypes, while on javascript wrapper side there is no difference. See class <code><a href="asdoc/org/opensocial/client/ext/orkut/jswrapper/OrkutJsWrapperClient.html" target=_parent>OrkutJsWrapperClient</a></code>.</li>
         <li>Added batch request feature. So in your flash app, you can batch your requests. On response, you can either add event handler for each single <code>AsyncDataRequest</code> object, or add event handler for the <code>BatchRequest</code> object. Note that the handler on <code>BatchRequest</code> object will be invoked first. See this example as follow:
           <pre style="width:700px">
 var batch:BatchRequest = new BatchRequest();
@@ -57,9 +57,9 @@ batch.send(client);
       <ol>
         <li>In this update, we decided to deprecated the external javascript file since it's not convinient for deploying and not easy to have extension for different special containers. Instead, we generated the javascript codes dynamically from the default XML file and container specific extended XML file and inject the javascript codes to DOM tree at runtime. <p>Basically, we are using XML node manipulation, which is easy, instead of using complex javascript inheritance and overriding to archieve the customization work for specific containers. </p></li>
         <ul>
-          <li>We introduced a plugin-able XML file to hold the javascript bridge codes (the codes are mostly from the old "opensocial-flashsdk.js" file). See <a href="/svn/trunk/src/org/opensocial/client/jswrapper/default.xml" target=_parent>default.xml</a> and the corelated class <code><a href="/svn/trunk/doc/asdoc/org/opensocial/client/jswrapper/JsWrapperBridge.html" target=_parent>JsWrapperBridge</a></code>.</li>
-          <li>The extended client holds another XML file which contains the javascript codes to extend. See <a href="/svn/trunk/src/org/opensocial/client/ext/myspace/jswrapper/myspace.xml" target=_parent>myspace.xml</a> and the corelated class <code><a href="/svn/trunk/doc/asdoc/org/opensocial/client/ext/myspace/jswrapper/MyspaceJsWrapperBridge.html" target=_parent>MyspaceJsWrapperBridge</a></code>.</li>
-          <li>When initializing the extended client object, e.g. calling <code>new MyspaceJsWrapperClient()</code> in the <a href="/svn/trunk/sample/ext/myspace/flex/MyspaceSampleApp.mxml" target=_parent>MyspaceSample.mxml</a> sample app, it first loads <a href="/svn/trunk/src/org/opensocial/client/jswrapper/default.xml" target=_parent>default.xml</a>, and then extends it with <a href="/svn/trunk/src/org/opensocial/client/ext/myspace/jswrapper/myspace.xml" target=_parent>myspace.xml</a>. After that <code>JsWrapperBridge.render()</code> function extracts all javascript codes from the extended XML object and injects the javascript codes to create the <code>opensocial.flash</code> namespace in global DOM tree. </li>
+          <li>We introduced a plugin-able XML file to hold the javascript bridge codes (the codes are mostly from the old "opensocial-flashsdk.js" file). See <a href="../src/org/opensocial/client/jswrapper/default.xml" target=_parent>default.xml</a> and the corelated class <code><a href="../doc/asdoc/org/opensocial/client/jswrapper/JsWrapperBridge.html" target=_parent>JsWrapperBridge</a></code>.</li>
+          <li>The extended client holds another XML file which contains the javascript codes to extend. See <a href="../src/org/opensocial/client/ext/myspace/jswrapper/myspace.xml" target=_parent>myspace.xml</a> and the corelated class <code><a href="../doc/asdoc/org/opensocial/client/ext/myspace/jswrapper/MyspaceJsWrapperBridge.html" target=_parent>MyspaceJsWrapperBridge</a></code>.</li>
+          <li>When initializing the extended client object, e.g. calling <code>new MyspaceJsWrapperClient()</code> in the <a href="../sample/ext/myspace/flex/MyspaceSampleApp.mxml" target=_parent>MyspaceSample.mxml</a> sample app, it first loads <a href="../src/org/opensocial/client/jswrapper/default.xml" target=_parent>default.xml</a>, and then extends it with <a href="../src/org/opensocial/client/ext/myspace/jswrapper/myspace.xml" target=_parent>myspace.xml</a>. After that <code>JsWrapperBridge.render()</code> function extracts all javascript codes from the extended XML object and injects the javascript codes to create the <code>opensocial.flash</code> namespace in global DOM tree. </li>
           <li>After the javascript codes rendering finished, all other data req/resp flows are the same as before.</li>
         </ul>
         <li>This update also fixed some <code>ArrayType</code>/<code>Collection</code> related bugs.
@@ -94,7 +94,7 @@ batch.send(client);
     <dd>Summitted new CLs for the some fixes and testing (M3):
       <ol>
         <li> Move the whole project to &quot;<a href="http://code.google.com/p/opensocial-as3-client">opensocial-as3-client</a>&quot; and rename the 'Client SDK' to 'Client Library' to aline with other client libraries.</li>
-        <li>Finished the testings under org.opensocial.client.base.* package. See the <a href="/svn/trunk/test/AllTests.html" target=_parent>AllTests</a> page and play around in Firefox.</li>
+        <li>Finished the testings under org.opensocial.client.base.* package. See the <a href="../test/AllTests.html" target=_parent>AllTests</a> page and play around in Firefox.</li>
         <li>Fixed some bugs.</li>
         <li>Cut the previous code base to the M3 milestone branch <a href="/svn/tags/2009-04-18-0.8-M3/" target=_parent>2009-04-18-0.8-M3</a>. The <a href="/svn/trunk/" target=_parent>trunk branch</a> will continue to M4 version with more testings and new features.</li>
       </ol>
@@ -105,9 +105,9 @@ batch.send(client);
       <ol>
         <li> Added an architecture graph to illustrate the SDK more clearly.</li>
         <li> Added event dispatchers to allow event-driven model for the client.</li>
-        <li> Added testing framework. See the <a href="/svn/trunk/test/AllTests.html" target=_parent>AllTests</a> page.</li>
+        <li> Added testing framework. See the <a href="../test/AllTests.html" target=_parent>AllTests</a> page.</li>
         <li> Finished the JsUnit test cases and started the FlexUnit part.</li>
-        <li> SampleApp is moved from a zip file to '<a href="/svn/trunk/sample/" target=_parent>/sample</a>' directory, with Flex style and Adobe Flash CS style.</li>
+        <li> SampleApp is moved from a zip file to '<a href="../sample/" target=_parent>/sample</a>' directory, with Flex style and Adobe Flash CS style.</li>
       </ol>
       <br>
     </dd>
@@ -141,25 +141,25 @@ batch.send(client);
   <p>We are preparing some sample apps for tutorial. But right now you can simply follow these steps and consult the api reference if you are building a gadget.</p>
   <ol>
     <li>
-      <p>Checkout the <a href="/svn/trunk/src/org/opensocial/client/" target=_parent>source codes</a> and include those packages in your flash project. </p>
+      <p>Checkout the <a href="../src/org/opensocial/client/" target=_parent>source codes</a> and include those packages in your flash project. </p>
     </li>
     <li>
-      <p>First please read the <code><a href="/svn/trunk/sample/" target=_parent>SampleApp</a></code> codes. The SampleApp is a simple app that just illustrates several OpenSocial features. It is written in both <a href="/svn/trunk/sample/flex/SampleApp.mxml" target=_parent>Flex 3 style</a> and <a href="/svn/trunk/sample/flash/SampleApp.as" target=_parent>Adobe Flash CS3 style</a> for your flavors. Note that the former one is illustrating how to use helpers and the latter is illustrating how to use event dispatchers.</p>
+      <p>First please read the <code><a href="../sample/" target=_parent>SampleApp</a></code> codes. The SampleApp is a simple app that just illustrates several OpenSocial features. It is written in both <a href="../sample/flex/SampleApp.mxml" target=_parent>Flex 3 style</a> and <a href="../sample/flash/SampleApp.as" target=_parent>Adobe Flash CS3 style</a> for your flavors. Note that the former one is illustrating how to use helpers and the latter is illustrating how to use event dispatchers.</p>
     </li>
     <li>
       <p>Start your project by copying some code snippet from SampleApp.</p>
     </li>
     <li>
-      <p>Use the <code><a href="/svn/trunk/doc/asdoc/org/opensocial/client/jswrapper/JsWrapperClient.html" target=_parent>JsWrapperClient</a></code> object and async event dispatchers (e.g. <code><a href="/svn/trunk/doc/asdoc/org/opensocial/client/features/BatchRequest.html" target=_parent>BatchRequest</a></code>, <code><a href="/svn/trunk/doc/asdoc/org/opensocial/client/features/AsyncDataRequest.html" target=_parent>AsyncDataRequest</a></code>, <code><a href="/svn/trunk/doc/asdoc/org/opensocial/client/features/ProxiedRequest.html" target=_parent>ProxiedRequest</a></code>, <code><a href="/svn/trunk/doc/asdoc/org/opensocial/client/features/RPCRequest.html" target=_parent>RPCRequest</a></code> or <code><a href="/svn/trunk/doc/asdoc/org/opensocial/client/features/RPCService.html" target=_parent>RPCService</a></code>) and the sync helper  (e.g. <code><a href="/svn/trunk/doc/asdoc/org/opensocial/client/features/SyncHelper.html" target=_parent>SyncHelper</a></code>) to due with OpenSocial data or Rpc operations and fill your app with social functionalities. See SampleApp to learn how it works, and the <a href="/svn/trunk/doc/asdoc/index.html" target=_parent>reference</a> for this SDK is also your friend.</p>
+      <p>Use the <code><a href="asdoc/org/opensocial/client/jswrapper/JsWrapperClient.html" target=_parent>JsWrapperClient</a></code> object and async event dispatchers (e.g. <code><a href="asdoc/org/opensocial/client/features/BatchRequest.html" target=_parent>BatchRequest</a></code>, <code><a href="asdoc/org/opensocial/client/features/AsyncDataRequest.html" target=_parent>AsyncDataRequest</a></code>, <code><a href="asdoc/org/opensocial/client/features/ProxiedRequest.html" target=_parent>ProxiedRequest</a></code>, <code><a href="asdoc/org/opensocial/client/features/RPCRequest.html" target=_parent>RPCRequest</a></code> or <code><a href="asdoc/org/opensocial/client/features/RPCService.html" target=_parent>RPCService</a></code>) and the sync helper  (e.g. <code><a href="asdoc/org/opensocial/client/features/SyncHelper.html" target=_parent>SyncHelper</a></code>) to due with OpenSocial data or Rpc operations and fill your app with social functionalities. See SampleApp to learn how it works, and the <a href="asdoc/index.html" target=_parent>reference</a> for this SDK is also your friend.</p>
     </li>
     <li>
-      <p>Some containers is acting slightly difference from the reference container model - <a href="http://shindig.apache.org/" target=_blank>Shinig</a>, so you may also need to use clients with container-specific extension (e.g. <code><a href="/svn/trunk/doc/asdoc/org/opensocial/client/ext/myspace/jswrapper/MyspaceJsWrapperClient.html" target=_parent>MyspaceJsWrapperClient</a></code>, <code><a href="/svn/trunk/doc/asdoc/org/opensocial/client/ext/orkut/jswrapper/OrkutJsWrapperClient.html" target=_parent>OrkutJsWrapperClient</a></code>).  See all extensions in <code><a href="/svn/trunk/doc/asdoc/org/opensocial/client/ext/" target=_parent>org.opensocial.client.ext</a></code> package.</p>
+      <p>Some containers is acting slightly difference from the reference container model - <a href="http://shindig.apache.org/" target=_blank>Shinig</a>, so you may also need to use clients with container-specific extension (e.g. <code><a href="asdoc/org/opensocial/client/ext/myspace/jswrapper/MyspaceJsWrapperClient.html" target=_parent>MyspaceJsWrapperClient</a></code>, <code><a href="asdoc/org/opensocial/client/ext/orkut/jswrapper/OrkutJsWrapperClient.html" target=_parent>OrkutJsWrapperClient</a></code>).  See all extensions in <code><a href="asdoc/org/opensocial/client/ext/" target=_parent>org.opensocial.client.ext</a></code> package.</p>
     </li>
     <li>
       <p>Build your project to a SWF file. You can either use Flex 3 SDK or Adobe Flash CS3/CS4 IDE.</p>
     </li>
     <li>
-      <p>Take the spec XML listed below and edit it in your case (you can use proxy url to let the container cache your swf files), or use the <a href="/svn/trunk/sample/SampleApp.xml" target=_parent>SampleApp.xml</a> codes if you want to bypass the container cache when you are debugging. Then upload the spec, swf file to somewhere publicly accessible. And you app is done.
+      <p>Take the spec XML listed below and edit it in your case (you can use proxy url to let the container cache your swf files), or use the <a href="../sample/SampleApp.xml" target=_parent>SampleApp.xml</a> codes if you want to bypass the container cache when you are debugging. Then upload the spec, swf file to somewhere publicly accessible. And you app is done.
       <pre>
 &lt;?xml version="1.0" encoding="UTF-8" ?&gt;
 &lt;Module&gt;
